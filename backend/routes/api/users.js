@@ -8,6 +8,16 @@ const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
 
 const validateSignup = [
+    check('firstName')
+    .exists({ checkFalsy: true })
+    .not()
+    .isEmail()
+    .withMessage('Please provide a valid first name.'),
+    check('lastName')
+    .exists({ checkFalsy: true })
+    .not()
+    .isEmail()
+    .withMessage('Please provide a valid last name.'),
     check('email')
       .exists({ checkFalsy: true })
       .isEmail()
@@ -32,11 +42,10 @@ const validateSignup = [
     '/',
     validateSignup,
     async (req, res) => {
-      const { email, password, username } = req.body;
-      const user = await User.signup({ email, username, password });
+      const { firstName, lastName, email, password, username } = req.body;
+      const user = await User.signup({ firstName, lastName, email, username, password });
 
       await setTokenCookie(res, user);
-
       return res.json({
         user: user
       });

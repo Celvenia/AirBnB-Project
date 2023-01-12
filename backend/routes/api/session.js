@@ -28,6 +28,15 @@ router.post(
     }
   );
 
-  // if XSRF-Token isn't shown go here http://localhost:8000/api/csrf/restore 
+  // Log out
+router.delete(
+    '/',
+    (_req, res) => {
+      res.clearCookie('token');
+      return res.json({ message: 'success' });
+    }
+  );
+
+  // if XSRF-Token isn't shown go here http://localhost:8000/api/csrf/restore
 
 module.exports = router;

@@ -15,16 +15,14 @@ module.exports = {
       },
       userId: {
         type: Sequelize.INTEGER,
-        allowNull: false,
         references: {
-          models: 'Users'
+          model: 'Users'
         }
       },
       spotId: {
         type: Sequelize.INTEGER,
-        allowNull: false,
         references: {
-          models: 'Spots'
+          model: 'Spots'
         }
       },
       review: {
@@ -32,15 +30,16 @@ module.exports = {
       },
       stars: {
         type: Sequelize.INTEGER,
-        allowNull: false
       },
       createdAt: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
       },
       updatedAt: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
       }
     });
   },

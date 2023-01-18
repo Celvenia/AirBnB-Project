@@ -20,9 +20,10 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Spot.belongsTo(models.User, {foreignKey: 'ownerId'})
-      Spot.hasMany(models.Review, {foreignKey: 'spotId'})
-      Spot.hasMany(models.SpotImage, {foreignKey: 'id'})
+      Spot.belongsTo(models.User, {foreignKey: 'id'})
+      Spot.hasMany(models.Review, {foreignKey: 'spotId', onDelete: 'CASCADE',  hooks: true})
+      Spot.hasMany(models.SpotImage, {foreignKey: 'id', onDelete: 'CASCADE',  hooks: true})
+      Spot.hasMany(models.Booking, {foreignKey: 'spotId', onDelete: 'CASCADE',  hooks: true})
     }
   }
   Spot.init({
@@ -43,6 +44,11 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'Spot',
+      defaultScope: {
+        attributes: {
+          exclude: ["createdAt", "updatedAt"]
+        }
+      },
   });
   return Spot;
 };

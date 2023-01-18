@@ -14,8 +14,8 @@ module.exports = {
       {
         userId: 1,
         spotId: 1,
-        startDate: new Date(),
-        endDate: new Date(),
+        startDate: new Date(2023, 2, 3, 10, 30), //  Feb 03 2023 10:30
+        endDate: new Date(2023, 2, 4, 10, 30), //    Feb 04 2023 10:30
       }
     ], {});
   },

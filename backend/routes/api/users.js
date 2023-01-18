@@ -40,7 +40,7 @@ const validateSignup = [
   // get all users
   router.get('/', async (req, res) => {
     const users = await User.findAll({
-      
+      // include: Spot
     })
     res.json(users)
   })

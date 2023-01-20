@@ -65,7 +65,9 @@ const validateSpot = [
 
 // get all spots
 router.get('/', async (req, res) => {
-    const spots = await Spot.findAll()
+    const spots = await Spot.findAll({
+      include: [{model: SpotImage}]
+    })
     res.json(spots)
 })
 
@@ -90,6 +92,7 @@ router.get('/:spotId', async (req, res) => {
          {
             model: SpotImage,
             attributes: ['id', 'url', 'preview'],
+            subQuery:false
          },
          {
             model: Review,
@@ -100,7 +103,7 @@ router.get('/:spotId', async (req, res) => {
         // group: [Spot.id]
     })
 
-    if(!spot) {
+    if(spot.id === null) {
         res.status(404).json({message: "Spot couldn't be found"})
     }
 

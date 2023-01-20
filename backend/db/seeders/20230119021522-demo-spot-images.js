@@ -11,8 +11,28 @@ module.exports = {
     options.tableName = 'SpotImages';
     return queryInterface.bulkInsert(options, [
       {
-        id: 1,
+        spotId: '1',
         url: 'test.url',
+        preview: true,
+      },
+      {
+        spotId: '1',
+        url: 'test2.url',
+        preview: true,
+      },
+      {
+        spotId: '1',
+        url: 'test3.url',
+        preview: true,
+      },
+      {
+        spotId: '4',
+        url: 'test4.url',
+        preview: true,
+      },
+      {
+        spotId: '5',
+        url: 'test5.url',
         preview: true,
       },
     ], {})
@@ -22,7 +42,7 @@ module.exports = {
     options.tableName = 'SpotImages';
     const Op = Sequelize.Op;
     return queryInterface.bulkDelete(options, {
-      id: { [Op.in]: [1] }
+      id: { [Op.in]: [1, 2, 3, 4, 5] }
     }, {});
   }
 };

@@ -88,12 +88,13 @@ module.exports = {
     options.tableName = 'Spots';
     const Op = Sequelize.Op;
     return queryInterface.bulkDelete(options, {
-      address: { [Op.in]: [
-        '123 Wonder Blvd.',
-        '210 Batcave Pl.',
-        '321 Flash Dr.',
-        '432 Mandalorian Way.',
-        '543 SupermanLois Ln.'] }
+      // address: { [Op.in]: [
+      //   '123 Wonder Blvd.',
+      //   '210 Batcave Pl.',
+      //   '321 Flash Dr.',
+      //   '432 Mandalorian Way.',
+      //   '543 SupermanLois Ln.'] }
+      id: { [Op.in]: [1,2,3,4,5]}
     }, {});
   }
 };

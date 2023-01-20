@@ -7,9 +7,11 @@
 # GET http://localhost:8000/api/spots/1
 
 //get all reviews by a spot based on id
-GET http://localhost:8000/api/spots/1/reviews
+# GET http://localhost:8000/api/spots/1/reviews
 
-# GET http://localhost:8000/api/spots
+# DELETE http://localhost:8000/api/spots/1
+
+GET http://localhost:8000/api/spots/1/test
 
 // didn't work - sign up
 # POST http://localhost:8000/api/users

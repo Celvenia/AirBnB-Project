@@ -18,6 +18,12 @@ module.exports = {
     },
     {
       userId: 2,
+      spotId: 1,
+      review: 'beautiful but expensive',
+      stars: 3
+    },
+    {
+      userId: 2,
       spotId: 2,
       review: 'this place is gloomy',
       stars: 1

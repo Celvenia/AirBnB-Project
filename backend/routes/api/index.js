@@ -35,7 +35,7 @@ router.post('/test', function(req, res) {
   // const { setTokenCookie } = require('../../utils/auth.js');
   // const { requireAuth } = require('../../utils/auth.js');
 
-// // GET /api/set-token-cookie
+// GET /api/set-token-cookie
 // router.get('/set-token-cookie', async (_req, res) => {
 //   const user = await User.findOne({
 //       where: {

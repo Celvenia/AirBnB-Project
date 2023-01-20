@@ -1,5 +1,6 @@
 const express = require('express')
 const router = express.Router();
+const bcrypt = require('bcryptjs')
 
 const { setTokenCookie, requireAuth } = require('../../utils/auth');
 const { User, Spot } = require('../../db/models');
@@ -46,18 +47,31 @@ const validateSignup = [
   })
 
   //sign up
-  router.post(
-    '/',
-    validateSignup,
-    async (req, res) => {
+  router.post('/', validateSignup, async (req, res) => {
       const { firstName, lastName, email, password, username } = req.body;
       const user = await User.signup({ firstName, lastName, email, username, password });
 
       await setTokenCookie(res, user);
+
       return res.json({
         user: user
       });
-    }
-  );
+    });
+
+  //log
+  // router.post('/login', async (req, res) => {
+  //   const {username, password} = req.body
+  //   const user = await User.findOne({
+  //     where: {
+  //       username,
+  //       password
+  //     }
+  //   })
+  //   if(!user) {
+  //     return res.status(404).json({message: "User can't be found with that username and password"})
+  //   }
+  //   res.json({message: "Successfully logged in"})
+
+  // })
 
 module.exports = router;

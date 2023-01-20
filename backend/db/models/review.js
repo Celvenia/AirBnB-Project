@@ -18,7 +18,7 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       Review.belongsTo(models.Spot, {foreignKey: 'spotId'})
       Review.belongsTo(models.User, {foreignKey: 'userId'})
-      Review.hasMany(models.ReviewImage, {foreignKey: 'id'})
+      Review.hasMany(models.ReviewImage, {foreignKey: 'reviewId'})
     }
   }
   Review.init({
@@ -37,11 +37,11 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'Review',
-    defaultScope: {
-      attributes: {
-        exclude: ["createdAt", "updatedAt"]
-      }
-    },
+    // defaultScope: {
+    //   attributes: {
+    //     exclude: ["createdAt", "updatedAt"]
+    //   }
+    // },
   });
   return Review;
 };

@@ -72,43 +72,97 @@ router.get("/", async (req, res) => {
 });
 
 // get information from spot by id
-router.get("/:spotId", async (req, res) => {
-  const spotToFind = req.params.spotId;
-  const spot = await Spot.findByPk(spotToFind, {
-    attributes: {
-      include: [
-        [sequelize.fn("AVG", sequelize.col("Reviews.stars")), "avgStarRating"],
-        [sequelize.fn("COUNT", sequelize.col("Reviews.id")), "numReviews"],
-      ],
+// router.get("/:spotId", async (req, res) => {
+//   const spotToFind = req.params.spotId;
+//   const spot = await Spot.findByPk(spotToFind, {
+//     attributes: {
+//       // include: [
+//       //   [sequelize.fn("AVG", sequelize.col("Reviews.stars")), "avgStarRating"],
+//       //   [sequelize.fn("COUNT", sequelize.col("Reviews.id")), "numReviews"],
+//       // ],
+//     },
+
+//     include: [
+//       {
+//         model: User,
+//         as: "Owner",
+//         attributes: ["id", "firstName", "lastName"],
+//         subQuery: false,
+//       },
+//       {
+//         model: SpotImage,
+//         attributes: ["id", "url", "preview"],
+//         subQuery: false,
+//       },
+//       {
+//         model: Review,
+//         attributes: [],
+//         subQuery: false,
+//       },
+//     ],
+//     // group: [Spot.id]
+//   });
+
+//   if (spot.id === null) {
+//     res.status(404).json({ message: "Spot couldn't be found" });
+//   }
+
+//   res.json(spot);
+// });
+
+// get information from spot by id
+router.get('/:spotId', async (req, res) => {
+  const spot = await Spot.findByPk(req.params.spotId)
+  const user = await User.findByPk(spot.ownerId)
+  const spotImages = await SpotImage.findAll({
+    where: {spotId: req.params.spotId},
+    attributes: {exclude: ['spotId']}
+  })
+  const reviews = await Review.findAll({
+    where: {spotId: req.params.spotId},
+    // attributes :{
+    // include: [[sequelize.fn("COUNT", sequelize.col("Review.id")), "numReviews"],
+    // [sequelize.fn("AVG", sequelize.col("Review.stars")), "avgStarRating"]]}
+  })
+  let count = 0
+  let adder = reviews.forEach(review => {
+    count += review.stars
+  })
+  let avg = count / reviews.length
+
+  const obj = {
+    Spot: {
+      id: spot.id,
+      ownerId: spot.ownerId,
+      address: spot.address,
+      city: spot.city,
+      state: spot.state,
+      country: spot.country,
+      lat: spot.lat,
+      lng: spot.lng,
+      name: spot.name,
+      description: spot.description,
+      price: spot.price,
+      createdAt: spot.createdAt,
+      updatedAt: spot.updatedAt,
+      numReviews: reviews.length,
+      avgStarRating: avg
     },
-
-    include: [
-      {
-        model: User,
-        as: "Owner",
-        attributes: ["id", "firstName", "lastName"],
-        subQuery: false,
-      },
-      {
-        model: SpotImage,
-        attributes: ["id", "url", "preview"],
-        subQuery: false,
-      },
-      {
-        model: Review,
-        attributes: [],
-        subQuery: false,
-      },
-    ],
-    // group: [Spot.id]
-  });
-
-  if (spot.id === null) {
-    res.status(404).json({ message: "Spot couldn't be found" });
+    Users: {
+      id: user.id,
+      firstName: user.firstName,
+      lastName: user.lastName
+    },
+    SpotImages: spotImages
+  }
+  if(!spot) {
+    res.status(404).json({message: "Spot couldn't be found"})
   }
 
-  res.json(spot);
-});
+  res.json(obj)
+
+
+})
 
 // create a spot
 router.post("/", validateSpot, async (req, res) => {
@@ -130,19 +184,21 @@ router.post("/", validateSpot, async (req, res) => {
 });
 
 // delete a spot
-// router.delete("/:spotId", async (req, res) => {
-//   const spot = await Spot.findOne({
-//     where: { id: req.params.spotId, ownerId: req.user.id },
-//   });
-//   if (!spot) {
-//     res
-//       .status(404)
-//       .json({ message: "Spot couldn't be found" });
-//   }
-//   await spot.destroy();
-//   res.json({ message: "Successfully deleted" });
+router.delete("/:spotId/test", async (req, res) => { //requireAuth
+  const spot = await Spot.findByPk(req.params.spotId, {
+    where: { ownerId: req.user.id},
+  });
+
+  if (!spot) {
+    return res
+      .status(404)
+      .json({ message: "Spot couldn't be found" });
+  }
+  await spot.destroy();
+  return res.status(200).json({ message: "Successfully deleted" });
+
   // res.json(spot)
-// });
+});
 
 // get all reviews based on spot id
 router.get("/:spotId/reviews", async (req, res) => {

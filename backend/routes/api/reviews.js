@@ -9,7 +9,7 @@ const { handleValidationErrors } = require('../../utils/validation');
 
 router.get('/', async (req, res) => {
     const reviews = await Review.findAll()
-    console.log(reviews)
+    // console.log(reviews)
     res.json(reviews)
 })
 

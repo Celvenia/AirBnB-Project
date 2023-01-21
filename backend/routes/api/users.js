@@ -41,7 +41,7 @@ const validateSignup = [
   // get all users
   router.get('/', async (req, res) => {
     const users = await User.findAll({
-      // include: Spot
+      include: Spot
     })
     res.json(users)
   })
@@ -57,6 +57,18 @@ const validateSignup = [
         user: user
       });
     });
+
+    router.get('/:userId/spots', async (req, res) => {
+      const userSpots = await Spot.findAll({
+        where: {
+          ownerId: req.user.id,
+        },
+      })
+      if(!userSpots) {
+        res.status(404).json({message: "User has no spots"})
+      }
+      res.json({Spots: userSpots})
+    })
 
   //log
   // router.post('/login', async (req, res) => {

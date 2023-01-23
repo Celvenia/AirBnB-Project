@@ -18,45 +18,25 @@ const { handleValidationErrors } = require("../../utils/validation");
 const validateSpot = [
   check("address")
     .exists({ checkFalsy: true })
-    .not()
     .withMessage("Street address is required"),
-
-  check("city")
-    .exists({ checkFalsy: true })
-    .not()
-    .withMessage("City is required"),
-
-  check("state")
-    .exists({ checkFalsy: true })
-    .not()
-    .withMessage("State is required"),
-
+  check("city").exists({ checkFalsy: true }).withMessage("City is required"),
+  check("state").exists({ checkFalsy: true }).withMessage("State is required"),
   check("country")
     .exists({ checkFalsy: true })
-    .not()
     .withMessage("Country is required"),
-
   check("lat")
     .exists({ checkFalsy: true })
-    .isDecimal()
-    .not()
     .withMessage("Latitude is not valid"),
-
   check("lng")
     .exists({ checkFalsy: true })
-    .isDecimal()
-    .not()
     .withMessage("Longitude is not valid"),
-
   check("name")
     .exists({ checkFalsy: true })
     .isLength({ max: 50 })
     .withMessage("Name must be less than 50 characters"),
-
   check("description")
     .exists({ checkFalsy: true })
     .withMessage("Description is required"),
-
   check("price")
     .exists({ checkFalsy: true })
     .withMessage("Price per day is required"),
@@ -66,36 +46,35 @@ const validateSpot = [
 // get all spots
 router.get("/", async (req, res) => {
   try {
-  const spots = await Spot.findAll({
-    attributes: [
-      "id",
-      "ownerId",
-      "address",
-      "city",
-      "state",
-      "country",
-      "lat",
-      "lng",
-      "name",
-      "description",
-      "price",
-      "createdAt",
-      "updatedAt",
-      "previewImage",
-      [sequelize.fn("AVG", sequelize.col("Reviews.stars")), "avgRating"],
-    ],
-    include: [
-      {
-        model: Review,
-        attributes: [],
-      },
-    ],
-    group: ["Spot.id"],
-  });
-  // spots.dataValues.avgRating = sequelize.fn("AVG", sequelize.col("Review.stars"))
-  res.json(spots);
-  } catch(err) {
-    res.status(500).json({message: 'Server error'})
+    const spots = await Spot.findAll({
+      attributes: [
+        "id",
+        "ownerId",
+        "address",
+        "city",
+        "state",
+        "country",
+        "lat",
+        "lng",
+        "name",
+        "description",
+        "price",
+        "createdAt",
+        "updatedAt",
+        "previewImage",
+        [sequelize.fn("AVG", sequelize.col("Reviews.stars")), "avgRating"],
+      ],
+      include: [
+        {
+          model: Review,
+          attributes: [],
+        },
+      ],
+      group: ["Spot.id"],
+    });
+    res.json(spots);
+  } catch (err) {
+    res.status(500).json({ message: "Server error" });
   }
 });
 
@@ -191,41 +170,53 @@ router.get("/:spotId", async (req, res) => {
 });
 
 // create a spot
-router.post("/", validateSpot, async (req, res) => {
-  const { address, city, state, country, lat, lng, name, description, price } =
-    req.body;
-  const newSpot = await Spot.create({
-    ownerId: req.user.id,
-    address,
-    city,
-    state,
-    country,
-    lat,
-    lng,
-    name,
-    description,
-    price,
-  });
-  res.status(201).json({ message: "Successfully created", data: newSpot });
+router.post("/", validateSpot, async (req, res, next) => {
+  try {
+    const {
+      address,
+      city,
+      state,
+      country,
+      lat,
+      lng,
+      name,
+      description,
+      price,
+    } = req.body;
+    const newSpot = await Spot.create({
+      ownerId: req.user.id,
+      address,
+      city,
+      state,
+      country,
+      lat,
+      lng,
+      name,
+      description,
+      price,
+    });
+    res.status(201).json({ message: "Successfully created", data: newSpot });
+  } catch (err) {
+    res.status(500).json({ message: "Server error" });
+  }
 });
 
 // delete a spot
-router.delete("/:spotId/test", async (req, res) => {
-  //requireAuth
-
+router.delete("/:spotId", requireAuth, async (req, res) => {
   const spot = await Spot.findByPk(req.params.spotId, {
     where: { ownerId: req.user.id },
   });
-
   if (!spot) {
     return res.status(404).json({ message: "Spot couldn't be found" });
+  }
+  if (req.user.id !== spot.ownerId) {
+    res.status(403).json({ message: "Forbidden" });
   }
 
   await spot.destroy();
 
   res.status(200).json({ message: "Successfully deleted" });
 
-  // res.json(spot)
 });
 
 // get all reviews based on spot id
@@ -258,27 +249,42 @@ router.get("/:spotId/reviews", async (req, res) => {
   res.json(spotReviews);
 });
 
-//edit a spot
+//edit a spot only with authorized user
 router.put("/:spotId", requireAuth, validateSpot, async (req, res) => {
-  const { address, city, state, country, lat, lng, name, description, price } =
-    req.body;
-  let spot = await Spot.findByPk(req.params.spotId);
-  spot.update({
-    address: address,
-    city: city,
-    state: state,
-    country: country,
-    lat: lat,
-    lng: lng,
-    name: name,
-    description: description,
-    price: price,
-  });
-  if (!spot) {
-    res.status(404).json({ message: "Spot not found" });
+  try {
+    const {
+      address,
+      city,
+      state,
+      country,
+      lat,
+      lng,
+      name,
+      description,
+      price,
+    } = req.body;
+
+    let spot = await Spot.findByPk(req.params.spotId);
+    if (req.user.id !== spot.ownerId) {
+      res.status(401).json({ message: "Authentication required" });
+    }
+    spot.update({
+      address: address,
+      city: city,
+      state: state,
+      country: country,
+      lat: lat,
+      lng: lng,
+      name: name,
+      description: description,
+      price: price,
+    });
+
+    await spot.save();
+    res.json(spot);
+  } catch (err) {
+    res.status(404).json({ message: "Spot couldn't be found" });
   }
-  await spot.save();
-  res.json(spot);
 });
 
 module.exports = router;

@@ -70,6 +70,26 @@ const validateSignup = [
       res.json({Spots: userSpots})
     })
 
+    router.get('/current', requireAuth, async (req, res) => {
+      try {
+        if(res.user === null) {
+          res.status(200).json(res.user)
+        }
+        const userObj = {
+          user: {
+            id: req.user.id,
+            firstName: req.user.firstName,
+            lastName: req.user.lastName,
+            email: req.user.email,
+            username: req.user.username
+          }
+        }
+        res.json(userObj)
+      } catch(err) {
+        res.status(500).json({message: "Server error"})
+      }
+    })
+
   //log
   // router.post('/login', async (req, res) => {
   //   const {username, password} = req.body

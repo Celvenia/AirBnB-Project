@@ -10,7 +10,7 @@ const {
   ReviewImage,
   sequelize,
 } = require("../../db/models");
-// const sequelize = require('sequelize')
+// const {sequelize} = require('sequelize')
 
 const { check } = require("express-validator");
 const { handleValidationErrors } = require("../../utils/validation");
@@ -65,10 +65,38 @@ const validateSpot = [
 
 // get all spots
 router.get("/", async (req, res) => {
+  try {
   const spots = await Spot.findAll({
-    // include: [{model: SpotImage}] - checking to see if spotImage data was associated correctly
+    attributes: [
+      "id",
+      "ownerId",
+      "address",
+      "city",
+      "state",
+      "country",
+      "lat",
+      "lng",
+      "name",
+      "description",
+      "price",
+      "createdAt",
+      "updatedAt",
+      "previewImage",
+      [sequelize.fn("AVG", sequelize.col("Reviews.stars")), "avgRating"],
+    ],
+    include: [
+      {
+        model: Review,
+        attributes: [],
+      },
+    ],
+    group: ["Spot.id"],
   });
+  // spots.dataValues.avgRating = sequelize.fn("AVG", sequelize.col("Review.stars"))
   res.json(spots);
+  } catch(err) {
+    res.status(500).json({message: 'Server error'})
+  }
 });
 
 // get information from spot by id
@@ -111,24 +139,24 @@ router.get("/", async (req, res) => {
 // });
 
 // get information from spot by id
-router.get('/:spotId', async (req, res) => {
-  const spot = await Spot.findByPk(req.params.spotId)
-  const user = await User.findByPk(spot.ownerId)
+router.get("/:spotId", async (req, res) => {
+  const spot = await Spot.findByPk(req.params.spotId);
+  const user = await User.findByPk(spot.ownerId);
   const spotImages = await SpotImage.findAll({
-    where: {spotId: req.params.spotId},
-    attributes: {exclude: ['spotId']}
-  })
+    where: { spotId: req.params.spotId },
+    attributes: { exclude: ["spotId"] },
+  });
   const reviews = await Review.findAll({
-    where: {spotId: req.params.spotId},
+    where: { spotId: req.params.spotId },
     // attributes :{
     // include: [[sequelize.fn("COUNT", sequelize.col("Review.id")), "numReviews"],
     // [sequelize.fn("AVG", sequelize.col("Review.stars")), "avgStarRating"]]}
-  })
-  let count = 0
-  let adder = reviews.forEach(review => {
-    count += review.stars
-  })
-  let avg = count / reviews.length
+  });
+  let count = 0;
+  let adder = reviews.forEach((review) => {
+    count += review.stars;
+  });
+  let avg = count / reviews.length;
 
   const obj = {
     Spot: {
@@ -146,23 +174,21 @@ router.get('/:spotId', async (req, res) => {
       createdAt: spot.createdAt,
       updatedAt: spot.updatedAt,
       numReviews: reviews.length,
-      avgStarRating: avg
+      avgStarRating: avg,
     },
     Users: {
       id: user.id,
       firstName: user.firstName,
-      lastName: user.lastName
+      lastName: user.lastName,
     },
-    SpotImages: spotImages
+    SpotImages: spotImages,
+  };
+  if (!spot) {
+    res.status(404).json({ message: "Spot couldn't be found" });
   }
-  if(!spot) {
-    res.status(404).json({message: "Spot couldn't be found"})
-  }
 
-  res.json(obj)
-
-
-})
+  res.json(obj);
+});
 
 // create a spot
 router.post("/", validateSpot, async (req, res) => {
@@ -184,18 +210,20 @@ router.post("/", validateSpot, async (req, res) => {
 });
 
 // delete a spot
-router.delete("/:spotId/test", async (req, res) => { //requireAuth
+router.delete("/:spotId/test", async (req, res) => {
+  //requireAuth
+
   const spot = await Spot.findByPk(req.params.spotId, {
-    where: { ownerId: req.user.id},
+    where: { ownerId: req.user.id },
   });
 
   if (!spot) {
-    return res
-      .status(404)
-      .json({ message: "Spot couldn't be found" });
+    return res.status(404).json({ message: "Spot couldn't be found" });
   }
+
   await spot.destroy();
-  return res.status(200).json({ message: "Successfully deleted" });
+
+  res.status(200).json({ message: "Successfully deleted" });
 
   // res.json(spot)
 });
@@ -228,6 +256,29 @@ router.get("/:spotId/reviews", async (req, res) => {
   }
 
   res.json(spotReviews);
+});
+
+//edit a spot
+router.put("/:spotId", requireAuth, validateSpot, async (req, res) => {
+  const { address, city, state, country, lat, lng, name, description, price } =
+    req.body;
+  let spot = await Spot.findByPk(req.params.spotId);
+  spot.update({
+    address: address,
+    city: city,
+    state: state,
+    country: country,
+    lat: lat,
+    lng: lng,
+    name: name,
+    description: description,
+    price: price,
+  });
+  if (!spot) {
+    res.status(404).json({ message: "Spot not found" });
+  }
+  await spot.save();
+  res.json(spot);
 });
 
 module.exports = router;

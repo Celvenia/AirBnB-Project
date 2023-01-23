@@ -19,7 +19,9 @@ module.exports = (sequelize, DataTypes) => {
     userId: {
       type: DataTypes.INTEGER
     },
-    spotId: DataTypes.INTEGER,
+    spotId: {
+      type: DataTypes.INTEGER,
+    onDelete: 'CASCADE'},
     startDate: DataTypes.DATE,
     endDate: DataTypes.DATE
   }, {

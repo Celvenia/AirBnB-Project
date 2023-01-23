@@ -21,7 +21,6 @@ module.exports = {
         name: 'House#1',
         description: 'This is the 1st airbnb house',
         price: 100.11,
-        avgRating: 4.1,
         previewImage: 'something1.url'
       },
       {
@@ -35,7 +34,6 @@ module.exports = {
         name: 'House#2',
         description: 'This is the 2nd airbnb house',
         price: 200,
-        avgRating: 4.2,
         previewImage: 'something2.url'
       },
       {
@@ -49,7 +47,6 @@ module.exports = {
         name: 'House#3',
         description: 'This is the 3rd airbnb house',
         price: 39.99,
-        avgRating: 3.9,
         previewImage: 'something3.url'
       },
       {
@@ -63,7 +60,6 @@ module.exports = {
         name: 'House#4',
         description: 'This is the 4th airbnb house',
         price: 400,
-        avgRating: 4.4,
         previewImage: 'something4.url'
       },
       {
@@ -77,7 +73,6 @@ module.exports = {
         name: 'House#5',
         description: 'This is the 5th airbnb house',
         price: 500,
-        avgRating: 5.0,
         previewImage: 'something5.url'
       },
 

@@ -36,10 +36,10 @@ const validateLogin = [
         return next(err);
       }
 
-      await setTokenCookie(res, user);
-
+       await setTokenCookie(res, user);
+      const token = req.cookies.token
       return res.json({
-        user: user
+        user: user, token
       });
     }
   );

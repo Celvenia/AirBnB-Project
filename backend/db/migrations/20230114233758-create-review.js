@@ -28,10 +28,12 @@ module.exports = {
         onDelete: 'CASCADE'
       },
       review: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull: false
       },
       stars: {
         type: Sequelize.INTEGER,
+        allowNull: false
       },
       createdAt: {
         allowNull: false,

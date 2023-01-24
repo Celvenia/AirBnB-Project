@@ -134,10 +134,12 @@ router.get("/:userId/reviews", requireAuth, async (req, res) => {
 
 
 // get all bookings of current user
-router.get('/:userId/bookings', async (req, res) => {
+router.get('/:userId/bookings', requireAuth, async (req, res) => {
+  let user = req.params.userId
+
   const bookings = await Booking.findAll({
     where: {
-      userId: req.user.id
+      userId: user
     },
     include: [
       {
@@ -148,8 +150,16 @@ router.get('/:userId/bookings', async (req, res) => {
       }
     ]
   })
+  if(user == req.user.id && !bookings.length) {
+    res.status(200).json({message: "Current user has no bookings"})
+  }
+  if( user != req.user.id) {
+    res.status(401).json({message: "Authentication required"})
+  }
+
   res.json({Bookings: bookings})
 })
+
 
 
 

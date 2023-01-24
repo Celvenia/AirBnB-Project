@@ -3,10 +3,11 @@ const router = express.Router();
 const bcrypt = require("bcryptjs");
 
 const { setTokenCookie, requireAuth } = require("../../utils/auth");
-const { User, Spot, Review, ReviewImage } = require("../../db/models");
+const { User, Spot, Review, ReviewImage, Booking } = require("../../db/models");
 
 const { check } = require("express-validator");
 const { handleValidationErrors } = require("../../utils/validation");
+const booking = require("../../db/models/booking");
 
 const validateSignup = [
   check("firstName")
@@ -130,5 +131,26 @@ router.get("/:userId/reviews", requireAuth, async (req, res) => {
 
   res.json({Reviews: reviews});
 });
+
+
+// get all bookings of current user
+router.get('/:userId/bookings', async (req, res) => {
+  const bookings = await Booking.findAll({
+    where: {
+      userId: req.user.id
+    },
+    include: [
+      {
+        model: Spot,
+        attributes: {
+          exclude: ['description', 'createdAt', 'updatedAt']
+        }
+      }
+    ]
+  })
+  res.json({Bookings: bookings})
+})
+
+
 
 module.exports = router;

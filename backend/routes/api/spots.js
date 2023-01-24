@@ -4,6 +4,7 @@ const router = express.Router();
 const { setTokenCookie, requireAuth } = require("../../utils/auth");
 const {
   Spot,
+  Booking,
   User,
   Review,
   SpotImage,
@@ -14,6 +15,7 @@ const {
 
 const { check } = require("express-validator");
 const { handleValidationErrors } = require("../../utils/validation");
+const booking = require("../../db/models/booking");
 
 const validateSpot = [
   check("address")
@@ -287,4 +289,122 @@ router.put("/:spotId", requireAuth, validateSpot, async (req, res) => {
   }
 });
 
+router.get('/:spotId/bookings', requireAuth, async (req, res) => {
+
+  const spot = await Spot.findByPk(req.params.spotId)
+  if(!spot) {
+    res.status(404).json({message: "Spot couldn't be found"})
+  }
+
+  const userId = req.user.id
+  const ownerId = spot.ownerId
+
+  const bookings = await Booking.findAll({
+    where: {
+      spotId: req.params.spotId
+    }
+  })
+
+  const response = []
+
+  bookings.forEach(booking =>{
+    if(ownerId == userId) {
+      response.push({
+        id: booking.id,
+        userId: booking.userId,
+        spotId: booking.spotId,
+        startDate: booking.startDate,
+        endDate: booking.endDate,
+        createdAt: booking.createdAt,
+        updatedAt: booking.updatedAt
+      })
+    } else if (ownerId != userId) {
+      response.push({
+        spotId: booking.spotId,
+        startDate: booking.startDate,
+        endDate: booking.endDate
+      })
+    }
+  })
+  if(!response.length) {
+    res.status(200).json({message: "Spot currently doesn't have any bookings"})
+  }
+  res.json({Bookings: response})
+})
+
 module.exports = router;
+
+
+/*   const bookings = await Booking.findAll({
+    where: {
+      spotId: req.params.spotId
+    },
+    include: [{
+      model: User,
+      attributes: ['id', 'firstName', 'lastName']
+    },
+    {
+      model: Spot,
+      attributes: ['ownerId'],
+      where: {ownerId: userId},
+      subQuery: false
+    }
+  ]
+  });
+  const response = []
+
+  bookings.forEach(booking => {
+    if(booking.Spot.ownerId == userId) {
+      response.push(booking)
+    } else {
+      response.push({
+        spotId: booking.spotId,
+        startDate: booking.startDate,
+        endDate: booking.endDate
+      })
+    }
+  })
+
+  // const bookings = await Booking.findAll({
+  //   where: {
+  //     spotId: req.params.spotId
+  //   },
+  //   attributes: ['spotId', 'startDate', 'endDate']
+
+
+
+
+
+  const bookings = await Spot.findAll({
+    where: {id: req.params.spotId},
+    attributes: [],
+    include: [{
+      model: Booking,
+    }]
+  })
+
+  // bookings.forEach(booking => {
+  //   if(booking.userId == userId) {
+  //     response.push(booking)
+  //   } else {
+  //     response.push({
+  //       spotId: booking.spotId,
+  //       startDate: booking.startDate,
+  //       endDate: booking.endDate
+  //     })
+  //   }
+
+
+  //   const bookings = await Spot.findAll({
+  //   where: {
+  //     id: req.params.spotId
+  //   },
+  //   attributes: [],
+  //   include: [
+  //     {
+  //       model: Booking,
+  //       attributes: ['spotId', 'startDate', 'endDate']
+  //     }
+  //   ]
+  // })
+  // }) */

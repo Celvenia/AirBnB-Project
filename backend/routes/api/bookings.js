@@ -10,7 +10,6 @@ const { check } = require("express-validator");
 const { handleValidationErrors } = require("../../utils/validation");
 
 const { Sequelize, Op } = require("sequelize");
-const booking = require("../../db/models/booking");
 
 // find all bookings
 router.get("/", async (req, res) => {

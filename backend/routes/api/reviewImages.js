@@ -22,7 +22,7 @@ router.get("/", async (req, res) => {
   res.json(reviewImages);
 });
 
-// delete review image by reviewImage id, requires user to own review
+// delete review image by id, requires user to own review
 router.delete("/:imageId", requireAuth, async (req, res) => {
   const reviewImage = await ReviewImage.findByPk(req.params.imageId);
   if (!reviewImage) {
@@ -34,8 +34,8 @@ router.delete("/:imageId", requireAuth, async (req, res) => {
       id: reviewImage.reviewId,
     },
   });
-  
-  if (review.id != req.user.id) {
+
+  if (review.userId != req.user.id) {
     res.status(403).json({ message: "Forbidden" });
   } else {
     await reviewImage.destroy();

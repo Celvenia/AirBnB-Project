@@ -48,53 +48,50 @@ router.put("/:reviewId", requireAuth, validateReview, async (req, res) => {
 });
 
 // delete a review, require authentication and authorization
-router.delete('/:reviewId',requireAuth, async (req, res) => {
-    const review = await Review.findByPk(req.params.reviewId);
-    try {
-        if (!review) {
-            res.status(403).json({message: "Review couldn't be found"})
-        } else if (review.userId != req.user.id) {
-            res.status(403).json({ message: "Forbidden" });
-        } else {
-            await review.destroy();
-            res.status(200).json({message: "Successfully deleted"})
-        }
-    } catch (err) {
-        return res.status(500).json({err: "A server error has occured"});
+router.delete("/:reviewId", requireAuth, async (req, res) => {
+  const review = await Review.findByPk(req.params.reviewId);
+  try {
+    if (!review) {
+      res.status(403).json({ message: "Review couldn't be found" });
+    } else if (review.userId != req.user.id) {
+      res.status(403).json({ message: "Forbidden" });
+    } else {
+      await review.destroy();
+      res.status(200).json({ message: "Successfully deleted" });
     }
-})
+  } catch (err) {
+    return res.status(500).json({ err: "A server error has occured" });
+  }
+});
 
 // add an image to a review
-router.post('/:reviewId/images', async (req, res) => {
-  const { url } = req.body
-  const review = await Review.findByPk(req.params.reviewId)
+router.post("/:reviewId/images", requireAuth, async (req, res) => {
+  const { url } = req.body;
+  const review = await Review.findByPk(req.params.reviewId);
   const reviewImages = await ReviewImage.findAll({
     where: {
-      reviewId: review.id
-    }
+      reviewId: review.id,
+    },
   });
-  if(!review) {
-    res.status(404).json({message: "Review couldn't be found"})
+  if (!review) {
+    res.status(404).json({ message: "Review couldn't be found" });
+  } else if (review.userId != req.user.id) {
+    res.status(403).json({ message: "Forbidden" });
   } else if (reviewImages.length >= 11) {
-    res.status(403).json({message: "Maximum number of images for this resource was reached"})
+    res.status(403).json({
+      message: "Maximum number of images for this resource was reached",
+    });
   } else {
     const reviewImage = await ReviewImage.create({
       reviewId: review.id,
-      url: url
-    })
+      url: url,
+    });
     let resObj = {
       id: reviewImage.id,
-      url: reviewImage.url
-    }
-    res.json(resObj)
+      url: reviewImage.url,
+    };
+    res.json(resObj);
   }
-
-  // {
-  //   "message": "Maximum number of images for this resource was reached",
-  //   "statusCode": 403
-  // }
-
-})
-
+});
 
 module.exports = router;

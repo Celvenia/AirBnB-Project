@@ -36,10 +36,9 @@ router.delete("/:bookingId", requireAuth, async (req, res) => {
   res.status(200).json({ message: "Successfully deleted" });
 });
 
-
 // edit booking by booking id with authorized user
 router.patch("/:bookingId", requireAuth, async (req, res) => {
-    const { startDate, endDate } = req.body;
+  const { startDate, endDate } = req.body;
 
   const currentDate = new Date();
 
@@ -47,7 +46,7 @@ router.patch("/:bookingId", requireAuth, async (req, res) => {
   let momentStart = moment(startDate);
   let momentEnd = moment(endDate);
   while (momentStart.isBefore(momentEnd) || momentStart.isSame(momentEnd)) {
-    dates.push(new Date(momentStart));
+    dates.push(moment(momentStart));
     momentStart.add(1, "days");
   }
 
@@ -60,6 +59,9 @@ router.patch("/:bookingId", requireAuth, async (req, res) => {
   const spotBookings = await Booking.findAll({
     where: {
       spotId: booking.spotId,
+      userId: {
+        [Op.ne]: req.user.id
+      }
     },
   });
   let currentBookings = [];
@@ -67,50 +69,60 @@ router.patch("/:bookingId", requireAuth, async (req, res) => {
     let momentStart = moment(spotBooking.startDate);
     let momentEnd = moment(spotBooking.endDate);
     while (momentStart.isBefore(momentEnd) || momentStart.isSame(momentEnd)) {
-      currentBookings.push(new Date(momentStart));
+      currentBookings.push(moment(momentStart));
       momentStart.add(1, "days");
     }
   });
 
-    if (!booking) {
-      res.status(404).json({ message: "Booking couldn't be found" });
-    } else if (booking.userId != req.user.id) {
-      res.status(401).json({ message: "Authentication required" });
-    } else if (startDate >= endDate) {
-      res
-        .status(400)
-        .json({
-          message: "Validation error",
-          statusCode: 400,
-          errors: ["endDate cannot come before startDate"],
-        });
-    } else if (booking.endDate <= currentDate) {
-      res.status(403).json({message: "Past bookings can't be modified"})
-    } else if (compareDates(dates, currentBookings)) {
-        res.status(403).json({message: "Sorry, this spot is already booked for the specified dates",
-    statusCode: 403,
-errors: [
-    "Start date conflicts with an existing booking",
-    "End date conflicts with an existing booking"
-]})
-    } else {
-      booking.update({
-        startDate: startDate,
-        endDate: endDate,
+  if (!booking) {
+    res.status(404).json({ message: "Booking couldn't be found" });
+  } else if (booking.userId != req.user.id) {
+    res.status(401).json({ message: "Authentication required" });
+  } else if (startDate >= endDate) {
+    res.status(400).json({
+      message: "Validation error",
+      statusCode: 400,
+      errors: ["endDate cannot come before startDate"],
+    });
+  } else if (booking.endDate <= currentDate) {
+    res.status(403).json({ message: "Past bookings can't be modified" });
+  } else if (compareDates(dates, currentBookings)) {
+    res
+      .status(403)
+      .json({
+        message: "Sorry, this spot is already booked for the specified dates",
+        statusCode: 403,
+        errors: [
+          "Start date conflicts with an existing booking",
+          "End date conflicts with an existing booking",
+        ],
       });
-      booking.save();
-    }
+  } else {
+    booking.update({
+      startDate: startDate,
+      endDate: endDate,
+    });
+    booking.save();
+  }
   res.json(booking);
 });
 
+// compares moments to see if they match
 function compareDates(arr1, arr2) {
-    let set = new Set(arr2.map(date => date.getTime()));
-    for(let i = 0; i < arr1.length; i++) {
-        if(set.has(arr1[i].getTime())) {
-            return true
-        }
+  let set = new Set()
+
+  arr2.forEach((dateString) => {
+     let dateString1 = dateString.format('YYYY-MM-DD')
+     set.add(dateString1)
+  });
+
+  for (let i = 0; i < arr1.length; i++) {
+      let dateString2 = arr1[i].format('YYYY-MM-DD')
+    if (set.has(dateString2)) {
+      return true;
     }
-    return false
+  }
+  return false;
 }
 
 module.exports = router;

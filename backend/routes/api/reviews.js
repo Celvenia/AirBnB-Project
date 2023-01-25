@@ -25,6 +25,7 @@ router.get("/", async (req, res) => {
   res.json(reviews);
 });
 
+// edit a review, require authentication and authorization
 router.put("/:reviewId", requireAuth, validateReview, async (req, res) => {
   const { review, stars } = req.body;
   const reviewToEdit = await Review.findByPk(req.params.reviewId, {
@@ -45,5 +46,23 @@ router.put("/:reviewId", requireAuth, validateReview, async (req, res) => {
   }
   return res.json(reviewToEdit);
 });
+
+// delete a review, require authentication and authorization
+router.delete('/:reviewId',requireAuth, async (req, res) => {
+    const review = await Review.findByPk(req.params.reviewId);
+    try {
+        if (!review) {
+            res.status(403).json({message: "Review couldn't be found"})
+        } else if (review.userId != req.user.id) {
+            res.status(403).json({ message: "Forbidden" });
+        } else {
+            await review.destroy();
+            res.status(200).json({message: "Successfully deleted"})
+        }
+    } catch (err) {
+        return res.status(500).json({err: "A server error has occured"});
+    }
+})
+
 
 module.exports = router;

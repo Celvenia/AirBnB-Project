@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 
 const { setTokenCookie, requireAuth } = require("../../utils/auth");
-const { Review } = require("../../db/models");
+const { Review, ReviewImage } = require("../../db/models");
 
 const { check } = require("express-validator");
 const { handleValidationErrors } = require("../../utils/validation");
@@ -62,6 +62,38 @@ router.delete('/:reviewId',requireAuth, async (req, res) => {
     } catch (err) {
         return res.status(500).json({err: "A server error has occured"});
     }
+})
+
+// add an image to a review
+router.post('/:reviewId/images', async (req, res) => {
+  const { url } = req.body
+  const review = await Review.findByPk(req.params.reviewId)
+  const reviewImages = await ReviewImage.findAll({
+    where: {
+      reviewId: review.id
+    }
+  });
+  if(!review) {
+    res.status(404).json({message: "Review couldn't be found"})
+  } else if (reviewImages.length >= 11) {
+    res.status(403).json({message: "Maximum number of images for this resource was reached"})
+  } else {
+    const reviewImage = await ReviewImage.create({
+      reviewId: review.id,
+      url: url
+    })
+    let resObj = {
+      id: reviewImage.id,
+      url: reviewImage.url
+    }
+    res.json(resObj)
+  }
+
+  // {
+  //   "message": "Maximum number of images for this resource was reached",
+  //   "statusCode": 403
+  // }
+
 })
 
 

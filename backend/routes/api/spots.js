@@ -106,9 +106,26 @@ router.get("/", async (req, res) => {
   }
 });
 
+router.get("/current", async (req, res) => {
+  const userSpots = await Spot.findAll({
+    where: {
+      ownerId: req.user.id,
+    },
+  });
+  if (!userSpots) {
+    res.status(404).json({ message: "User has no spots" });
+  }
+  res.json({ Spots: userSpots });
+});
+
 // get information from spot by id
 router.get("/:spotId", async (req, res) => {
   const spot = await Spot.findByPk(req.params.spotId);
+
+  if (!spot) {
+    res.status(404).json({ message: "Spot couldn't be found" });
+  }
+
   const user = await User.findByPk(spot.ownerId);
   const spotImages = await SpotImage.findAll({
     where: { spotId: req.params.spotId },
@@ -123,36 +140,31 @@ router.get("/:spotId", async (req, res) => {
   });
   let avg = count / reviews.length;
 
-  const obj = {
-    Spot: {
-      id: spot.id,
-      ownerId: spot.ownerId,
-      address: spot.address,
-      city: spot.city,
-      state: spot.state,
-      country: spot.country,
-      lat: spot.lat,
-      lng: spot.lng,
-      name: spot.name,
-      description: spot.description,
-      price: spot.price,
-      createdAt: spot.createdAt,
-      updatedAt: spot.updatedAt,
-      numReviews: reviews.length,
-      avgStarRating: avg,
-    },
-    Users: {
+  const resObj = {
+    id: spot.id,
+    ownerId: spot.ownerId,
+    address: spot.address,
+    city: spot.city,
+    state: spot.state,
+    country: spot.country,
+    lat: spot.lat,
+    lng: spot.lng,
+    name: spot.name,
+    description: spot.description,
+    price: spot.price,
+    createdAt: spot.createdAt,
+    updatedAt: spot.updatedAt,
+    numReviews: reviews.length,
+    avgStarRating: avg,
+    Owner: {
       id: user.id,
       firstName: user.firstName,
       lastName: user.lastName,
     },
     SpotImages: spotImages,
   };
-  if (!spot) {
-    res.status(404).json({ message: "Spot couldn't be found" });
-  }
 
-  res.json(obj);
+  res.json(resObj);
 });
 
 // create a spot
@@ -169,6 +181,13 @@ router.post("/", validateSpot, async (req, res, next) => {
       description,
       price,
     } = req.body;
+
+    // const allSpots = await Spot.findAll({
+    //   where: {
+    //     att
+    //   }
+    // })
+
     const newSpot = await Spot.create({
       ownerId: req.user.id,
       address,
@@ -181,7 +200,8 @@ router.post("/", validateSpot, async (req, res, next) => {
       description,
       price,
     });
-    res.status(201).json({ message: "Successfully created", data: newSpot });
+    // res.status(201).json({ message: "Successfully created", newSpot: newSpot });
+    res.status(201).json(newSpot)
   } catch (err) {
     res.status(500).json({ message: "Server error" });
   }
@@ -316,6 +336,7 @@ router.get("/:spotId/bookings", requireAuth, async (req, res) => {
   res.json({ Bookings: response });
 });
 
+//add an image to a spot based on spot id
 router.post("/:spotId/images", requireAuth, async (req, res) => {
   const { url, preview } = req.body;
   const spot = await Spot.findByPk(req.params.spotId);
@@ -402,7 +423,7 @@ router.post(
     }
 
     let currentBookings = [];
-    spotBookings.forEach(spotBooking => {
+    spotBookings.forEach((spotBooking) => {
       let momentStart = moment(spotBooking.startDate);
       let momentEnd = moment(spotBooking.endDate);
       while (momentStart.isBefore(momentEnd) || momentStart.isSame(momentEnd)) {
@@ -448,15 +469,15 @@ router.post(
 
 // compares moments to see if they match
 function compareDates(arr1, arr2) {
-  let set = new Set()
+  let set = new Set();
 
   arr2.forEach((dateString) => {
-     let dateString1 = dateString.format('YYYY-MM-DD')
-     set.add(dateString1)
+    let dateString1 = dateString.format("YYYY-MM-DD");
+    set.add(dateString1);
   });
 
   for (let i = 0; i < arr1.length; i++) {
-      let dateString2 = arr1[i].format('YYYY-MM-DD')
+    let dateString2 = arr1[i].format("YYYY-MM-DD");
     if (set.has(dateString2)) {
       return true;
     }

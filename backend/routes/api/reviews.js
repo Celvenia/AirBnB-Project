@@ -2,7 +2,15 @@ const express = require("express");
 const router = express.Router();
 
 const { setTokenCookie, requireAuth } = require("../../utils/auth");
-const { Review, ReviewImage } = require("../../db/models");
+const {
+  Spot,
+  Booking,
+  User,
+  Review,
+  SpotImage,
+  ReviewImage,
+  sequelize,
+} = require("../../db/models");
 
 const { check } = require("express-validator");
 const { handleValidationErrors } = require("../../utils/validation");
@@ -92,6 +100,44 @@ router.post("/:reviewId/images", requireAuth, async (req, res) => {
     };
     res.json(resObj);
   }
+});
+
+// get all reviews of current user
+router.get("/current", requireAuth, async (req, res) => {
+  const reviews = await Review.findAll({
+    where: { userId: req.user.id },
+    include: [
+      {
+        model: User,
+        attributes: ["id", "firstName", "lastName"],
+      },
+      {
+        model: Spot,
+        attributes: [
+          "id",
+          "ownerId",
+          "address",
+          "city",
+          "state",
+          "country",
+          "lat",
+          "lng",
+          "name",
+          "price",
+          "previewImage",
+        ],
+      },
+      {
+        model: ReviewImage,
+        attributes: ["id", "url"],
+      },
+    ],
+  });
+  // if (req.params.userId != req.user.id) {
+  //   return res.status(401).json({ message: "Authentication required" });
+  // }
+
+  res.json({ Reviews: reviews });
 });
 
 module.exports = router;

@@ -4,7 +4,15 @@ const router = express.Router();
 const moment = require("moment");
 
 const { setTokenCookie, requireAuth } = require("../../utils/auth");
-const { Booking, Owner } = require("../../db/models");
+const {
+  Spot,
+  Booking,
+  User,
+  Review,
+  SpotImage,
+  ReviewImage,
+  sequelize,
+} = require("../../db/models");
 
 const { check } = require("express-validator");
 const { handleValidationErrors } = require("../../utils/validation");
@@ -37,7 +45,7 @@ router.delete("/:bookingId", requireAuth, async (req, res) => {
 });
 
 // edit booking by booking id with authorized user
-router.patch("/:bookingId", requireAuth, async (req, res) => {
+router.put("/:bookingId", requireAuth, async (req, res) => {
   const { startDate, endDate } = req.body;
 
   const currentDate = new Date();
@@ -55,13 +63,15 @@ router.patch("/:bookingId", requireAuth, async (req, res) => {
       userId: req.user.id,
     },
   });
-
+  if (!booking) {
+    return res.status(404).json({ message: "Booking couldn't be found" });
+  }
   const spotBookings = await Booking.findAll({
     where: {
       spotId: booking.spotId,
       userId: {
-        [Op.ne]: req.user.id
-      }
+        [Op.ne]: req.user.id,
+      },
     },
   });
   let currentBookings = [];
@@ -74,29 +84,25 @@ router.patch("/:bookingId", requireAuth, async (req, res) => {
     }
   });
 
-  if (!booking) {
-    res.status(404).json({ message: "Booking couldn't be found" });
-  } else if (booking.userId != req.user.id) {
-    res.status(401).json({ message: "Authentication required" });
+  if (booking.userId != req.user.id) {
+    return res.status(401).json({ message: "Authentication required" });
   } else if (startDate >= endDate) {
-    res.status(400).json({
+    return res.status(400).json({
       message: "Validation error",
       statusCode: 400,
       errors: ["endDate cannot come before startDate"],
     });
   } else if (booking.endDate <= currentDate) {
-    res.status(403).json({ message: "Past bookings can't be modified" });
+    return res.status(403).json({ message: "Past bookings can't be modified" });
   } else if (compareDates(dates, currentBookings)) {
-    res
-      .status(403)
-      .json({
-        message: "Sorry, this spot is already booked for the specified dates",
-        statusCode: 403,
-        errors: [
-          "Start date conflicts with an existing booking",
-          "End date conflicts with an existing booking",
-        ],
-      });
+    return res.status(403).json({
+      message: "Sorry, this spot is already booked for the specified dates",
+      statusCode: 403,
+      errors: [
+        "Start date conflicts with an existing booking",
+        "End date conflicts with an existing booking",
+      ],
+    });
   } else {
     booking.update({
       startDate: startDate,
@@ -109,20 +115,47 @@ router.patch("/:bookingId", requireAuth, async (req, res) => {
 
 // compares moments to see if they match
 function compareDates(arr1, arr2) {
-  let set = new Set()
+  let set = new Set();
 
   arr2.forEach((dateString) => {
-     let dateString1 = dateString.format('YYYY-MM-DD')
-     set.add(dateString1)
+    let dateString1 = dateString.format("YYYY-MM-DD");
+    set.add(dateString1);
   });
 
   for (let i = 0; i < arr1.length; i++) {
-      let dateString2 = arr1[i].format('YYYY-MM-DD')
+    let dateString2 = arr1[i].format("YYYY-MM-DD");
     if (set.has(dateString2)) {
       return true;
     }
   }
   return false;
 }
+
+// get all bookings of current user
+router.get("/current", requireAuth, async (req, res) => {
+  let user = req.user.id;
+
+  const bookings = await Booking.findAll({
+    where: {
+      userId: user,
+    },
+    include: [
+      {
+        model: Spot,
+        attributes: {
+          exclude: ["description", "createdAt", "updatedAt"],
+        },
+      },
+    ],
+  });
+  if (user == req.user.id && !bookings.length) {
+    res.status(200).json({ message: "Current user has no bookings" });
+  }
+  if (user != req.user.id) {
+    res.status(401).json({ message: "Authentication required" });
+  }
+
+  res.json({ Bookings: bookings });
+});
 
 module.exports = router;

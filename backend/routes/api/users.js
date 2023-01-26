@@ -5,21 +5,21 @@ const bcrypt = require("bcryptjs");
 const { setTokenCookie, requireAuth } = require("../../utils/auth");
 const { User, Spot, Review, ReviewImage, Booking } = require("../../db/models");
 
-const { check } = require("express-validator");
+const { check, cookie } = require("express-validator");
 const { handleValidationErrors } = require("../../utils/validation");
 const booking = require("../../db/models/booking");
+
+const { Sequelize, Op } = require("sequelize");
 
 const validateSignup = [
   check("firstName")
     .exists({ checkFalsy: true })
-    .not()
-    .isEmail()
-    .withMessage("Please provide a valid first name."),
+    .withMessage("First Name is required"),
+    check("firstName").not().isEmail().withMessage("firstName cannot be an email."),
   check("lastName")
     .exists({ checkFalsy: true })
-    .not()
-    .isEmail()
-    .withMessage("Please provide a valid last name."),
+    .withMessage("Last Name is required"),
+    check("lastName").not().isEmail().withMessage("lastName cannot be an email."),
   check("email")
     .exists({ checkFalsy: true })
     .isEmail()
@@ -44,9 +44,38 @@ router.get("/", async (req, res) => {
   res.json(users);
 });
 
-//sign up
+// Sign Up a User
 router.post("/", validateSignup, async (req, res) => {
   const { firstName, lastName, email, password, username } = req.body;
+
+  if(!firstName) {
+    res.status
+  }
+
+  const currentUsers = await User.findAll({
+    attributes: {
+      include: ["email", "username"],
+    },
+  });
+  currentUsers.forEach((user) => {
+    if (user.email == email) {
+      return res.status(403).json({
+        message: "User already exists",
+        statusCode: 403,
+        errors: {
+          email: "User with that email already exists",
+        },
+      });
+    } else if (user.username == username) {
+      return res.status(403).json({
+        message: "User already exists",
+        statusCode: 403,
+        errors: {
+          email: "User with that username already exists",
+        },
+      });
+    }
+  });
   const user = await User.signup({
     firstName,
     lastName,
@@ -57,22 +86,18 @@ router.post("/", validateSignup, async (req, res) => {
 
   await setTokenCookie(res, user);
 
-  return res.json({
-    user: user,
-  });
+  // let resObj = {
+  //   id: user.id,
+  //   firstName: user.firstName,
+  //   lastName: user.lastName,
+  //   email: user.email,
+  //   username: user.username,
+  //   token: token
+  // }
+  // return res.json(user);
+  return res.json(user)
 });
 
-router.get("/:userId/spots", async (req, res) => {
-  const userSpots = await Spot.findAll({
-    where: {
-      ownerId: req.user.id,
-    },
-  });
-  if (!userSpots) {
-    res.status(404).json({ message: "User has no spots" });
-  }
-  res.json({ Spots: userSpots });
-});
 
 router.get("/current", requireAuth, async (req, res) => {
   try {
@@ -93,72 +118,6 @@ router.get("/current", requireAuth, async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 });
-
-// get all reviews of current user
-router.get("/:userId/reviews", requireAuth, async (req, res) => {
-  const reviews = await Review.findAll({
-    where: { userId: req.params.userId },
-    include: [
-      {
-        model: User,
-        attributes: ["id", "firstName", "lastName"],
-      },
-      {
-        model: Spot,
-        attributes: [
-          "id",
-          "ownerId",
-          "address",
-          "city",
-          "state",
-          "country",
-          "lat",
-          "lng",
-          "name",
-          "price",
-          "previewImage",
-        ],
-      },
-      {
-        model: ReviewImage,
-        attributes: ["id", "url"],
-      },
-    ],
-  });
-  if (req.params.userId != req.user.id) {
-    return res.status(401).json({ message: "Authentication required" });
-  }
-
-  res.json({Reviews: reviews});
-});
-
-
-// get all bookings of current user
-router.get('/:userId/bookings', requireAuth, async (req, res) => {
-  let user = req.params.userId
-
-  const bookings = await Booking.findAll({
-    where: {
-      userId: user
-    },
-    include: [
-      {
-        model: Spot,
-        attributes: {
-          exclude: ['description', 'createdAt', 'updatedAt']
-        }
-      }
-    ]
-  })
-  if(user == req.user.id && !bookings.length) {
-    res.status(200).json({message: "Current user has no bookings"})
-  }
-  if( user != req.user.id) {
-    res.status(401).json({message: "Authentication required"})
-  }
-
-  res.json({Bookings: bookings})
-})
 
 
 

@@ -76,17 +76,18 @@ router.delete("/:reviewId", requireAuth, async (req, res) => {
 router.post("/:reviewId/images", requireAuth, async (req, res) => {
   const { url } = req.body;
   const review = await Review.findByPk(req.params.reviewId);
+  if (!review) {
+    return res.status(404).json({ message: "Review couldn't be found" });
+  }
   const reviewImages = await ReviewImage.findAll({
     where: {
       reviewId: review.id,
     },
   });
-  if (!review) {
-    res.status(404).json({ message: "Review couldn't be found" });
-  } else if (review.userId != req.user.id) {
-    res.status(403).json({ message: "Forbidden" });
+  if (review.userId != req.user.id) {
+    return res.status(403).json({ message: "Forbidden" });
   } else if (reviewImages.length >= 11) {
-    res.status(403).json({
+    return res.status(403).json({
       message: "Maximum number of images for this resource was reached",
     });
   } else {
@@ -98,7 +99,7 @@ router.post("/:reviewId/images", requireAuth, async (req, res) => {
       id: reviewImage.id,
       url: reviewImage.url,
     };
-    res.json(resObj);
+    return res.json(resObj);
   }
 });
 

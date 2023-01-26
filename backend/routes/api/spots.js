@@ -18,6 +18,7 @@ const {
 const { check } = require("express-validator");
 const { handleValidationErrors } = require("../../utils/validation");
 const booking = require("../../db/models/booking");
+const { response } = require("express");
 
 const validateSpot = [
   check("address")
@@ -73,37 +74,65 @@ const validateBooking = [
 
 // get all spots
 router.get("/", async (req, res) => {
-  try {
-    const spots = await Spot.findAll({
-      attributes: [
-        "id",
-        "ownerId",
-        "address",
-        "city",
-        "state",
-        "country",
-        "lat",
-        "lng",
-        "name",
-        "description",
-        "price",
-        "createdAt",
-        "updatedAt",
-        "previewImage",
-        [sequelize.fn("AVG", sequelize.col("Reviews.stars")), "avgRating"],
-      ],
-      include: [
-        {
-          model: Review,
-          attributes: [],
-        },
-      ],
-      group: ["Spot.id"],
+  let { page, size } = req.query;
+  page = parseInt(page);
+  size = parseInt(size);
+  if (Number.isNaN(page) || page < 0) page = 1;
+  if (Number.isNaN(size) || size < 0) size = 1;
+
+  const spots = await Spot.findAll({
+    include: {
+      model: Review,
+      attributes: ["stars"],
+    },
+    limit: size,
+    offset: size * (page - 1),
+  });
+  let response = [];
+  spots.forEach((spot) => {
+    let reviews = spot.Reviews;
+    // spot.dataValues.numReviews = reviews.length
+    let stars = 0;
+    if (reviews) {
+      reviews.forEach((review) => {
+        stars += review.stars;
+      });
+    }
+    const {
+      id,
+      ownerId,
+      address,
+      city,
+      state,
+      country,
+      lat,
+      lng,
+      name,
+      description,
+      price,
+      createdAt,
+      updatedAt,
+      previewImage,
+    } = spot;
+    response.push({
+      id,
+      ownerId,
+      address,
+      city,
+      state,
+      country,
+      lat,
+      lng,
+      name,
+      description,
+      price,
+      createdAt,
+      updatedAt,
+      avgRating: stars / reviews.length || "no reviews for this spot",
+      previewImage,
     });
-    res.json(spots);
-  } catch (err) {
-    res.status(500).json({ message: "Server error" });
-  }
+  });
+  res.json({ Spots: response });
 });
 
 router.get("/current", async (req, res) => {
@@ -201,7 +230,7 @@ router.post("/", validateSpot, async (req, res, next) => {
       price,
     });
     // res.status(201).json({ message: "Successfully created", newSpot: newSpot });
-    res.status(201).json(newSpot)
+    res.status(201).json(newSpot);
   } catch (err) {
     res.status(500).json({ message: "Server error" });
   }
@@ -269,7 +298,11 @@ router.put("/:spotId", requireAuth, validateSpot, async (req, res) => {
       price,
     } = req.body;
 
-    let spot = await Spot.findByPk(req.params.spotId);
+    let spot = await Spot.findByPk(req.params.spotId, {
+      attributes: {
+        exclude: ['previewImage']
+      }
+    });
     if (req.user.id !== spot.ownerId) {
       res.status(401).json({ message: "Authentication required" });
     }

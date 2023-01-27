@@ -72,13 +72,25 @@ const validateBooking = [
   handleValidationErrors,
 ];
 
+// const validateQuery = [
+//   check("page") .withMessage("Page must be greater than or equal to 1"),
+//   check("size") .withMessage("Size must be greater than or equal to 1"),
+//   check("maxLat") .withMessage("Maximum latitude is invalid"),
+//   check("minLat") .withMessage("Minimum latitude is invalid"),
+//   check("minLng") .withMessage("Maximum longitude is invalid"),
+//   check("maxLng") .withMessage("Minimum longitude is invalid"),
+//   check("minPrice") .withMessage("Maximum price must be greater than or equal to 0"),
+//   check("maxPrice") .withMessage("Minimum price must be greater than or equal to 0")
+// ]
+
 // get all spots
 router.get("/", async (req, res) => {
   let { page, size } = req.query;
   page = parseInt(page);
   size = parseInt(size);
   if (Number.isNaN(page) || page < 0) page = 1;
-  if (Number.isNaN(size) || size < 0) size = 1;
+  if (Number.isNaN(size) || size < 0) size = 20;
+  if (size > 20) size = 20
 
   const spots = await Spot.findAll({
     include: {
@@ -338,6 +350,9 @@ router.get("/:spotId/bookings", requireAuth, async (req, res) => {
     where: {
       spotId: req.params.spotId,
     },
+    include: {
+      model: User
+    }
   });
 
   const response = [];
@@ -348,16 +363,21 @@ router.get("/:spotId/bookings", requireAuth, async (req, res) => {
         id: booking.id,
         userId: booking.userId,
         spotId: booking.spotId,
-        startDate: booking.startDate,
-        endDate: booking.endDate,
+        startDate: booking.startDate.toISOString().slice(0,10),
+        endDate: booking.endDate.toISOString().slice(0,10),
         createdAt: booking.createdAt,
         updatedAt: booking.updatedAt,
+        User: {
+          id: booking.User.dataValues.id,
+          firstName: booking.User.dataValues.firstName,
+          lastName: booking.User.dataValues.lastName
+        }
       });
     } else if (ownerId != userId) {
       response.push({
         spotId: booking.spotId,
-        startDate: booking.startDate,
-        endDate: booking.endDate,
+        startDate: booking.startDate.toISOString().slice(0,10),
+        endDate: booking.endDate.toISOString().slice(0,10),
       });
     }
   });
@@ -495,7 +515,16 @@ router.post(
         startDate: startDate,
         endDate: endDate,
       });
-      res.json(booking);
+      const response = {
+        id: booking.id,
+        spotId: booking.spotId,
+        userId: booking.userId,
+        startDate: booking.startDate.toISOString().slice(0,10),
+        endDate: booking.endDate.toISOString().slice(0,10),
+        createdAt: booking.createdAt,
+        updatedAt: booking.updatedAt
+      }
+      res.json(response);
     }
   }
 );

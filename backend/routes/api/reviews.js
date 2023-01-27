@@ -79,28 +79,39 @@ router.post("/:reviewId/images", requireAuth, async (req, res) => {
   if (!review) {
     return res.status(404).json({ message: "Review couldn't be found" });
   }
+  if (review.userId != req.user.id) {
+    return res.status(403).json({ message: "Forbidden" });
+  }
   const reviewImages = await ReviewImage.findAll({
     where: {
       reviewId: review.id,
     },
   });
-  if (review.userId != req.user.id) {
-    return res.status(403).json({ message: "Forbidden" });
-  } else if (reviewImages.length >= 11) {
+  if (reviewImages.length >= 10) {
     return res.status(403).json({
       message: "Maximum number of images for this resource was reached",
     });
   } else {
-    const reviewImage = await ReviewImage.create({
-      reviewId: review.id,
-      url: url,
-    });
+
+  }
+  const reviewImage = await ReviewImage.build({
+    reviewId: review.id,
+    url: url,
+  });
+  if (review.userId != req.user.id) {
+    return res.status(403).json({ message: "Forbidden" });
+  }
+    // const reviewImage = await ReviewImage.build({
+    //   reviewId: review.id,
+    //   url: url,
+    // });
+    await reviewImage.save()
     let resObj = {
       id: reviewImage.id,
       url: reviewImage.url,
     };
-    return res.json(resObj);
-  }
+    // return res.json(resObj);
+    return res.json(reviewImages)
 });
 
 // get all reviews of current user

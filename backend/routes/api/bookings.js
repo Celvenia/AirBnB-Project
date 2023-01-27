@@ -133,6 +133,9 @@ function compareDates(arr1, arr2) {
 
 // get all bookings of current user
 router.get("/current", requireAuth, async (req, res) => {
+  if (!req.user.id) {
+    return res.status(401).json({ message: "Authentication required" });
+  }
   let user = req.user.id;
 
   const bookings = await Booking.findAll({
@@ -148,14 +151,37 @@ router.get("/current", requireAuth, async (req, res) => {
       },
     ],
   });
-  if (user == req.user.id && !bookings.length) {
+  if (!bookings.length) {
     res.status(200).json({ message: "Current user has no bookings" });
   }
-  if (user != req.user.id) {
-    res.status(401).json({ message: "Authentication required" });
-  }
 
-  res.json({ Bookings: bookings });
+  let response = []
+
+  bookings.forEach(booking => {
+    response.push({
+      id: booking.id,
+      userId: booking.userId,
+      spotId: booking.spotId,
+      startDate: booking.startDate.toISOString().slice(0,10),
+      endDate: booking.endDate.toISOString().slice(0,10),
+      createdAt: booking.createdAt,
+      updatedAt: booking.updatedAt,
+      Spot: {
+          id: booking.Spot.dataValues.id,
+          ownerId: booking.Spot.dataValues.ownerId,
+          address: booking.Spot.dataValues.address,
+          city: booking.Spot.dataValues.city,
+          state: booking.Spot.dataValues.state,
+          country: booking.Spot.dataValues.country,
+          lat: booking.Spot.dataValues.lat,
+          lng: booking.Spot.dataValues.lng,
+          name: booking.Spot.dataValues.name,
+          price: booking.Spot.dataValues.price,
+          previewImage: booking.Spot.dataValues.previewImage
+      }
+      })
+  })
+  res.json({ Bookings: response });
 });
 
 module.exports = router;

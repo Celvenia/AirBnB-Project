@@ -9,8 +9,8 @@ const {
 module.exports = (sequelize, DataTypes) => {
   class Spot extends Model {
     toSafeObject() {
-      const {id, ownerId, address, city, state, country, lat, lng, name, description, price, avgRating, previewImage } = this
-      return {id, ownerId, address, city, state, country, lat, lng, name, description, price, avgRating, previewImage }
+      const {id, ownerId, address, city, state, country, lat, lng, name, description, price, avgRating} = this
+      return {id, ownerId, address, city, state, country, lat, lng, name, description, price, avgRating}
     }
 
     /**
@@ -39,7 +39,6 @@ module.exports = (sequelize, DataTypes) => {
     name: DataTypes.STRING,
     description: DataTypes.STRING,
     price: DataTypes.DECIMAL,
-    previewImage: DataTypes.STRING 
   }, {
     sequelize,
     modelName: 'Spot',

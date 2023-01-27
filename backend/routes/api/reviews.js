@@ -101,17 +101,13 @@ router.post("/:reviewId/images", requireAuth, async (req, res) => {
   if (review.userId != req.user.id) {
     return res.status(403).json({ message: "Forbidden" });
   }
-    // const reviewImage = await ReviewImage.build({
-    //   reviewId: review.id,
-    //   url: url,
-    // });
     await reviewImage.save()
     let resObj = {
       id: reviewImage.id,
       url: reviewImage.url,
     };
-    // return res.json(resObj);
-    return res.json(reviewImages)
+    return res.json(resObj);
+    // return res.json(reviewImage)
 });
 
 // get all reviews of current user
@@ -125,19 +121,11 @@ router.get("/current", requireAuth, async (req, res) => {
       },
       {
         model: Spot,
-        attributes: [
-          "id",
-          "ownerId",
-          "address",
-          "city",
-          "state",
-          "country",
-          "lat",
-          "lng",
-          "name",
-          "price",
-          "previewImage",
-        ],
+        attributes: {
+          include:
+          [[sequelize.literal(`(SELECT url FROM ReviewImages WHERE reviewId = Review.id AND preview = true)`),`previewImage`]],
+          exclude: ['createdAt', 'updatedAt']
+      }
       },
       {
         model: ReviewImage,

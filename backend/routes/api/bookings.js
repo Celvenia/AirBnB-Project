@@ -131,33 +131,36 @@ function compareDates(arr1, arr2) {
   return false;
 }
 
-// get all bookings of current user
+
+
+// get all of the Current User's Bookings
 router.get("/current", requireAuth, async (req, res) => {
-  if (!req.user.id) {
-    return res.status(401).json({ message: "Authentication required" });
-  }
-  let user = req.user.id;
+  // if (!req.user.id) {
+  //   return res.status(401).json({ message: "Authentication required", statusCode: 401 });
+  // }
 
   const bookings = await Booking.findAll({
     where: {
-      userId: user,
+      userId: req.user.id
     },
     include: [
       {
         model: Spot,
         attributes: {
+          include: [[sequelize.literal(`(SELECT url FROM SpotImages WHERE spotId = Spot.id AND preview = true)`),`previewImage`]],
           exclude: ["description", "createdAt", "updatedAt"],
         },
       },
     ],
   });
   if (!bookings.length) {
-    res.status(200).json({ message: "Current user has no bookings" });
+    return res.status(200).json({ message: "Current user has no bookings" });
   }
 
-  let response = []
+      let response = []
 
-  bookings.forEach(booking => {
+      bookings.forEach(booking => {
+
     response.push({
       id: booking.id,
       userId: booking.userId,
@@ -182,6 +185,8 @@ router.get("/current", requireAuth, async (req, res) => {
       })
   })
   res.json({ Bookings: response });
+  // res.json(bookings)
+  // res.json(spotImages)
 });
 
 module.exports = router;

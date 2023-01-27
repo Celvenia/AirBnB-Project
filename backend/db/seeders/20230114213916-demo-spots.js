@@ -21,7 +21,6 @@ module.exports = {
         name: 'House#1',
         description: 'This is the 1st airbnb house',
         price: 100.11,
-        previewImage: 'something1.url'
       },
       {
         ownerId: 2,
@@ -34,7 +33,6 @@ module.exports = {
         name: 'House#2',
         description: 'This is the 2nd airbnb house',
         price: 200,
-        previewImage: 'something2.url'
       },
       {
         ownerId: 3,
@@ -47,7 +45,6 @@ module.exports = {
         name: 'House#3',
         description: 'This is the 3rd airbnb house',
         price: 39.99,
-        previewImage: 'something3.url'
       },
       {
         ownerId: 4,
@@ -60,7 +57,6 @@ module.exports = {
         name: 'House#4',
         description: 'This is the 4th airbnb house',
         price: 400,
-        previewImage: 'something4.url'
       },
       {
         ownerId: 5,
@@ -73,7 +69,6 @@ module.exports = {
         name: 'House#5',
         description: 'This is the 5th airbnb house',
         price: 500,
-        previewImage: 'something5.url'
       },
 
     ], {});
@@ -82,14 +77,6 @@ module.exports = {
   down: async (queryInterface, Sequelize) => {
     options.tableName = 'Spots';
     const Op = Sequelize.Op;
-    return queryInterface.bulkDelete(options, {
-      // address: { [Op.in]: [
-      //   '123 Wonder Blvd.',
-      //   '210 Batcave Pl.',
-      //   '321 Flash Dr.',
-      //   '432 Mandalorian Way.',
-      //   '543 SupermanLois Ln.'] }
-      id: { [Op.in]: [1,2,3,4,5]}
-    }, {});
+    return queryInterface.bulkDelete(options, null, {});
   }
 };

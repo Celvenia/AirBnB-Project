@@ -13,7 +13,7 @@ const {
   ReviewImage,
   sequelize,
 } = require("../../db/models");
-const {Op} = require('sequelize')
+const { Op, where } = require("sequelize");
 
 const { check } = require("express-validator");
 const { handleValidationErrors } = require("../../utils/validation");
@@ -73,30 +73,64 @@ const validateBooking = [
 ];
 
 const validateQuery = [
-  check("page").if(check("page").exists()).isInt({ min: 1 }).withMessage("Page must be greater than or equal to 1"),
-  check("size").if(check("size").exists()).isInt({ min: 1 }).withMessage("Size must be greater than or equal to 1"),
-  check("maxLat").if(check("maxLat").exists()).isFloat({min: -90, max: 90}).withMessage("Maximum latitude is invalid"),
-  check("minLat").if(check("minLat").exists()).isFloat({min: -90, max: 90}).withMessage("Minimum latitude is invalid"),
-  check("minLng").if(check("minLng").exists()).isFloat({min: -180, max: 180}).withMessage("Maximum longitude is invalid"),
-  check("maxLng").if(check("maxLng").exists()).isFloat({min: -180, max: 180}).withMessage("Minimum longitude is invalid"),
-  check("minPrice").if(check("minPrice").exists()).isFloat({min: 0}).withMessage("Maximum price must be greater than or equal to 0"),
-  check("maxPrice").if(check("maxPrice").exists()).isFloat({min: 0}).withMessage("Minimum price must be greater than or equal to 0"),
-  handleValidationErrors
-]
+  check("page")
+    .if(check("page").exists())
+    .isInt({ min: 1 })
+    .withMessage("Page must be greater than or equal to 1"),
+  check("size")
+    .if(check("size").exists())
+    .isInt({ min: 1 })
+    .withMessage("Size must be greater than or equal to 1"),
+  check("maxLat")
+    .if(check("maxLat").exists())
+    .isFloat({ min: -90, max: 90 })
+    .withMessage("Maximum latitude is invalid"),
+  check("minLat")
+    .if(check("minLat").exists())
+    .isFloat({ min: -90, max: 90 })
+    .withMessage("Minimum latitude is invalid"),
+  check("minLng")
+    .if(check("minLng").exists())
+    .isFloat({ min: -180, max: 180 })
+    .withMessage("Maximum longitude is invalid"),
+  check("maxLng")
+    .if(check("maxLng").exists())
+    .isFloat({ min: -180, max: 180 })
+    .withMessage("Minimum longitude is invalid"),
+  check("minPrice")
+    .if(check("minPrice").exists())
+    .isFloat({ min: 0 })
+    .withMessage("Maximum price must be greater than or equal to 0"),
+  check("maxPrice")
+    .if(check("maxPrice").exists())
+    .isFloat({ min: 0 })
+    .withMessage("Minimum price must be greater than or equal to 0"),
+  handleValidationErrors,
+];
 
 // get all spots
 router.get("/", validateQuery, async (req, res) => {
-  let { page, size, maxLat, minLat, minLng, maxLng, minPrice, maxPrice } = req.query;
+  let { page, size, maxLat, minLat, minLng, maxLng, minPrice, maxPrice } =
+    req.query;
+
+  let where = {};
 
   page = parseInt(page);
   size = parseInt(size);
   if (Number.isNaN(page) || page < 0) page = 1;
   if (Number.isNaN(size) || size < 0 || size > 20) size = 20;
+  if (maxLng) where.lng = { [Op.lte]: maxLng };
+  if (minLng) where.lng = { [Op.gte]: minLng };
+  if (maxLat) where.lat = { [Op.gte]: maxLat };
+  if (minLat) where.lat = { [Op.lte]: minLat };
+  if (minPrice) where.price = { [Op.gte]: minPrice };
+  if (maxPrice) where.price = { [Op.lte]: maxPrice };
+
+  // where.limit = size
+  // where.offset = size * (page -1)
 
   const spots = await Spot.findAll({
-    // where: {
-    //   lng: {[Op.lt]: maxLng}
-    // },
+    where,
     include: {
       model: Review,
       attributes: ["stars"],
@@ -104,6 +138,7 @@ router.get("/", validateQuery, async (req, res) => {
     limit: size,
     offset: size * (page - 1),
   });
+
   let response = [];
   spots.forEach((spot) => {
     let reviews = spot.Reviews;
@@ -149,6 +184,7 @@ router.get("/", validateQuery, async (req, res) => {
     });
   });
   res.json({ Spots: response });
+  // res.json(spots)
 });
 
 router.get("/current", async (req, res) => {
@@ -214,32 +250,23 @@ router.get("/:spotId", async (req, res) => {
 
 // create a spot
 router.post("/", validateSpot, async (req, res, next) => {
-    const {
-      address,
-      city,
-      state,
-      country,
-      lat,
-      lng,
-      name,
-      description,
-      price,
-    } = req.body;
+  const { address, city, state, country, lat, lng, name, description, price } =
+    req.body;
 
-    const newSpot = await Spot.create({
-      ownerId: req.user.id,
-      address,
-      city,
-      state,
-      country,
-      lat,
-      lng,
-      name,
-      description,
-      price,
-    });
-    // res.status(201).json({ message: "Successfully created", newSpot: newSpot });
-    res.status(201).json(newSpot);
+  const newSpot = await Spot.create({
+    ownerId: req.user.id,
+    address,
+    city,
+    state,
+    country,
+    lat,
+    lng,
+    name,
+    description,
+    price,
+  });
+  // res.status(201).json({ message: "Successfully created", newSpot: newSpot });
+  res.status(201).json(newSpot);
 });
 
 // delete a spot
@@ -306,8 +333,8 @@ router.put("/:spotId", requireAuth, validateSpot, async (req, res) => {
 
     let spot = await Spot.findByPk(req.params.spotId, {
       attributes: {
-        exclude: ['previewImage']
-      }
+        exclude: ["previewImage"],
+      },
     });
     if (req.user.id !== spot.ownerId) {
       res.status(401).json({ message: "Authentication required" });
@@ -345,8 +372,8 @@ router.get("/:spotId/bookings", requireAuth, async (req, res) => {
       spotId: req.params.spotId,
     },
     include: {
-      model: User
-    }
+      model: User,
+    },
   });
 
   const response = [];
@@ -357,21 +384,21 @@ router.get("/:spotId/bookings", requireAuth, async (req, res) => {
         id: booking.id,
         userId: booking.userId,
         spotId: booking.spotId,
-        startDate: booking.startDate.toISOString().slice(0,10),
-        endDate: booking.endDate.toISOString().slice(0,10),
+        startDate: booking.startDate.toISOString().slice(0, 10),
+        endDate: booking.endDate.toISOString().slice(0, 10),
         createdAt: booking.createdAt,
         updatedAt: booking.updatedAt,
         User: {
           id: booking.User.dataValues.id,
           firstName: booking.User.dataValues.firstName,
-          lastName: booking.User.dataValues.lastName
-        }
+          lastName: booking.User.dataValues.lastName,
+        },
       });
     } else if (ownerId != userId) {
       response.push({
         spotId: booking.spotId,
-        startDate: booking.startDate.toISOString().slice(0,10),
-        endDate: booking.endDate.toISOString().slice(0,10),
+        startDate: booking.startDate.toISOString().slice(0, 10),
+        endDate: booking.endDate.toISOString().slice(0, 10),
       });
     }
   });
@@ -483,18 +510,20 @@ router.post(
       res.status(404).json({ message: "Spot couldn't be found" });
     } else if (spot.ownerId == req.user.id) {
       return res
-        .status(400)
-        .json({ message: "Owner unable to make bookings on their spot" });
+        .status(403)
+        .json({
+          message: "Forbidden, Owner unable to make bookings on their spot",
+        });
     } else if (moment(startDate).isBefore(moment(today))) {
-      res.status(400).json({ message: "Unable to make bookings in the past" });
+      return res.status(400).json({ message: "Unable to make bookings in the past" });
     } else if (startDate >= endDate) {
-      res.status(400).json({
+      return res.status(400).json({
         message: "Validation error",
         statusCode: 400,
         errors: ["endDate cannot come before startDate"],
       });
     } else if (compareDates(bookingDates, currentBookings)) {
-      res.status(403).json({
+      return res.status(403).json({
         message: "Sorry, this spot is already booked for the specified dates",
         statusCode: 403,
         errors: [
@@ -513,11 +542,11 @@ router.post(
         id: booking.id,
         spotId: booking.spotId,
         userId: booking.userId,
-        startDate: booking.startDate.toISOString().slice(0,10),
-        endDate: booking.endDate.toISOString().slice(0,10),
+        startDate: booking.startDate.toISOString().slice(0, 10),
+        endDate: booking.endDate.toISOString().slice(0, 10),
         createdAt: booking.createdAt,
-        updatedAt: booking.updatedAt
-      }
+        updatedAt: booking.updatedAt,
+      };
       res.json(response);
     }
   }

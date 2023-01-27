@@ -13,7 +13,7 @@ const {
   ReviewImage,
   sequelize,
 } = require("../../db/models");
-// const {sequelize} = require('sequelize')
+const {Op} = require('sequelize')
 
 const { check } = require("express-validator");
 const { handleValidationErrors } = require("../../utils/validation");
@@ -72,27 +72,31 @@ const validateBooking = [
   handleValidationErrors,
 ];
 
-// const validateQuery = [
-//   check("page") .withMessage("Page must be greater than or equal to 1"),
-//   check("size") .withMessage("Size must be greater than or equal to 1"),
-//   check("maxLat") .withMessage("Maximum latitude is invalid"),
-//   check("minLat") .withMessage("Minimum latitude is invalid"),
-//   check("minLng") .withMessage("Maximum longitude is invalid"),
-//   check("maxLng") .withMessage("Minimum longitude is invalid"),
-//   check("minPrice") .withMessage("Maximum price must be greater than or equal to 0"),
-//   check("maxPrice") .withMessage("Minimum price must be greater than or equal to 0")
-// ]
+const validateQuery = [
+  check("page").if(check("page").exists()).isInt({ min: 1 }).withMessage("Page must be greater than or equal to 1"),
+  check("size").if(check("size").exists()).isInt({ min: 1 }).withMessage("Size must be greater than or equal to 1"),
+  check("maxLat").if(check("maxLat").exists()).isFloat({min: -90, max: 90}).withMessage("Maximum latitude is invalid"),
+  check("minLat").if(check("minLat").exists()).isFloat({min: -90, max: 90}).withMessage("Minimum latitude is invalid"),
+  check("minLng").if(check("minLng").exists()).isFloat({min: -180, max: 180}).withMessage("Maximum longitude is invalid"),
+  check("maxLng").if(check("maxLng").exists()).isFloat({min: -180, max: 180}).withMessage("Minimum longitude is invalid"),
+  check("minPrice").if(check("minPrice").exists()).isFloat({min: 0}).withMessage("Maximum price must be greater than or equal to 0"),
+  check("maxPrice").if(check("maxPrice").exists()).isFloat({min: 0}).withMessage("Minimum price must be greater than or equal to 0"),
+  handleValidationErrors
+]
 
 // get all spots
-router.get("/", async (req, res) => {
-  let { page, size } = req.query;
+router.get("/", validateQuery, async (req, res) => {
+  let { page, size, maxLat, minLat, minLng, maxLng, minPrice, maxPrice } = req.query;
+
   page = parseInt(page);
   size = parseInt(size);
   if (Number.isNaN(page) || page < 0) page = 1;
-  if (Number.isNaN(size) || size < 0) size = 20;
-  if (size > 20) size = 20
+  if (Number.isNaN(size) || size < 0 || size > 20) size = 20;
 
   const spots = await Spot.findAll({
+    // where: {
+    //   lng: {[Op.lt]: maxLng}
+    // },
     include: {
       model: Review,
       attributes: ["stars"],
@@ -210,7 +214,6 @@ router.get("/:spotId", async (req, res) => {
 
 // create a spot
 router.post("/", validateSpot, async (req, res, next) => {
-  try {
     const {
       address,
       city,
@@ -222,12 +225,6 @@ router.post("/", validateSpot, async (req, res, next) => {
       description,
       price,
     } = req.body;
-
-    // const allSpots = await Spot.findAll({
-    //   where: {
-    //     att
-    //   }
-    // })
 
     const newSpot = await Spot.create({
       ownerId: req.user.id,
@@ -243,9 +240,6 @@ router.post("/", validateSpot, async (req, res, next) => {
     });
     // res.status(201).json({ message: "Successfully created", newSpot: newSpot });
     res.status(201).json(newSpot);
-  } catch (err) {
-    res.status(500).json({ message: "Server error" });
-  }
 });
 
 // delete a spot

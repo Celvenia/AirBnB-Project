@@ -191,8 +191,8 @@ router.get("/", validateQuery, async (req, res) => {
       previewImage: spot.dataValues.previewImage || false
     });
   });
-  res.json({ Spots: response });
-  res.json(spots)
+  res.json({ Spots: response, page, size });
+  // res.json(spots)
 });
 
 router.get("/current", async (req, res) => {

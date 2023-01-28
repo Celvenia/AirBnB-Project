@@ -2,7 +2,7 @@
 
 ## Database Schema Design
 
-![](https://res.cloudinary.com/dtzv3fsas/image/upload/v1673404821/AirBnB_2_f2ac32.png)
+![](https://res.cloudinary.com/dtzv3fsas/image/upload/v1674910701/AirBnB_3_aiv0vn.png)
 
 
 ## API Documentation

@@ -188,7 +188,7 @@ router.get("/", validateQuery, async (req, res) => {
       createdAt,
       updatedAt,
       avgRating: stars / reviews.length || "no reviews for this spot",
-      previewImage: spot.dataValues.previewImage
+      previewImage: spot.dataValues.previewImage || false
     });
   });
   res.json({ Spots: response });
@@ -249,7 +249,7 @@ router.get("/:spotId", async (req, res) => {
     createdAt: spot.createdAt,
     updatedAt: spot.updatedAt,
     numReviews: reviews.length,
-    avgStarRating: avg,
+    avgStarRating: avg || "no ratings for this spot",
     Owner: {
       id: user.id,
       firstName: user.firstName,

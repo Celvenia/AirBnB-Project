@@ -11,8 +11,8 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Booking.belongsTo(models.Spot, {foreignKey: 'id', onDelete: 'CASCADE'})
-      Booking.belongsTo(models.User, {foreignKey: 'id', onDelete: 'CASCADE'})
+      Booking.belongsTo(models.Spot, {foreignKey: 'spotId', onDelete: 'CASCADE'})
+      Booking.belongsTo(models.User, {foreignKey: 'userId', onDelete: 'CASCADE'})
     }
   }
   Booking.init({
@@ -21,7 +21,8 @@ module.exports = (sequelize, DataTypes) => {
     },
     spotId: {
       type: DataTypes.INTEGER,
-    onDelete: 'CASCADE'},
+    onDelete: 'CASCADE'
+  },
     startDate: DataTypes.DATE,
     endDate: DataTypes.DATE
   }, {

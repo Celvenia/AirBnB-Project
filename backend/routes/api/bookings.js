@@ -157,7 +157,6 @@ router.get("/current", requireAuth, async (req, res) => {
       let response = []
 
       bookings.forEach(booking => {
-d
 
     response.push({
       id: booking.id,
@@ -165,20 +164,20 @@ d
       spotId: booking.spotId,
       startDate: booking.startDate.toISOString().slice(0,10),
       endDate: booking.endDate.toISOString().slice(0,10),
-      createdAt: created,
-      updatedAt: updated,
+      createdAt: booking.createdAt,
+      updatedAt: booking.updatedAt,
       Spot: {
-          id: booking.Spot.dataValues.id,
-          ownerId: booking.Spot.dataValues.ownerId,
-          address: booking.Spot.dataValues.address,
-          city: booking.Spot.dataValues.city,
-          state: booking.Spot.dataValues.state,
-          country: booking.Spot.dataValues.country,
-          lat: booking.Spot.dataValues.lat,
-          lng: booking.Spot.dataValues.lng,
-          name: booking.Spot.dataValues.name,
-          price: booking.Spot.dataValues.price,
-          previewImage: booking.Spot.dataValues.previewImage
+          id: booking.Spot.id,
+          ownerId: booking.Spot.ownerId,
+          address: booking.Spot.address,
+          city: booking.Spot.city,
+          state: booking.Spot.state,
+          country: booking.Spot.country,
+          lat: booking.Spot.lat,
+          lng: booking.Spot.lng,
+          name: booking.Spot.name,
+          price: booking.Spot.price,
+          previewImage: booking.Spot.previewImage || null
       }
       })
   })

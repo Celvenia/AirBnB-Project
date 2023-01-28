@@ -15,11 +15,11 @@ module.exports = {
         type: Sequelize.INTEGER,
       },
       firstName: {
-        type: Sequelize.STRING,
+        type: Sequelize.STRING(30),
         allowNull: false
       },
       lastName: {
-        type: Sequelize.STRING,
+        type: Sequelize.STRING(30),
         allowNull: false
       },
       username: {
@@ -28,7 +28,7 @@ module.exports = {
         unique: true
       },
       email: {
-        type: Sequelize.STRING(256),
+        type: Sequelize.STRING(50),
         allowNull: false,
         unique: true
       },

@@ -111,6 +111,7 @@ router.post("/:reviewId/images", requireAuth, async (req, res) => {
 
     return res.json(resObj);
   }
+
 });
 
 // get all reviews of current user

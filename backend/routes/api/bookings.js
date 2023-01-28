@@ -144,7 +144,6 @@ router.get("/current", requireAuth, async (req, res) => {
       {
         model: Spot,
         attributes: {
-          include: [[sequelize.literal(`(SELECT url FROM SpotImages WHERE spotId = Spot.id AND preview = true)`),`previewImage`]],
           exclude: ["description", "createdAt", "updatedAt"],
         },
       },
@@ -153,11 +152,24 @@ router.get("/current", requireAuth, async (req, res) => {
   if (!bookings.length) {
     return res.status(200).json({ message: "Current user has no bookings", statusCode: 200 });
   }
-
-      let response = []
+  let response = []
+  for await(let booking of bookings) {
+      const image = await SpotImage.findOne({
+        where: {
+          spotId: booking.Spot.id,
+          preview: true
+        }
+      })
+      if(image) {
+        booking.Spot.dataValues.previewImage = image.url
+      } else {
+        booking.Spot.dataValues.previewImage = 'No preview image'
+      }
+  }
 
       bookings.forEach(booking => {
 
+      
     response.push({
       id: booking.id,
       userId: booking.userId,
@@ -177,7 +189,7 @@ router.get("/current", requireAuth, async (req, res) => {
           lng: booking.Spot.lng,
           name: booking.Spot.name,
           price: booking.Spot.price,
-          previewImage: booking.Spot.previewImage || null
+          previewImage: booking.Spot.dataValues.previewImage
       }
       })
   })

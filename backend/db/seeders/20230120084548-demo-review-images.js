@@ -25,18 +25,30 @@ module.exports = {
       url: 'something3.url',
       preview: true
     },
-    // {
-    //   reviewId: 2,
-    //   url: 'something4.url',
-    // },
-    // {
-    //   reviewId: 2,
-    //   url: 'something5.url',
-    // },
-    // {
-    //   reviewId: 2,
-    //   url: 'something6.url',
-    // },
+    {
+      reviewId: 2,
+      url: 'something4.url',
+    },
+    {
+      reviewId: 3,
+      url: 'something5.url',
+    },
+    {
+      reviewId: 4,
+      url: 'something6.url',
+    },
+    {
+      reviewId: 5,
+      url: 'something6.url',
+    },
+    {
+      reviewId: 6,
+      url: 'something6.url',
+    },
+    {
+      reviewId: 7,
+      url: 'something6.url',
+    },
 
   ], {});
 },

@@ -115,7 +115,7 @@ router.get("/current", requireAuth, async (req, res) => {
     };
     res.json(userObj);
   } catch (err) {
-    res.status(500).json({ message: "Server error" });
+    res.status(500).json({ message: "Server error", statusCode: 500 });
   }
 });
 

@@ -37,10 +37,23 @@ module.exports = {
       },
       {
         userId: 2,
-        spotId: 2,
+        spotId: 3,
+        startDate: new Date(2023, 8, 3), //  September 03 2023
+        endDate: new Date(2023, 8, 4), //    September 04 2023
+      },
+      {
+        userId: 2,
+        spotId: 4,
+        startDate: new Date(2023, 8, 3), //  September 03 2023
+        endDate: new Date(2023, 8, 4), //    September 04 2023
+      },
+      {
+        userId: 2,
+        spotId: 5,
         startDate: new Date(2023, 8, 3), //  September 03 2023
         endDate: new Date(2023, 8, 4), //    September 04 2023
       }
+
     ], {});
   },
 

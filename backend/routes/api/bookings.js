@@ -31,17 +31,17 @@ router.delete("/:bookingId", requireAuth, async (req, res) => {
   const bookingToDelete = await Booking.findByPk(req.params.bookingId);
 
   if (!bookingToDelete) {
-    res.status(403).json({ message: "Booking couldn't be found" });
+    res.status(403).json({ message: "Booking couldn't be found", statusCode: 404 });
   } else if (bookingToDelete.userId != req.user.id) {
-    res.status(401).json({ message: "Authentication required" });
+    res.status(401).json({ message: "Authentication required", statusCode: 401 });
   } else if (bookingToDelete.startDate <= currentDate) {
     //  && currentDate <= bookingToDelete.endDate (to delete past bookings)
     res
       .status(403)
-      .json({ message: "Bookings that have been started can't be deleted" });
+      .json({ message: "Bookings that have been started can't be deleted", statusCode: 403 });
   } else bookingToDelete.destroy();
 
-  res.status(200).json({ message: "Successfully deleted" });
+  res.status(200).json({ message: "Successfully deleted", statusCode: 200 });
 });
 
 // edit booking by booking id with authorized user
@@ -64,7 +64,7 @@ router.put("/:bookingId", requireAuth, async (req, res) => {
     },
   });
   if (!booking) {
-    return res.status(404).json({ message: "Booking couldn't be found" });
+    return res.status(404).json({ message: "Booking couldn't be found", statusCode: 404 });
   }
   const spotBookings = await Booking.findAll({
     where: {
@@ -85,7 +85,7 @@ router.put("/:bookingId", requireAuth, async (req, res) => {
   });
 
   if (booking.userId != req.user.id) {
-    return res.status(401).json({ message: "Authentication required" });
+    return res.status(401).json({ message: "Authentication required", statusCode: 401 });
   } else if (startDate >= endDate) {
     return res.status(400).json({
       message: "Validation error",
@@ -93,7 +93,7 @@ router.put("/:bookingId", requireAuth, async (req, res) => {
       errors: ["endDate cannot come before startDate"],
     });
   } else if (booking.endDate <= currentDate) {
-    return res.status(403).json({ message: "Past bookings can't be modified" });
+    return res.status(403).json({ message: "Past bookings can't be modified", statusCode: 403 });
   } else if (compareDates(dates, currentBookings)) {
     return res.status(403).json({
       message: "Sorry, this spot is already booked for the specified dates",
@@ -135,9 +135,6 @@ function compareDates(arr1, arr2) {
 
 // get all of the Current User's Bookings
 router.get("/current", requireAuth, async (req, res) => {
-  // if (!req.user.id) {
-  //   return res.status(401).json({ message: "Authentication required", statusCode: 401 });
-  // }
 
   const bookings = await Booking.findAll({
     where: {
@@ -154,12 +151,13 @@ router.get("/current", requireAuth, async (req, res) => {
     ],
   });
   if (!bookings.length) {
-    return res.status(200).json({ message: "Current user has no bookings" });
+    return res.status(200).json({ message: "Current user has no bookings", statusCode: 200 });
   }
 
       let response = []
 
       bookings.forEach(booking => {
+d
 
     response.push({
       id: booking.id,
@@ -167,8 +165,8 @@ router.get("/current", requireAuth, async (req, res) => {
       spotId: booking.spotId,
       startDate: booking.startDate.toISOString().slice(0,10),
       endDate: booking.endDate.toISOString().slice(0,10),
-      createdAt: booking.createdAt,
-      updatedAt: booking.updatedAt,
+      createdAt: created,
+      updatedAt: updated,
       Spot: {
           id: booking.Spot.dataValues.id,
           ownerId: booking.Spot.dataValues.ownerId,

@@ -46,13 +46,12 @@ module.exports = {
       review: 'this place is super',
       stars: 5
     },
-
-  //  {
-  //     userId: 1,
-  //     spotId: 1,
-  //     review: 'so cozy, will definitely be back',
-  //     stars: 4
-  //   }
+   {
+      userId: 1,
+      spotId: 4,
+      review: 'so cozy, will definitely be back',
+      stars: 4
+    }
 
   ], {});
 },

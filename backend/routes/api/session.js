@@ -28,11 +28,10 @@ const validateLogin = [
       const user = await User.login({ credential, password });
 
       if (!user) {
-        const err = new Error('Login failed');
-        err.status = 401;
-        err.title = 'Login failed';
-        err.errors = validateLogin
-        err.errors = ['Invalid credentials'];
+        res.json({
+          message: "Invalid credentials",
+          statusCode: 401
+      })
         return next(err);
       }
 
@@ -61,7 +60,7 @@ router.get(
       const { user } = req;
       if (user) {
         return res.json(
-          user.toSafeObject()
+          {user:user.toSafeObject()}
         );
       } else return res.json({ user: null });
     }

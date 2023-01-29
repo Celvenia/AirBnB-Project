@@ -36,7 +36,7 @@ router.delete("/:imageId", requireAuth, async (req, res) => {
   });
 
   if (review.userId != req.user.id) {
-    res.status(403).json({ message: "Forbidden" });
+    res.status(403).json({ message: "Forbidden", statusCode: 403 });
   } else {
     await reviewImage.destroy();
     res.status(200).json({ message: "Successfully deleted", statusCode: 200 });

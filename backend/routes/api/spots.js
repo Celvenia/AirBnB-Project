@@ -158,7 +158,7 @@ router.get("/", validateQuery, async (req, res) => {
       spot.dataValues.avgStarRating = 0;
     }
   }
-  res.json({ Spot: spots, page, size });
+  res.json({ Spots: spots, page, size });
 });
 
 // get current users spots

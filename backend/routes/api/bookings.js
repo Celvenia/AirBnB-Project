@@ -110,7 +110,16 @@ router.put("/:bookingId", requireAuth, async (req, res) => {
     });
     booking.save();
   }
-  res.json(booking);
+  let response = {
+    id: booking.id,
+    userId: booking.userId,
+    spotId: booking.spotId,
+    startDate: booking.startDate.toISOString().slice(0, 10),
+    endDate: booking.endDate.toISOString().slice(0,10),
+    createdAt: booking.createdAt.toISOString().replace('T', ' ').replace('Z', '').slice(0, 19),
+    updatedAt: booking.updatedAt.toISOString().replace('T', ' ').replace('Z', '').slice(0, 19)
+  }
+  res.json(response);
 });
 
 // compares moments to see if they match
@@ -169,7 +178,7 @@ router.get("/current", requireAuth, async (req, res) => {
 
       bookings.forEach(booking => {
 
-      
+
     response.push({
       id: booking.id,
       userId: booking.userId,

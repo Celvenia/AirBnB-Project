@@ -20,16 +20,12 @@ router.use("/reviews", reviewsRouter);
 router.use("/bookings", bookingsRouter);
 router.use("/review-images", reviewImagesRouter);
 router.use("/spot-images", spotImagesRouter)
-
-router.post("/test", (req, res) => {
-  res.json({ requestBody: req.body });
-});
-
 module.exports = router;
 
-router.post("/test", function (req, res) {
-  res.json({ requestBody: req.body });
-});
+
+// router.post("/test", function (req, res) {
+//   res.json({ requestBody: req.body });
+// });
 
 // const { User } = require('../../db/models');
 // const { setTokenCookie } = require('../../utils/auth.js');

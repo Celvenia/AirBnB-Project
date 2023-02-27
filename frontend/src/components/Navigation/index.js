@@ -5,6 +5,7 @@ import { useSelector } from 'react-redux';
 import ProfileButton from './ProfileButton';
 import AirbnbIcon from '../AirbnbIcon'
 import './Navigation.css';
+import Spots from '../Spots';
 
 function Navigation({ isLoaded }){
   const sessionUser = useSelector(state => state.session.user);
@@ -12,6 +13,7 @@ function Navigation({ isLoaded }){
   return (
     <div className='header_navigation'>
       <AirbnbIcon />
+      <Spots />
     <ul>
       <li>
         <NavLink exact to="/">Home</NavLink>

@@ -13,7 +13,6 @@ function Navigation({ isLoaded }){
   return (
     <div className='header_navigation'>
       <AirbnbIcon />
-      <Spots />
     <ul>
       <li>
         <NavLink exact to="/">Home</NavLink>

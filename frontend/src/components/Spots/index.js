@@ -16,7 +16,6 @@ const Spots = () => {
 
   return (
     <main className="spot_cards">
-      {/* {!spotsArr.length && <span>No listing available right now.</span>} */}
 
       {spotsArr.length && spotsArr.map((spot) => (
         <div>{spot.id}</div>

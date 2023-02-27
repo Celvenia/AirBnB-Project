@@ -2,8 +2,8 @@ import { csrfFetch } from "./csrf";
 
 
 // constant variables for action creator
-const ADD_SPOT = '/spots/ADD_SPOT'
 const LOAD_SPOTS = '/spots/LOAD_SPOTS'
+const ADD_SPOT = '/spots/ADD_SPOT'
 
 
 // action creators - define actions( objects with type/data )
@@ -15,8 +15,10 @@ const loadSpots = (spots) => ({
 // thunk action creators - for asynchronous code, i.e fetch calls prior to dispatching action creators
 export const getSpots = () => async (dispatch) => {
     const res = await csrfFetch('/api/spots');
-    const spots = await res.json();
-    dispatch(loadSpots(spots))
+    if(res.ok) {
+        const spots = await res.json();
+        dispatch(loadSpots(spots))
+    }
 }
 
 const initialState = {}

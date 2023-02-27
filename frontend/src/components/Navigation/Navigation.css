@@ -1,3 +1,7 @@
 .hidden {
     display: none;
 }
+.header_navigation {
+    display: flex;
+    justify-content: space-between;
+}

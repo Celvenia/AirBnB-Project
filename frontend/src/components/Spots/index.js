@@ -29,10 +29,10 @@ const Spots = () => {
           />
           <div className="spot_card_text">
             {spot.city}, {spot.state}
+            {/* <br /> */}
+            {/* lat/lng: {spot.lat},{spot.lng} */}
             <br />
-            miles away
-            <br />
-            ${spot.price}
+            ${spot.price} night
           </div>
         </div>
       ))}

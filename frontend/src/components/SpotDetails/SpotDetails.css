@@ -1,0 +1,36 @@
+/* main {
+    max-width: 1000px;
+} */
+.spot_detail_header {
+    display: flex;
+    justify-content: space-between;
+}
+
+.spot_detail_header_info {
+    display: flex;
+    justify-content: space-between;
+}
+
+.spot_detail_header_info > span{
+    display: flex;
+    padding: 5px;
+}
+
+.spot_detail_header_info > span:nth-child(3) {
+    text-decoration: underline;
+    font-weight: 200;
+}
+
+.image_container {
+    display: grid;
+    /* grid-template-areas:
+    "img1 . ."
+    "img1 . ."; */
+}
+
+.image_container > img {
+    width: 100%;
+    /* width: 510px;
+    height: 410px;
+    grid-area: img1; */
+}

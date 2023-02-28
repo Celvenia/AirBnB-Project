@@ -52,9 +52,11 @@ const spotReducer = (state = initialState, action) => {
     case LOAD_A_SPOT: {
       const newState = { ...state};
       // newState.spots = {}
-      newState.spots[action.spot.id] = action.spot
+      // newState.spots[action.spot.id] = action.spot
       // console.log('testing', {...newState.spots, ...action.spot})
-        return newState
+      //   return {...newState, ...action.spot}
+      // return newState;
+      return {...newState, [action.spot.id]: action.spot}
     }
     default:
       return state;

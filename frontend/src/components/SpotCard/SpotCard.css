@@ -13,21 +13,26 @@
   transition: 0.2s ease-in-out;
 }
 .spot_card:hover {
-  filter: brightness(90%)
+  filter: brightness(90%);
 }
 
 .spot_card_text {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
   color: black;
 }
 
-.spot_card_price {
-  text-decoration: solid;
+.address {
+  display: flex;
+  justify-content: space-between;
+  font-weight: 700;
 }
 
+.address > span {
+  font-weight: 100;
+}
+
+
 .spot_card_image {
-  /* object-fit: contain; */
   height: 200px;
   overflow: hidden;
 }

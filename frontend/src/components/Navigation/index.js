@@ -12,11 +12,10 @@ function Navigation({ isLoaded }){
 
   return (
     <div className='header_navigation'>
+        <NavLink exact to="/">
       <AirbnbIcon />
+        </NavLink>
     <ul>
-      <li>
-        <NavLink exact to="/">Home</NavLink>
-      </li>
       {isLoaded && (
         <li>
           <ProfileButton user={sessionUser} />

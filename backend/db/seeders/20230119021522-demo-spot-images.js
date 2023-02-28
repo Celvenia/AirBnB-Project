@@ -12,27 +12,27 @@ module.exports = {
     return queryInterface.bulkInsert(options, [
       {
         spotId: 1,
-        url: 'test.url',
+        url: 'https://res.cloudinary.com/dtzv3fsas/image/upload/v1677581893/medium_gzyzbb.jpg',
         preview: true,
       },
       {
         spotId: 2,
-        url: 'test2.url',
+        url: 'https://res.cloudinary.com/dtzv3fsas/image/upload/v1677581891/5762e39f91058424008c987a_suiu83.jpg',
         preview: true,
       },
       {
         spotId: 3,
-        url: 'test3.url',
+        url: 'https://res.cloudinary.com/dtzv3fsas/image/upload/v1677581891/62598f30-cb03-43ef-b80e-9d0d5b28ac51_ehm46u.jpg',
         preview: true,
       },
       {
         spotId: 4,
-        url: 'test4.url',
+        url: 'https://res.cloudinary.com/dtzv3fsas/image/upload/v1677581890/050719_airbnbluxe_s00nfs.jpg',
         preview: true,
       },
       {
         spotId: 5,
-        url: 'test5.url',
+        url: 'https://res.cloudinary.com/dtzv3fsas/image/upload/v1677581890/cliff-top-residence1-1100x733_h2dejd.jpg',
         preview: true,
       },
     ], {})

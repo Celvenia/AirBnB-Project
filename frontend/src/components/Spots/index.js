@@ -1,53 +1,37 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { NavLink } from "react-router-dom";
 import { getSpots } from "../../store/spots";
-// import SpotCard from "../SpotCard";
+import SpotCard from "../SpotCard";
 import "./Spots.css";
 
 const Spots = () => {
   const dispatch = useDispatch();
   const spotsArr = useSelector((state) => Object.values(state.spots));
 
-  // console.log(spotsArr)
+  console.log(spotsArr);
 
   useEffect(() => {
     dispatch(getSpots());
+    return () => {}
   }, [dispatch]);
 
-  if(!spotsArr.length) {
-    return <div>Loading...</div>
+  if (!spotsArr.length) {
+    return <div>Loading...</div>;
   }
 
   return (
     <main className="spot_cards">
-      {spotsArr.map((spot) => (
-        // <SpotCard  spot={spot} key={spot.id} />
-        <div className="spot_card" key={spot.id}>
-          <img
-            src="https://wallpapercave.com/wp/wp7113919.jpg"
-            alt="home_image"
-          />
-          <div className="spot_card_text">
-            {spot.city}, {spot.state}
-            {/* <br /> */}
-            {/* lat/lng: {spot.lat},{spot.lng} */}
-            <br />
-            ${spot.price} night
+      {spotsArr.length &&
+        spotsArr.map((spot) => (
+          <div className='spot_card_container' key={spot.id}>
+          <NavLink to={`/spots/${spot.id}`} className='nav_link'>
+            <SpotCard spot={spot} />
+          </NavLink>
           </div>
-        </div>
-      ))}
+        ))}
     </main>
   );
 };
-
-/* return (
- <main className="spot_cards">
-
-      {spotsArr.length ? spotsArr.forEach((spot) => (
-        <SpotCard  spot={spot} key={spot.id} />
-       )) : <div>Loading...</div>}
-
-     </main>
-   ); */
 
 export default Spots;

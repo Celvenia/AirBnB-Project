@@ -18,12 +18,13 @@ function App() {
       <Navigation isLoaded={isLoaded} />
       {isLoaded && (
         <Switch>
-          <Route exact path='/'>
+          <Route exact path="/">
             <Spots />
           </Route>
-          {/* <Route path = '/spots/:spotId'>
+          <Route path="/spots/:spotId">
             <SpotDetails />
-          </Route> */}
+          </Route>
+          <Route>404 Path Not Found</Route>
         </Switch>
       )}
     </>

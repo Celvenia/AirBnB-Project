@@ -2,7 +2,7 @@ import './AirbnbIcon.css'
 
 const AirbnbIcon = () => {
   return (
-    <div className="Icon">
+    <div title='this is a test' className="Icon">
 
       <img
         className="header_airbnb_icon"

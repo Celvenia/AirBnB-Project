@@ -1,7 +1,9 @@
+/* defines toggle between active and hidden */
 .hidden {
     display: none;
 }
 
+/* side by side elements spaced */
 .header_navigation {
     display: flex;
     justify-content: space-between;
@@ -10,4 +12,9 @@
 /* remove li dots */
 ul {
     list-style: none;
+}
+
+/* mouseover button, cursor becomes pointer */
+button {
+    cursor: pointer;
 }

@@ -1,6 +1,6 @@
 // frontend/src/components/Navigation/index.js
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useHistory } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import ProfileButton from './ProfileButton';
 import AirbnbIcon from '../AirbnbIcon'
@@ -9,12 +9,18 @@ import Spots from '../Spots';
 
 function Navigation({ isLoaded }){
   const sessionUser = useSelector(state => state.session.user);
+  const history = useHistory()
+
+  const handleClick = () => {
+    history.push('/')
+  }
 
   return (
     <div className='header_navigation'>
-        <NavLink exact to="/">
+        <div onClick={handleClick}>
       <AirbnbIcon />
-        </NavLink>
+        </div>
+
     <ul>
       {isLoaded && (
         <li>

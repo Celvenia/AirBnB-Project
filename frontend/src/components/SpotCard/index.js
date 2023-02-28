@@ -1,19 +1,21 @@
+import "./SpotCard.css";
 
-// const SpotCard = ({id, city, state, lat, lng, price}) => {
-//     console.log(id, city, state, lat, lng, price)
-//     return (
-//         <div className="spot_card" key={id}>
-//         <img src='https://wallpapercave.com/wp/wp7113919.jpg' />
-//       <div className="spot_card_text">
-//         {city}, {state}
-//         <br />
-//         {/* {lat}, {lng} */}
-//         miles away
-//         <br />
-//         ${price}
-//       </div>
-//     </div>
-//      );
-// }
+const SpotCard = ({ spot: { city, state, price, name, previewImage } }) => {
 
-// export default SpotCard;
+  const address = `${city}, ${state}`
+  return (
+    <div className="spot_card" title={`${name}`}>
+      <div className="spot_card_image">
+        <img src={previewImage} alt="home image" />
+      </div>
+      <div className="spot_card_text">
+        {address}
+        <br />
+        miles away
+        <br />${price}
+      </div>
+    </div>
+  );
+};
+
+export default SpotCard;

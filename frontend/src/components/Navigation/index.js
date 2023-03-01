@@ -1,34 +1,36 @@
 // frontend/src/components/Navigation/index.js
-import React from 'react';
-import { NavLink, useHistory } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-import ProfileButton from './ProfileButton';
-import AirbnbIcon from '../AirbnbIcon'
-import './Navigation.css';
-import Spots from '../Spots';
+import React from "react";
+import { NavLink, useHistory } from "react-router-dom";
+import { useSelector } from "react-redux";
+import ProfileButton from "./ProfileButton";
+import AirbnbIcon from "../AirbnbIcon";
+import "./Navigation.css";
+import Spots from "../Spots";
 
-function Navigation({ isLoaded }){
-  const sessionUser = useSelector(state => state.session.user);
-  const history = useHistory()
+function Navigation({ isLoaded }) {
+  const sessionUser = useSelector((state) => state.session.user);
+  const history = useHistory();
 
   const handleClick = () => {
-    history.push('/')
-  }
+    history.push("/");
+  };
 
   return (
-    <div className='header_navigation'>
+    <div className="header_navigation">
+      <div className="header_content">
         <div onClick={handleClick}>
-      <AirbnbIcon />
+          <AirbnbIcon />
         </div>
 
-    <ul>
-      {isLoaded && (
-        <li>
-          <ProfileButton user={sessionUser} />
-        </li>
-      )}
-    </ul>
+        <ul>
+          {isLoaded && (
+            <li>
+              <ProfileButton user={sessionUser} />
+            </li>
+          )}
+        </ul>
       </div>
+    </div>
   );
 }
 

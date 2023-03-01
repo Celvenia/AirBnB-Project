@@ -1,7 +1,6 @@
 // frontend/src/store/session.js
 import { csrfFetch } from "./csrf";
 
-
 // actions as variables
 const SET_USER = "session/setUser";
 const REMOVE_USER = "session/removeUser";
@@ -71,7 +70,6 @@ export const signup = (user) => async (dispatch) => {
 
 // initial state
 const initialState = { user: null };
-
 
 // reducer for session
 const sessionReducer = (state = initialState, action) => {

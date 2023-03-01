@@ -1,20 +1,30 @@
 /* defines toggle between active and hidden */
 .hidden {
-    display: none;
+  display: none;
 }
 
 /* side by side elements spaced */
 .header_navigation {
+  position: fixed;
+  top: 0;
+  background-color: #fff;
+  z-index: 999;
+  width: 100%;
+}
+.header_content {
     display: flex;
     justify-content: space-between;
 }
-
 /* remove li dots */
 ul {
-    list-style: none;
+  list-style: none;
 }
 
 /* mouseover button, cursor becomes pointer */
 button {
+    margin-right: 20px;
+}
+button:hover {
     cursor: pointer;
+    filter: brightness(80%);
 }

@@ -1,6 +1,5 @@
 import { csrfFetch } from "./csrf";
 
-
 // constant variables for action creator
 const LOAD_SPOTS = "/spots/LOAD_SPOTS";
 const LOAD_A_SPOT = "/spots/LOAD_A_SPOT";
@@ -50,13 +49,8 @@ const spotReducer = (state = initialState, action) => {
       return newState;
     }
     case LOAD_A_SPOT: {
-      const newState = { ...state};
-      // newState.spots = {}
-      // newState.spots[action.spot.id] = action.spot
-      // console.log('testing', {...newState.spots, ...action.spot})
-      //   return {...newState, ...action.spot}
-      // return newState;
-      return {...newState, [action.spot.id]: action.spot}
+      const newState = { ...state };
+      return { ...newState, [action.spot.id]: action.spot };
     }
     default:
       return state;

@@ -13,7 +13,7 @@ const Spots = () => {
 
   useEffect(() => {
     dispatch(getSpots());
-    return () => {}
+    return () => {};
   }, [dispatch]);
 
   if (!spotsArr.length) {
@@ -24,10 +24,10 @@ const Spots = () => {
     <main className="spot_cards">
       {spotsArr.length &&
         spotsArr.map((spot) => (
-          <div className='spot_card_container' key={spot.id}>
-          <NavLink to={`/spots/${spot.id}`} className='nav_link'>
-            <SpotCard spot={spot} />
-          </NavLink>
+          <div className="spot_card_container" key={spot.id}>
+            <NavLink to={`/spots/${spot.id}`} className="nav_link">
+              <SpotCard spot={spot} />
+            </NavLink>
           </div>
         ))}
     </main>

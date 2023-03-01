@@ -1,4 +1,3 @@
-
 import React, { useRef, useState, useContext } from "react";
 import ReactDOM from "react-dom"; // to use ReactDOM.createPortal function
 import "./Modal.css";

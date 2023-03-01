@@ -6,6 +6,7 @@ import ProfileButton from "./ProfileButton";
 import AirbnbIcon from "../AirbnbIcon";
 import "./Navigation.css";
 import Spots from "../Spots";
+import SpotCreate from "../SpotCreate";
 
 function Navigation({ isLoaded }) {
   const sessionUser = useSelector((state) => state.session.user);
@@ -21,14 +22,16 @@ function Navigation({ isLoaded }) {
         <div onClick={handleClick}>
           <AirbnbIcon />
         </div>
-
-        <ul>
-          {isLoaded && (
-            <li>
-              <ProfileButton user={sessionUser} />
-            </li>
-          )}
-        </ul>
+          <ul>
+            {isLoaded && (
+              <span className="header_right">
+                  <NavLink exact to='/spots/new'>Create a New Spot</NavLink>
+              <li>
+                <ProfileButton user={sessionUser} />
+              </li>
+              </span>
+            )}
+          </ul>
       </div>
     </div>
   );

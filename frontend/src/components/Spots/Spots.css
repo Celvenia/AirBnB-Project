@@ -1,6 +1,7 @@
 .spot_cards {
   display: flex;
   flex-wrap: wrap;
+  margin-top: 100px;
   /* justify-content: space-evenly; */
   /* grid-template-columns: repeat(4, 1fr);
     gap: 20px; */

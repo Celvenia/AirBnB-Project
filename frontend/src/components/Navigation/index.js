@@ -15,6 +15,13 @@ function Navigation({ isLoaded }) {
   const handleClick = () => {
     history.push("/");
   };
+  const handleCreateASpotClick = () => {
+    if(!sessionUser) {
+      alert("Please Log in to Create a Spot")
+    } else {
+      history.push('/spots/new')
+    }
+  }
 
   return (
     <div className="header_navigation">
@@ -25,7 +32,7 @@ function Navigation({ isLoaded }) {
           <ul>
             {isLoaded && (
               <span className="header_right">
-                  <NavLink exact to='/spots/new'>Create a New Spot</NavLink>
+                  <span onClick={handleCreateASpotClick} className="header_create_spot">Create a New Spot</span>
               <li>
                 <ProfileButton user={sessionUser} />
               </li>

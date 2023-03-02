@@ -118,6 +118,11 @@ module.exports = {
 
         {
           spotId: 5,
+          url: `https://res.cloudinary.com/dtzv3fsas/image/upload/v1677693621/e9bb7061-0914-4919-8788-346643fdd448_xkwoox.jpg`,
+          preview: true,
+        },
+        {
+          spotId: 5,
           url: `https://res.cloudinary.com/dtzv3fsas/image/upload/v1677693679/49a7cbc0-bb86-4e1e-8454-a2c092d28321_wnrflo.jpg`,
           preview: true,
         },
@@ -134,11 +139,6 @@ module.exports = {
         {
           spotId: 5,
           url: `https://res.cloudinary.com/dtzv3fsas/image/upload/v1677693663/d3a3eb9a-ea98-40cc-8642-95c81d9303f5_n54n5t.jpg`,
-          preview: true,
-        },
-        {
-          spotId: 5,
-          url: `https://res.cloudinary.com/dtzv3fsas/image/upload/v1677693621/e9bb7061-0914-4919-8788-346643fdd448_xkwoox.jpg`,
           preview: true,
         },
       ],

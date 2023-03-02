@@ -5,12 +5,14 @@ import { useHistory } from "react-router-dom";
 import { useModal } from "../../context/Modal";
 import * as sessionActions from "../../store/session";
 import "./SpotCreate.css";
-import { createASpot, getSpots } from "../../store/spots";
+import { createASpot, postAImage } from "../../store/spots";
 
 function SpotCreate() {
   const dispatch = useDispatch();
+
   const spotsObj = useSelector((state) => state.spots);
   const spotsArr = Object.values(spotsObj);
+
   const [country, setCountry] = useState("");
   const [address, setAddress] = useState("");
   const [city, setCity] = useState("");
@@ -20,12 +22,26 @@ function SpotCreate() {
   const [description, setDescription] = useState("");
   const [name, setName] = useState("");
   const [price, setPrice] = useState(0);
-  const prevLength = useRef(spotsArr.length);
+  const [url, setUrl] = useState("No Preview Image");
+
   const [errors, setErrors] = useState([]);
   const history = useHistory();
 
+
+
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setErrors([])
+    const validationErrors = [];
+    // const regexForNumberCheck = /\d/;
+    // const regexForSymbolCheck = /\W/;
+
+    // allows for whitespace and semi-colon, excludes numbers and symbols
+    const numAndSymbolCheck = /\d|(?! )W/;
+    // allows for whitespace but not semi-colon, exclues numbers and symbols
+    // const regex = /(\d|(?! )\W|\s/;
+
     const payload = {
       address,
       city,
@@ -38,48 +54,78 @@ function SpotCreate() {
       price,
     };
     let spot;
+
+    // validates for numbers, symbols, or whitespace with regex
+    if(numAndSymbolCheck.test(payload.city)) validationErrors.push("City should not include numbers or symbols")
+    if(numAndSymbolCheck.test(payload.state)) validationErrors.push("State should not include numbers or symbols")
+    if(numAndSymbolCheck.test(payload.country)) validationErrors.push("Country should not include numbers or symbols")
+
+    // repetitive validation for the most part due to required trait on input fields
+    if(!address) validationErrors.push("Street address is required")
+    if(!city) validationErrors.push("City is required")
+    if(!state) validationErrors.push("State is required")
+    if(!country) validationErrors.push("Country is required")
+    if(!lat) validationErrors.push("Latitude is not valid")
+    if(!lng) validationErrors.push("Longitude is not valid")
+    if(name.length > 50) validationErrors.push("Name must be less than 50 characters")
+    if(!name) validationErrors.push("Name is required")
+    if(!description) validationErrors.push("Description is required")
+    if(!price) validationErrors.push("Price per day is required")
+    if(!price) validationErrors.push("Price must be a number")
+    setErrors(validationErrors)
+
+    if(validationErrors.length) {
+    return
+    }
+
     try {
-      spot = dispatch(createASpot(payload));
+      spot = await dispatch(createASpot(payload));
+
+      // if spot successfully dispatched, and user entered url allow dispatch for postAImage
+      if (spot && url !== "No Preview Image") {
+        let imageData = {
+          url,
+          preview: true,
+        };
+          dispatch(postAImage(spot, imageData));
+      }
+
+      // if spot is successful and no errors, redirect to newly created spot
+      if(spot && !errors.length) {
+        history.push(`/spots/${spot.id}`);
+      }
+
     } catch (err) {
-      setErrors([err.statusText]);
+      setErrors(["Spot already exists with that address, try again"])
     }
   };
 
-
-  // useRef to store prevLength of state, redirect when state increases in length
-  useEffect(() => {
-    if (spotsArr.length > prevLength.current) {
-      let spotId = spotsArr[spotsArr.length - 1].id
-      history.push(`/spots/${spotId}`);
-    }
-    return () => {};
-  }, [spotsObj]);
+  //re-render when inputs are changed to allow removal of validation errors
+  useEffect(()=> {
+    setErrors([])
+  }, [address, city, state, country, lat, lng, name, description, price])
 
   return (
-    <>
+    <div className="body_container">
       <h1>Create a New Spot</h1>
-      <h1>Create a New Spot</h1>
-      <h2>Payload</h2>
-      <p>Country: {country}</p>
-      <p>Address: {address}</p>
-      <p>City: {city}</p>
-      <p>State: {state}</p>
-      <p>Lat: {lat}</p>
-      <p>Lng: {lng}</p>
-      <p>Description: {description}</p>
-      <p>Price: {price}</p>
-
+      <h2>Where's your place located?</h2>
+      <h3>Guests will only get your exact address once they have booked a reservation</h3>
       <form className="spot_form" onSubmit={handleSubmit}>
         <ul>
+          {errors.length ? <h3>Errors</h3> : ""}
+          <div className="errors">
           {errors.map((error, idx) => (
             <li key={idx}>{error}</li>
-          ))}
+            ))}
+            {/* <button onClick={handleClick}>Refresh Page</button> */}
+            </div>
         </ul>
         <label>
           Country
           <input
             type="text"
-            value={country}
+            // value={country}
+            placeholder="Country is required"
             onChange={(e) => setCountry(e.target.value)}
             required
           />
@@ -88,7 +134,8 @@ function SpotCreate() {
           Street Address
           <input
             type="text"
-            // value={username}
+            // value={address}
+            placeholder="Street address is required"
             onChange={(e) => setAddress(e.target.value)}
             required
           />
@@ -97,7 +144,8 @@ function SpotCreate() {
           City
           <input
             type="text"
-            // value={firstName}
+            // value={city}
+            placeholder="City is required"
             onChange={(e) => setCity(e.target.value)}
             required
           />
@@ -106,7 +154,8 @@ function SpotCreate() {
           State
           <input
             type="text"
-            // value={lastName}
+            // value={state}
+            placeholder="State is required"
             onChange={(e) => setState(e.target.value)}
             required
           />
@@ -115,7 +164,8 @@ function SpotCreate() {
           Latitude
           <input
             type="number"
-            value={lat}
+            // value={lat}
+            placeholder=""
             onChange={(e) => setLat(e.target.value)}
             required
           />
@@ -124,7 +174,7 @@ function SpotCreate() {
           Longitude
           <input
             type="number"
-            value={lng}
+            // value={lng}
             onChange={(e) => setLng(e.target.value)}
             required
           />
@@ -132,8 +182,9 @@ function SpotCreate() {
         <label>
           Description
           <input
-            type="text"
-            value={description}
+            type="textarea"
+            // value={description}
+            placeholder="Description is required"
             onChange={(e) => setDescription(e.target.value)}
             required
           />
@@ -142,7 +193,8 @@ function SpotCreate() {
           Price
           <input
             type="number"
-            value={price}
+            // value={price}
+            placeholder="Price per day is required"
             onChange={(e) => setPrice(e.target.value)}
             required
           />
@@ -151,15 +203,59 @@ function SpotCreate() {
           Name
           <input
             type="text"
-            value={name}
+            // value={name}
+            placeholder="Name is required"
             onChange={(e) => setName(e.target.value)}
             required
           />
         </label>
-        <button type="submit">Create</button>
+        <label>
+          URL
+          <input
+            type="text"
+            // value={url}
+            placeholder="No Preview Image"
+            onChange={(e) => setUrl(e.target.value)}
+            // required
+          />
+        </label>
+        <button type="submit" disabled={errors.length ? true : false}>Create</button>
       </form>
-    </>
+    </div>
   );
 }
 
 export default SpotCreate;
+
+
+
+//     const handleSubmit = async (e) => {
+//   e.preventDefault();
+//   const payload = {
+//     address,
+//     city,
+//     state,
+//     country,
+//     lat,
+//     lng,
+//     name,
+//     description,
+//     price,
+//   };
+
+//   let imageData = {
+//     url,
+//     preview: true,
+//   };
+
+//   setErrors([]);
+//  return dispatch(createASpot(payload))
+//   // let spot = dispatch(createASpot(payload))
+//     .then((spot) => dispatch(postAImage(spot, imageData))
+//     .then(() => history.push(`/spots/${spot.id}`)
+//     .catch(async (res) => {
+//       const data = await res.json();
+//       if (data && data.errors) setErrors(data.errors);
+//     })))
+//     // })
+//   }

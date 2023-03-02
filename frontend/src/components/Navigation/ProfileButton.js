@@ -6,11 +6,13 @@ import OpenModalButton from "../OpenModalButton";
 import LoginFormModal from "../LoginFormModal";
 import SignupFormModal from "../SignupFormModal";
 import OpenModalMenuItem from "./OpenMenuModalItem";
+import { useHistory } from "react-router-dom";
 
 function ProfileButton({ user }) {
   const dispatch = useDispatch();
   const [showMenu, setShowMenu] = useState(false);
   const ulRef = useRef();
+  const history = useHistory()
 
   const openMenu = () => {
     if (showMenu) return;
@@ -41,6 +43,10 @@ function ProfileButton({ user }) {
 
   const ulClassName = "profile-dropdown" + (showMenu ? "" : " hidden");
 
+  const handleClick = () => {
+    history.push("/spots/current");
+  };
+
   return (
     <div className="profile_button">
       <button onClick={openMenu}>
@@ -57,6 +63,7 @@ function ProfileButton({ user }) {
             <li>
               <button onClick={logout}>Log Out</button>
             </li>
+            <li className="manage_spots" onClick={handleClick}>Manage Spots</li>
           </>
         ) : (
           <>

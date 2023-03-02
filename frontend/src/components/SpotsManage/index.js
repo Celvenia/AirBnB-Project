@@ -1,52 +1,85 @@
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
-import { getMySpots } from "../../store/spots";
+import { deleteASpot, getMySpots, updateASpot } from "../../store/spots";
+import DeleteSpotModal from "../DeleteSpotModal";
+import UpdateSpotModal from "../UpdateSpotModal";
+import OpenModalMenuItem from "../Navigation/OpenMenuModalItem";
+
 import SpotCard from "../SpotCard";
 import "./SpotsManage.css";
 
 const SpotsManage = () => {
-    // const spotsArr = useSelector((state) => Object.values(state.spots));
-    const spotsObj = useSelector((state) => state.spots);
-    const spotsArr = Object.values(spotsObj)
-    const mySpots = spotsArr[spotsArr.length-1]
-    console.log('spotsArr test', mySpots)
-
-
-
+  const spotsObj = useSelector((state) => state.spots);
+  const spotsArr = Object.values(spotsObj).flat();
+  const sessionUser = useSelector((state) => state.session.user);
   const dispatch = useDispatch();
-  //    const sessionUser = useSelector((state) => state.session.user);
-  //    const ownerId = sessionUser.id
-  //    const handleClick = () => {
-  //    }
+  const [deleted, setDeleted] = useState(false);
+  const [showMenu, setShowMenu] = useState(false);
+  const ulRef = useRef();
 
   useEffect(() => {
     dispatch(getMySpots());
+    return () => {}
   }, [dispatch]);
 
+  const openMenu = () => {
+    if (showMenu) return;
+    setShowMenu(true);
+  };
 
-  if (!spotsArr.length) {
+  useEffect(() => {
+    if (!showMenu) return;
+
+    const closeMenu = (e) => {
+      if (!ulRef.current.contains(e.target)) {
+        setShowMenu(false);
+      }
+    };
+
+    return () => document.removeEventListener("click", closeMenu);
+  }, [showMenu]);
+
+  const closeMenu = () => setShowMenu(false);
+
+
+  if (!spotsObj) {
     return <div>Loading...</div>;
   }
-// https://res.cloudinary.com/dtzv3fsas/image/upload/v1677693679/49a7cbc0-bb86-4e1e-8454-a2c092d28321_wnrflo.jpg
-//   console.log('testing', spotsArr)
-    // const spotsArr = Object?.values(spots)
 
-//   console.log(spotsArr);
-  return (
+
+  return spotsArr.length ? (
     <>
       <h1>Manage Spots</h1>
       <main className="spot_cards">
-        {mySpots.length &&
-          mySpots.map((spot) => (
+        {spotsArr.length &&
+          spotsArr.map((spot) => (
             <div className="spot_card_container" key={spot.id}>
               <NavLink to={`/spots/${spot.id}`} className="nav_link">
-                <SpotCard spot={spot} />
+                <SpotCard spot={spot}/>
               </NavLink>
+              {/* <button onClick={() => handleClickUpdate}>Update</button> */}
+              {/* <button onClick={(e) => handleClickDelete(spot.id)}>Delete</button> */}
+              <button>
+                <OpenModalMenuItem
+                  itemText="Update"
+                  onButtonClick={closeMenu}
+                  modalComponent={<UpdateSpotModal spot={spot}/>}
+                />
+              </button>
+              <button>
+                <OpenModalMenuItem
+                  itemText="Delete"
+                  onButtonClick={closeMenu}
+                  modalComponent={<DeleteSpotModal spotId={spot.id}/>}
+                />
+              </button>
             </div>
           ))}
       </main>
     </>
+  ) : (
+    <h1>Sorry it doesn't appear you have any listings...</h1>
   );
 };
 

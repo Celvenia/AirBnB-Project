@@ -7,6 +7,7 @@ import Spots from "./components/Spots";
 import SpotDetails from "./components/SpotDetails";
 import SpotCreate from "./components/SpotCreate";
 import SpotsManage from "./components/SpotsManage";
+import NotFound from "./components/NotFound";
 
 function App() {
   const dispatch = useDispatch();
@@ -32,7 +33,9 @@ function App() {
           <Route path="/spots/:spotId">
             <SpotDetails />
           </Route>
-          <Route>404 Path Not Found</Route>
+          <Route>
+            <NotFound />
+          </Route>
         </Switch>
       )}
     </>

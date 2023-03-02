@@ -21,13 +21,13 @@
   color: black;
 }
 
-.address {
+.first_line {
   display: flex;
   justify-content: space-between;
   font-weight: 700;
 }
 
-.address > span {
+.first_line > span {
   font-weight: 100;
 }
 

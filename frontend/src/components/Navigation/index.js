@@ -1,18 +1,21 @@
 // frontend/src/components/Navigation/index.js
 import React from "react";
-import { NavLink, useHistory } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useHistory } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import ProfileButton from "./ProfileButton";
 import AirbnbIcon from "../AirbnbIcon";
 import "./Navigation.css";
-import Spots from "../Spots";
-import SpotCreate from "../SpotCreate";
+import { getSpots } from "../../store/spots";
 
 function Navigation({ isLoaded }) {
   const sessionUser = useSelector((state) => state.session.user);
   const history = useHistory();
+  const dispatch = useDispatch();
+  // const spotsObj = useSelector((state) => state.spots);
+  // const spotsArr = Object.values(spotsObj)
 
   const handleClick = () => {
+    // dispatch(getSpots())
     history.push("/");
   };
   const handleCreateASpotClick = () => {

@@ -1,0 +1,9 @@
+.delete_container {
+    height: auto;
+    width: 500px;
+}
+
+button {
+    height: auto;
+    width: auto;
+}

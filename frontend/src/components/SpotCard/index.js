@@ -1,7 +1,7 @@
 import "./SpotCard.css";
 
 const SpotCard = ({
-  spot: { city, state, price, name, previewImage, avgStarRating },
+  spot: { city, state, price, name, previewImage, avgStarRating }
 }) => {
   const address = `${city}, ${state}`;
   return (
@@ -11,14 +11,14 @@ const SpotCard = ({
       </div>
 
       <div className="spot_card_text">
-        <div className="address">
+        <div className="first_line">
           {address}
           <span>
             <i class="fa-sharp fa-solid fa-star"></i>
             {avgStarRating}
           </span>
         </div>
-        <div>location: # miles away</div>$ {price}
+        <div>location: # miles away</div>$ {price} night
       </div>
     </div>
   );

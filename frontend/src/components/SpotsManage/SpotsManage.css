@@ -1,10 +1,9 @@
-h1 {
-    margin-top: 200px;
+.spots_manage_h1 {
+    margin-top: 100px;
 }
 .spot_cards {
     display: flex;
     flex-wrap: wrap;
-    margin-top: 100px;
   }
 
   .nav_link {
@@ -17,4 +16,8 @@ h1 {
 
   .spot_card:nth-child(4n) {
     margin-right: 25px;
+  }
+
+  .spots_manage_buttons {
+    display: flex;
   }

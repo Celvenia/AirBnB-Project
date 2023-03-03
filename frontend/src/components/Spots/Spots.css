@@ -1,6 +1,8 @@
 .spot_cards {
   display: flex;
   flex-wrap: wrap;
+}
+.spots_container {
   margin-top: 100px;
 }
 

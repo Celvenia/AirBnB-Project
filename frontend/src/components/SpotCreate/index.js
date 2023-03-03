@@ -131,158 +131,172 @@ function SpotCreate() {
   }, [sessionUser]);
 
   return (
-    <main>
-      <div className="body_container">
-        <div>
-          <h2>Create a New Spot</h2>
-          <h3>Where's your place located?</h3>
-          <h5>
-            Guests will only get your exact address once they have booked a
-            reservation
-          </h5>
-        </div>
-        <form className="spot_form" onSubmit={handleSubmit}>
-          <ul>
-            {errors.length ? <h3>Errors</h3> : ""}
-            <div className="errors">
-              {errors.map((error, idx) => (
-                <li key={idx}>{error}</li>
-              ))}
-            </div>
-          </ul>
-          <div>
-            <label>Country</label>
-            <input
-              type="text"
-              // value={country}
-              placeholder="Country"
-              onChange={(e) => setCountry(e.target.value)}
-              required
-            />
+    <div className="spot_create_container">
+      <h2>Create a New Spot</h2>
+      <h3>Where's your place located?</h3>
+      <h5>
+        Guests will only get your exact address once they have booked a
+        reservation
+      </h5>
+      <form className="spot_create_form" onSubmit={handleSubmit}>
+        <div className="red_divider" />
+        <ul>
+          {errors.length ? <h3>Errors</h3> : ""}
+          <div className="errors">
+            {errors.map((error, idx) => (
+              <li key={idx}>{error}</li>
+            ))}
           </div>
-          <div>
-            <label>Street Address</label>
-            <input
-              type="text"
-              // value={address}
-              placeholder="Address"
-              onChange={(e) => setAddress(e.target.value)}
-              required
-            />
-          </div>
-          <div>
-            <label>City</label>
-            <input
-              type="text"
-              // value={city}
-              placeholder="City"
-              onChange={(e) => setCity(e.target.value)}
-              required
-            />
-          </div>
-          <div>
-            <label>State</label>
-            <input
-              type="text"
-              // value={state}
-              placeholder="STATE"
-              onChange={(e) => setState(e.target.value)}
-              required
-            />
-          </div>
-          <div>
-            <label>Latitude</label>
-            <input
-              type="number"
-              // value={lat}
-              placeholder="Latitude"
-              onChange={(e) => setLat(e.target.value)}
-              required
-            />
-          </div>
-          <div>
-            <label>Longitude</label>
-            <input
-              type="number"
-              // value={lng}
-              placeholder="Longitude"
-              onChange={(e) => setLng(e.target.value)}
-              required
-            />
-          </div>
-          <h2>Describe your place to guests</h2>
-          <h5>
-            Mention the best features of your space, any special amenities like
-            fast wifi or parking, and what you love about your neighborhood.
-          </h5>
-          <div>
-            <label>Description</label>
-            <input
-              type="textarea"
-              // value={description}
-              placeholder="Description"
-              onChange={(e) => setDescription(e.target.value)}
-              required
-            />
-          </div>
-          <label>Price</label>
-          <input
-            type="number"
-            // value={price}
-            placeholder="Price per day is required"
-            onChange={(e) => setPrice(e.target.value)}
-            required
-          />
-          <label>Name</label>
-          <input
-            type="text"
-            // value={name}
-            placeholder="Name is required"
-            onChange={(e) => setName(e.target.value)}
-            required
-          />
-          <h3> Liven up your spot with photos </h3>
+        </ul>
 
-          <label>
-            Submit a link to at least one photo to publish your spot
-          </label>
-          <input
-            type="url"
-            // value={url}
-            placeholder="Preview Image URL"
-            onChange={(e) => setUrl(e.target.value)}
-            required
-          />
-          <input
-            type="url"
-            // value={url}
-            placeholder="image URL"
-            onChange={(e) => setUrl2(e.target.value)}
-          />
-          <input
-            type="url"
-            // value={url}
-            placeholder="image URL"
-            onChange={(e) => setUrl3(e.target.value)}
-          />
-          <input
-            type="url"
-            // value={url}
-            placeholder="image URL"
-            onChange={(e) => setUrl4(e.target.value)}
-          />
-          <input
-            type="url"
-            // value={url}
-            placeholder="image URL"
-            onChange={(e) => setUrl5(e.target.value)}
-          />
-          <button type="submit" disabled={errors.length ? true : false}>
-            Create
-          </button>
-        </form>
-      </div>
-    </main>
+        <label>Country</label>
+        <input
+          className="spot_create_input"
+          type="text"
+          // value={country}
+          placeholder="Country"
+          onChange={(e) => setCountry(e.target.value)}
+          required
+        />
+
+        <label>Street Address</label>
+        <input
+          className="spot_create_input"
+          type="text"
+          // value={address}
+          placeholder="Address"
+          onChange={(e) => setAddress(e.target.value)}
+          required
+        />
+        <label>City</label>
+        <input
+          className="spot_create_input"
+          type="text"
+          // value={city}
+          placeholder="City"
+          onChange={(e) => setCity(e.target.value)}
+          required
+        />
+        <label>State</label>
+        <input
+          className="spot_create_input"
+          type="text"
+          // value={state}
+          placeholder="STATE"
+          onChange={(e) => setState(e.target.value)}
+          required
+        />
+
+        <label>Latitude</label>
+        <input
+          className="spot_create_input"
+          type="number"
+          // value={lat}
+          placeholder="Latitude"
+          onChange={(e) => setLat(e.target.value)}
+          required
+        />
+        <label>Longitude</label>
+        <input
+          type="number"
+          // value={lng}
+          placeholder="Longitude"
+          onChange={(e) => setLng(e.target.value)}
+          required
+        />
+
+        <div className="red_divider" />
+
+        <h2>Describe your place to guests</h2>
+        <h5>
+          Mention the best features of your space, any special amenities like
+          fast wifi or parking, and what you love about your neighborhood.
+        </h5>
+        <input
+          className="spot_create_input"
+          type="textarea"
+          // value={description}
+          placeholder="Description needs a a minimum of 30 characters"
+          onChange={(e) => setDescription(e.target.value)}
+          required
+        />
+        <div className="red_divider" />
+        <h2>Create a title for you spot</h2>
+        <h5>
+          Catch guests' attention with a spot title that highlights what makes
+          your place special.
+        </h5>
+        <input
+          type="text"
+          // value={name}
+          placeholder="Name"
+          onChange={(e) => setName(e.target.value)}
+          required
+        />
+        <div className="red_divider" />
+        <h2>Set a base price for your spot</h2>
+        <h5>
+          Competitive pricing can help your listing stand out and rank higher in
+          search results.
+        </h5>
+        <label>Price $ </label>
+        <input
+          className="spot_create_input"
+          type="number"
+          // value={price}
+          placeholder="Price per night (USD)"
+          onChange={(e) => setPrice(e.target.value)}
+          required
+        />
+        <div className="red_divider" />
+        <h3> Liven up your spot with photos </h3>
+
+        <h5>Submit a link to at least one photo to publish your spot</h5>
+        <input
+          className="spot_create_input"
+          type="url"
+          // value={url}
+          placeholder="Preview Image URL"
+          onChange={(e) => setUrl(e.target.value)}
+          required
+        />
+        <input
+          className="spot_create_input"
+          type="url"
+          // value={url}
+          placeholder="image URL"
+          onChange={(e) => setUrl2(e.target.value)}
+        />
+        <input
+          className="spot_create_input"
+          type="url"
+          // value={url}
+          placeholder="image URL"
+          onChange={(e) => setUrl3(e.target.value)}
+        />
+        <input
+          className="spot_create_input"
+          type="url"
+          // value={url}
+          placeholder="image URL"
+          onChange={(e) => setUrl4(e.target.value)}
+        />
+        <input
+          className="spot_create_input"
+          type="url"
+          // value={url}
+          placeholder="image URL"
+          onChange={(e) => setUrl5(e.target.value)}
+        />
+        <button
+          className="spot_create_button"
+          type="submit"
+          disabled={errors.length ? true : false}
+        >
+          Create
+        </button>
+      </form>
+    </div>
   );
 }
 

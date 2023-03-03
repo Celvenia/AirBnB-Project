@@ -9,7 +9,7 @@ import "./Spots.css";
 const Spots = () => {
   const dispatch = useDispatch();
   const spotsObj = useSelector((state) => state.spots);
-  const spotsArr = Object.values(spotsObj)
+  const spotsArr = Object.values(spotsObj);
 
   useEffect(() => {
     dispatch(getSpots());
@@ -21,16 +21,26 @@ const Spots = () => {
   }
 
   return (
-    <main className="spot_cards">
-      {spotsArr.length &&
-        spotsArr.map((spot) => spot.id !== undefined ? (
-          <div className="spot_card_container" key={spot.id}>
-            <NavLink to={`/spots/${spot.id}`} className="nav_link" key={spot.id}>
-              <SpotCard spot={spot} key={spot.id}/>
-            </NavLink>
-          </div>
-        ): "")}
-    </main>
+    <div className="spots_container">
+      <div className="spot_cards">
+        {spotsArr.length &&
+          spotsArr.map((spot) =>
+            spot.id !== undefined ? (
+              <div className="spot_card_container" key={spot.id}>
+                <NavLink
+                  to={`/spots/${spot.id}`}
+                  className="nav_link"
+                  key={spot.id}
+                >
+                  <SpotCard spot={spot} key={spot.id} />
+                </NavLink>
+              </div>
+            ) : (
+              ""
+            )
+          )}
+      </div>
+    </div>
   );
 };
 

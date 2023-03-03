@@ -66,7 +66,7 @@ export const getMySpots = () => async (dispatch) => {
 
   if (res.ok) {
     const spots = await res.json();
-    // console.log(spots.Spots)
+    console.log(spots)
     dispatch(loadMySpots(spots));
     return spots;
   } else return res.json()
@@ -153,9 +153,9 @@ const spotReducer = (state = initialState, action) => {
       return { ...newState, [action.spot.id]: action.spot };
     }
     case LOAD_MY_SPOTS: {
-      // const newState = { ...state };
+      const newState = { ...state };
       // console.log(action.spots)
-      return {...action.spots}
+      return {...newState, ...action.spots}
     }
     case POST_IMAGE: {
       const newState = { ...state };

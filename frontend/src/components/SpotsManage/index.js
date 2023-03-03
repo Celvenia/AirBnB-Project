@@ -10,74 +10,48 @@ import SpotCard from "../SpotCard";
 import "./SpotsManage.css";
 
 const SpotsManage = () => {
-  const spotsObj = useSelector((state) => state.spots);
-  const spotsArr = Object.values(spotsObj).flat();
-  const sessionUser = useSelector((state) => state.session.user);
+  const spotsArr = useSelector((state) => state.spots?.Spots);
   const dispatch = useDispatch();
-  const [deleted, setDeleted] = useState(false);
-  const [showMenu, setShowMenu] = useState(false);
-  const ulRef = useRef();
 
   useEffect(() => {
     dispatch(getMySpots());
-    return () => {}
+    return () => {};
   }, [dispatch]);
 
-  const openMenu = () => {
-    if (showMenu) return;
-    setShowMenu(true);
-  };
-
-  useEffect(() => {
-    if (!showMenu) return;
-
-    const closeMenu = (e) => {
-      if (!ulRef.current.contains(e.target)) {
-        setShowMenu(false);
-      }
-    };
-
-    return () => document.removeEventListener("click", closeMenu);
-  }, [showMenu]);
-
-  const closeMenu = () => setShowMenu(false);
-
-
-  if (!spotsObj) {
+  if (!spotsArr) {
     return <div>Loading...</div>;
   }
 
-
-  return spotsArr.length ? (
-    <>
-      <h1>Manage Spots</h1>
-      <main className="spot_cards">
+  return spotsArr ? (
+    <div className="spots_manage_container">
+      <h1 className="spots_manage_h1 ">Manage Spots</h1>
+      <div className="spot_cards">
         {spotsArr.length &&
           spotsArr.map((spot) => (
             <div className="spot_card_container" key={spot.id}>
               <NavLink to={`/spots/${spot.id}`} className="nav_link">
-                <SpotCard spot={spot}/>
+                <SpotCard spot={spot} />
               </NavLink>
               {/* <button onClick={() => handleClickUpdate}>Update</button> */}
               {/* <button onClick={(e) => handleClickDelete(spot.id)}>Delete</button> */}
-              <button>
-                <OpenModalMenuItem
-                  itemText="Update"
-                  onButtonClick={closeMenu}
-                  modalComponent={<UpdateSpotModal spot={spot}/>}
-                />
-              </button>
-              <button>
-                <OpenModalMenuItem
-                  itemText="Delete"
-                  onButtonClick={closeMenu}
-                  modalComponent={<DeleteSpotModal spotId={spot.id}/>}
-                />
-              </button>
+              <div className="spots_manage_buttons">
+                <button>
+                  <OpenModalMenuItem
+                    itemText="Update"
+                    modalComponent={<UpdateSpotModal spot={spot} />}
+                  />
+                </button>
+                <button>
+                  <OpenModalMenuItem
+                    itemText="Delete"
+                    modalComponent={<DeleteSpotModal spotId={spot.id} />}
+                  />
+                </button>
+              </div>
             </div>
           ))}
-      </main>
-    </>
+      </div>
+    </div>
   ) : (
     <h1>Sorry it doesn't appear you have any listings...</h1>
   );

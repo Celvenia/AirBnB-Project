@@ -48,7 +48,7 @@ const SpotDetails = () => {
   };
 
   return (
-    <main>
+    <div>
       <div className="body_container">
         <h1>{name}</h1>
         <div className="spot_detail_header">
@@ -126,7 +126,7 @@ const SpotDetails = () => {
         <h2>About this place</h2>
         <article className="description">{description}</article>
       </div>
-    </main>
+    </div>
   );
 };
 

@@ -1,8 +1,7 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect} from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { getASpot } from "../../store/spots";
-
 import DeleteSpotModal from "../DeleteSpotModal";
 import UpdateSpotModal from "../UpdateSpotModal";
 import OpenModalMenuItem from "../Navigation/OpenMenuModalItem";
@@ -13,20 +12,22 @@ const SpotDetails = () => {
   const { spotId } = useParams();
   const spot = useSelector((state) => state.spots[spotId]);
   const dispatch = useDispatch();
-  const [showMenu, setShowMenu] = useState(false);
-  const ulRef = useRef();
+  const sessionUser = useSelector((state) => state.session.user);
+  let userId;
 
-  // const sessionUser = useSelector((state) => state.session.user.id)
-  // console.log('sessionUser', sessionUser)
+  if (sessionUser) {
+    userId = sessionUser.id;
+  }
+
 
   useEffect(() => {
     dispatch(getASpot(spotId));
     return () => {};
   }, [dispatch, spotId]);
 
-  // if (!spot || !spot.SpotImages || !spot.Owner) {
-  //   return <div>Loading...</div>;
-  // }
+  if (!spot || !spot.SpotImages || !spot.Owner) {
+    return <div>Loading...</div>;
+  }
 
   const {
     city,
@@ -39,31 +40,12 @@ const SpotDetails = () => {
     numReviews,
   } = spot;
 
-  const { firstName, lastName } = spot.Owner;
+  const { firstName, lastName, id } = spot.Owner;
   const images = Object.values(spot.SpotImages);
 
   const handleClick = () => {
     alert("Feature coming soon...");
   };
-
-  const openMenu = () => {
-    if (showMenu) return;
-    setShowMenu(true);
-  };
-
-  useEffect(() => {
-    if (!showMenu) return;
-
-    const closeMenu = (e) => {
-      if (!ulRef.current.contains(e.target)) {
-        setShowMenu(false);
-      }
-    };
-
-    return () => document.removeEventListener("click", closeMenu);
-  }, [showMenu]);
-
-  const closeMenu = () => setShowMenu(false);
 
   return (
     <main>
@@ -73,10 +55,10 @@ const SpotDetails = () => {
           <span className="spot_detail_header_info">
             {/* star */}
             <span>
-              <i className="fa-sharp fa-solid fa-star"></i> {avgStarRating}
+              <i className="fa-sharp fa-solid fa-star"></i> {numReviews !== 0 ? (avgStarRating % 1 === 0 ? avgStarRating.toFixed(1) : parseFloat(avgStarRating.toFixed(2))) : "New"}
             </span>
             {/* reviews */}
-            <span>#reviews</span>
+            <span>{numReviews} reviews</span>
             {/* location */}
             <span>
               {city}, {state}, {country}
@@ -95,7 +77,7 @@ const SpotDetails = () => {
             )}
           </span>
           <span className="images_after_first">
-            {images.slice(1).map((image) => (
+            {images.slice(1, 5).map((image) => (
               <img src={image.url} alt="preview home" key={image.id} />
             ))}
           </span>
@@ -105,22 +87,22 @@ const SpotDetails = () => {
             <h2>
               Hosted by {firstName} {lastName}
             </h2>
-            <div>
-              <button>
+
+            {userId === id ?
+              (<>   <button>
                 <OpenModalMenuItem
                   itemText="Update"
-                  onButtonClick={closeMenu}
-                  modalComponent={<UpdateSpotModal spot={spot} />}
+                  modalComponent={<UpdateSpotModal spot={spot}/>}
                 />
               </button>
               <button>
                 <OpenModalMenuItem
                   itemText="Delete"
-                  onButtonClick={closeMenu}
-                  modalComponent={<DeleteSpotModal spotId={spot.id} />}
+                  modalComponent={<DeleteSpotModal spotId={spot.id}/>}
                 />
               </button>
-            </div>
+              </>) : ("")
+            }
           </div>
 
           <span className="reserve_container">
@@ -129,7 +111,7 @@ const SpotDetails = () => {
                 <span className="price"> ${price} night, </span>
                 <span className="rating">
                   <i className="fa-sharp fa-solid fa-star"></i>
-                  {avgStarRating},
+                  {numReviews !== 0 ? (avgStarRating % 1 === 0 ? avgStarRating.toFixed(1) : parseFloat(avgStarRating.toFixed(2))) : "New"},
                 </span>
                 <span>{numReviews} review(s)</span>
               </span>

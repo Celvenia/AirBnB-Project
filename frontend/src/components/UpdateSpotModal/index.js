@@ -9,7 +9,6 @@ import { useModal } from "../../context/Modal";
 
 function UpdateSpotModal({ spot }) {
   const sessionUser = useSelector((state) => state.session.user);
-  const formData = useSelector(state => state.spots)
   const dispatch = useDispatch();
     const { closeModal } = useModal();
 
@@ -40,7 +39,7 @@ function UpdateSpotModal({ spot }) {
   //   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    // e.preventDefault();
     setErrors([]);
     const validationErrors = [];
     // const regexForNumberCheck = /\d/;
@@ -258,7 +257,7 @@ function UpdateSpotModal({ spot }) {
             value={url}
             placeholder="No Preview Image"
             onChange={(e) => setUrl(e.target.value)}
-            // required
+            required
           />
         </label>
         <button type="submit" disabled={errors.length ? true : false}>

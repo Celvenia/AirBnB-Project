@@ -1,7 +1,7 @@
 // frontend/src/components/LoginFormModal/index.js
 import React, { useState } from "react";
 import * as sessionActions from "../../store/session";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useModal } from "../../context/Modal";
 import "./LoginForm.css";
 
@@ -11,6 +11,7 @@ function LoginFormModal() {
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState([]);
   const { closeModal } = useModal();
+  const sessionUser = useSelector((state) => state.session.user);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -22,9 +23,13 @@ function LoginFormModal() {
         if (data && data.errors) setErrors(data.errors);
       });
   };
+  const handleClick = (e) => {
+    setCredential("FakeUser1")
+    setPassword("password1")
+  }
 
   return (
-    <>
+    <div className="login_modal">
       <h1>Log In</h1>
       <form onSubmit={handleSubmit}>
         <ul>
@@ -50,9 +55,10 @@ function LoginFormModal() {
             required
           />
         </label>
-        <button type="submit">Log In</button>
+        <button className="login_button" type="submit">Log In</button>
+      <div onClick={handleClick} className="demo_user"> Demo User</div>
       </form>
-    </>
+    </div>
   );
 }
 

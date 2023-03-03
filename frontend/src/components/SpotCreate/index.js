@@ -22,10 +22,10 @@ function SpotCreate() {
   const [name, setName] = useState("");
   const [price, setPrice] = useState(0);
   const [url, setUrl] = useState("No Preview Image");
-  const [url2, setUrl2] = useState("No Preview Image");
-  const [url3, setUrl3] = useState("No Preview Image");
-  const [url4, setUrl4] = useState("No Preview Image");
-  const [url5, setUrl5] = useState("No Preview Image");
+  const [url2, setUrl2] = useState("");
+  const [url3, setUrl3] = useState("");
+  const [url4, setUrl4] = useState("");
+  const [url5, setUrl5] = useState("");
   const [errors, setErrors] = useState([]);
   const history = useHistory();
 
@@ -41,7 +41,7 @@ function SpotCreate() {
     // allows for whitespace but not semi-colon, exclues numbers and symbols
     // const regex = /(\d|(?! )\W|\s/;
 
-    // checks 
+    // checks
     const imageCheck = /\.(png|jpe?g)$/i;
 
     const payload = {
@@ -56,11 +56,6 @@ function SpotCreate() {
       price,
     };
 
-    let imageData = {
-      url,
-      preview: true,
-    };
-
     let spot;
 
     // validates for numbers, symbols, or whitespace with regex
@@ -72,19 +67,12 @@ function SpotCreate() {
       validationErrors.push("Country should not include numbers or symbols");
     if (!imageCheck.test(url))
       validationErrors.push("Image URL must end in .png .jpg or .jpeg");
-    // repetitive validation for the most part due to required trait on input fields
     if (name.length > 50)
       validationErrors.push("Name must be less than 50 characters");
-    // if(!address) validationErrors.push("Street address is required")
-    // if(!city) validationErrors.push("City is required")
-    // if(!state) validationErrors.push("State is required")
-    // if(!country) validationErrors.push("Country is required")
-    // if(!lat) validationErrors.push("Latitude is not valid")
-    // if(!lng) validationErrors.push("Longitude is not valid")
-    // if(!name) validationErrors.push("Name is required")
-    // if(!description) validationErrors.push("Description is required")
-    // if(!price) validationErrors.push("Price per day is required")
-    // if(!price) validationErrors.push("Price must be a number")
+    if (description.length < 30)
+      validationErrors.push(
+        "Description needs to be a minimum of 30 characters"
+      );
     setErrors(validationErrors);
 
     if (validationErrors.length) {
@@ -95,8 +83,17 @@ function SpotCreate() {
       spot = await dispatch(createASpot(payload));
 
       // if spot successfully dispatched, and user entered url allow dispatch for postAImage
-      if (spot && url !== "No Preview Image") {
-        dispatch(postAImage(spot, imageData));
+      if (spot) {
+        let imageDataArr = [url, url2, url3, url4, url5];
+        imageDataArr.forEach((url) => {
+          if (url !== "") {
+            let imageData = {
+              url,
+              preview: true,
+            };
+            dispatch(postAImage(spot, imageData));
+          }
+        });
       }
 
       // if spot is successful and no errors, redirect to newly created spot
@@ -135,84 +132,84 @@ function SpotCreate() {
 
   return (
     <main>
-    <div className="body_container">
-      <div>
-        <h2>Create a New Spot</h2>
-        <h3>Where's your place located?</h3>
-        <h5>
-          Guests will only get your exact address once they have booked a
-          reservation
-        </h5>
-      </div>
-      <form className="spot_form" onSubmit={handleSubmit}>
-        <ul>
-          {errors.length ? <h3>Errors</h3> : ""}
-          <div className="errors">
-            {errors.map((error, idx) => (
-              <li key={idx}>{error}</li>
-            ))}
+      <div className="body_container">
+        <div>
+          <h2>Create a New Spot</h2>
+          <h3>Where's your place located?</h3>
+          <h5>
+            Guests will only get your exact address once they have booked a
+            reservation
+          </h5>
+        </div>
+        <form className="spot_form" onSubmit={handleSubmit}>
+          <ul>
+            {errors.length ? <h3>Errors</h3> : ""}
+            <div className="errors">
+              {errors.map((error, idx) => (
+                <li key={idx}>{error}</li>
+              ))}
+            </div>
+          </ul>
+          <div>
+            <label>Country</label>
+            <input
+              type="text"
+              // value={country}
+              placeholder="Country"
+              onChange={(e) => setCountry(e.target.value)}
+              required
+            />
           </div>
-        </ul>
-        <div>
-          <label>Country</label>
-          <input
-            type="text"
-            // value={country}
-            placeholder="Country"
-            onChange={(e) => setCountry(e.target.value)}
-            required
-          />
-        </div>
-        <div>
-          <label>Street Address</label>
-          <input
-            type="text"
-            // value={address}
-            placeholder="Address"
-            onChange={(e) => setAddress(e.target.value)}
-            required
-          />
-        </div>
-        <div>
-          <label>City</label>
-          <input
-            type="text"
-            // value={city}
-            placeholder="City"
-            onChange={(e) => setCity(e.target.value)}
-            required
-          />
-        </div>
-        <div>
-          <label>State</label>
-          <input
-            type="text"
-            // value={state}
-            placeholder="STATE"
-            onChange={(e) => setState(e.target.value)}
-            required
-          />
-        </div>
-        <div>
-          <label>Latitude</label>
-          <input
-            type="number"
-            // value={lat}
-            placeholder="Latitude"
-            onChange={(e) => setLat(e.target.value)}
-            required
-          />
-        </div>
-        <div>
-          <label>Longitude</label>
-          <input
-            type="number"
-            // value={lng}
-            placeholder="Longitude"
-            onChange={(e) => setLng(e.target.value)}
-            required
-          />
-        </div>
+          <div>
+            <label>Street Address</label>
+            <input
+              type="text"
+              // value={address}
+              placeholder="Address"
+              onChange={(e) => setAddress(e.target.value)}
+              required
+            />
+          </div>
+          <div>
+            <label>City</label>
+            <input
+              type="text"
+              // value={city}
+              placeholder="City"
+              onChange={(e) => setCity(e.target.value)}
+              required
+            />
+          </div>
+          <div>
+            <label>State</label>
+            <input
+              type="text"
+              // value={state}
+              placeholder="STATE"
+              onChange={(e) => setState(e.target.value)}
+              required
+            />
+          </div>
+          <div>
+            <label>Latitude</label>
+            <input
+              type="number"
+              // value={lat}
+              placeholder="Latitude"
+              onChange={(e) => setLat(e.target.value)}
+              required
+            />
+          </div>
+          <div>
+            <label>Longitude</label>
+            <input
+              type="number"
+              // value={lng}
+              placeholder="Longitude"
+              onChange={(e) => setLng(e.target.value)}
+              required
+            />
+          </div>
           <h2>Describe your place to guests</h2>
           <h5>
             Mention the best features of your space, any special amenities like
@@ -228,9 +225,7 @@ function SpotCreate() {
               required
             />
           </div>
-        <label>
-          Price
-          </label>
+          <label>Price</label>
           <input
             type="number"
             // value={price}
@@ -238,9 +233,7 @@ function SpotCreate() {
             onChange={(e) => setPrice(e.target.value)}
             required
           />
-        <label>
-          Name
-          </label>
+          <label>Name</label>
           <input
             type="text"
             // value={name}
@@ -250,8 +243,8 @@ function SpotCreate() {
           />
           <h3> Liven up your spot with photos </h3>
 
-        <label>
-          Submit a link to at least one photo to publish your spot
+          <label>
+            Submit a link to at least one photo to publish your spot
           </label>
           <input
             type="url"
@@ -259,7 +252,7 @@ function SpotCreate() {
             placeholder="Preview Image URL"
             onChange={(e) => setUrl(e.target.value)}
             required
-            />
+          />
           <input
             type="url"
             // value={url}
@@ -284,11 +277,11 @@ function SpotCreate() {
             placeholder="image URL"
             onChange={(e) => setUrl5(e.target.value)}
           />
-        <button type="submit" disabled={errors.length ? true : false}>
-          Create
-        </button>
-      </form>
-    </div>
+          <button type="submit" disabled={errors.length ? true : false}>
+            Create
+          </button>
+        </form>
+      </div>
     </main>
   );
 }

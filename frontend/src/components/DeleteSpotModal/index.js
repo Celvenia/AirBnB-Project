@@ -5,21 +5,36 @@ import { useDispatch } from "react-redux";
 import { useModal } from "../../context/Modal";
 import "./DeleteSpotModal.css";
 import { deleteASpot } from "../../store/spots";
+import { useHistory } from "react-router-dom";
 
 function DeleteSpotModal({spotId}) {
   const dispatch = useDispatch();
   const [errors, setErrors] = useState([]);
   const { closeModal } = useModal();
+  const history = useHistory()
 
   const handleSubmit = (e) => {
     // e.preventDefault();
-    setErrors([]);
-    return dispatch(deleteASpot(spotId))
-      .then(closeModal)
-      .catch(async (res) => {
-        const data = await res.json();
-        if (data && data.errors) setErrors(data.errors);
-      });
+    if(window.location.pathname === '/spots/current') {
+      setErrors([]);
+      return dispatch(deleteASpot(spotId))
+        .then(closeModal)
+        .catch(async (res) => {
+          const data = await res.json();
+          if (data && data.errors) setErrors(data.errors);
+        });
+    }
+    if(window.location.pathname !== '/spots/current') {
+      setErrors([]);
+      return dispatch(deleteASpot(spotId))
+        .then(closeModal)
+        .then(history.push('/'))
+        .catch(async (res) => {
+          const data = await res.json();
+          if (data && data.errors) setErrors(data.errors);
+        });
+
+    }
   };
 
 useEffect(()=> {

@@ -4,19 +4,17 @@ import { NavLink } from "react-router-dom";
 import { getSpots } from "../../store/spots";
 import SpotCard from "../SpotCard";
 import "./Spots.css";
-import * as sessionActions from "../../store/session";
+// import * as sessionActions from "../../store/session";
 
 const Spots = () => {
   const dispatch = useDispatch();
   const spotsObj = useSelector((state) => state.spots);
   const spotsArr = Object.values(spotsObj)
 
-  // console.log(spotsArr);
-
   useEffect(() => {
     dispatch(getSpots());
     return () => {};
-  }, []);
+  }, [dispatch]);
 
   if (!spotsArr.length) {
     return <div>Loading...</div>;
@@ -37,9 +35,3 @@ const Spots = () => {
 };
 
 export default Spots;
-
-// let uniqueSpotsSet = new Set();
-// spotsArr.forEach(spot => {
-//   uniqueSpotsSet.add(spot)
-// })
-// let uniqueSpotsArr = Array.from(uniqueSpotsSet);

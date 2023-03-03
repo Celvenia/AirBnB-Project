@@ -8,7 +8,7 @@
   margin-left: 5px;
   margin-right: 5px;
   margin-top: 20px;
-  width: 250px;
+  width: 265px;
   box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
   transition: 0.2s ease-in-out;
 }
@@ -29,6 +29,7 @@
 
 .first_line > span {
   font-weight: 100;
+  width: 50px;
 }
 
 .spot_card_image {

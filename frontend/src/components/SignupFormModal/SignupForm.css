@@ -1,0 +1,30 @@
+.signup_modal {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 500px;
+    height: 500px;
+}
+
+form {
+    display: inline-block;
+    margin-bottom: 25px;
+}
+
+input {
+    display: flex;
+}
+
+.signup_button {
+    display: flex;
+    width: 100px;
+    background-color: #FF5A5F;
+    justify-content: center;
+    margin-left: 10px;
+    font-weight: 700px;
+    color: white;
+    border-radius: 5px;
+    margin-bottom: 100px;
+    width: 150px;
+}

@@ -128,7 +128,7 @@ export const updateASpot = (spot) => async (dispatch) => {
   if(res.ok) {
     const spot = await res.json();
      dispatch(updateSpot(spot))
-     console.log(spot)
+    //  console.log(spot)
      return spot
     // .then(dispatch(loadMySpots()))
   } else return res.json()

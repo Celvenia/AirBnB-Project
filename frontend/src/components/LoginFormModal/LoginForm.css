@@ -1,0 +1,39 @@
+.login_modal {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 400px;
+    height: 400px;
+}
+
+form {
+    display: inline-block;
+    margin-bottom: 25px;
+}
+
+input {
+    display: flex;
+}
+
+.login_button {
+    display: flex;
+    width: 150px;
+    background-color: #FF5A5F;
+    justify-content: center;
+    margin-left: 10px;
+    font-weight: 700px;
+    color: white;
+    border-radius: 20px;
+
+}
+
+.demo_user {
+    text-decoration: underline;
+    margin-bottom: 150px;
+}
+
+.demo_user:hover {
+    color: #FF5A5F;
+    cursor: pointer;
+}

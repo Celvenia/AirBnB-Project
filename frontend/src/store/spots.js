@@ -66,7 +66,7 @@ export const getMySpots = () => async (dispatch) => {
 
   if (res.ok) {
     const spots = await res.json();
-    console.log(spots)
+    // console.log(spots)
     dispatch(loadMySpots(spots));
     return spots;
   } else return res.json()

@@ -21,7 +21,11 @@ function UpdateSpotModal({ spot }) {
   const [description, setDescription] = useState(spot.description);
   const [name, setName] = useState(spot.name);
   const [price, setPrice] = useState(spot.price);
-  const [url, setUrl] = useState(spot.previewImage);
+  const [url, setUrl] = useState("");
+  const [url2, setUrl2] = useState("");
+  const [url3, setUrl3] = useState("");
+  const [url4, setUrl4] = useState("");
+  const [url5, setUrl5] = useState("");
   const [errors, setErrors] = useState([]);
 //   const history = useHistory();
 
@@ -95,17 +99,19 @@ function UpdateSpotModal({ spot }) {
       data = await dispatch(updateASpot(payload));
       // if spot successfully dispatched, and user entered url allow dispatch for postAImage
     //   console.log("what is this", spot);
-      if (url !== "No Preview Image") {
-        let imageData = {
-          url,
-          preview: true,
-        };
-        // console.log(data)
-        dispatch(postAImage(data, imageData));
-      }
-      if (data) {
-        dispatch(getMySpots())
-      }
+    if (data) {
+      let imageDataArr = [url, url2, url3, url4, url5];
+      imageDataArr.forEach((url) => {
+        if (url !== "") {
+          let imageData = {
+            url,
+            preview: true,
+          };
+          dispatch(postAImage(spot, imageData));
+        }
+      });
+      dispatch(getMySpots())
+    }
 
       //   // if spot is successful and no errors, redirect to current page
       //   if (spot && !errors.length) {
@@ -147,10 +153,10 @@ function UpdateSpotModal({ spot }) {
 //   document.addEventListener("submit", closeModal);
 
   return (
-    <div className="body_container">
-      <h1>Update Spot</h1>
+    <div className="update_spot_modal_container">
 
-      <form className="spot_form" onSubmit={handleSubmit}>
+      <form className="update_spot_form" onSubmit={handleSubmit}>
+      {/* <h1 className="update_spot_h1">Update Spot</h1> */}
         <ul>
           {errors.length ? <h3>Errors</h3> : ""}
           <div className="errors">
@@ -160,9 +166,10 @@ function UpdateSpotModal({ spot }) {
             {/* <button onClick={handleClick}>Refresh Page</button> */}
           </div>
         </ul>
+          Country  <h1 className="update_spot_h1">Update Spot</h1>
         <label>
-          Country
           <input
+          className="update_spot_input"
             type="text"
             value={country}
             placeholder={spot.country}
@@ -173,6 +180,7 @@ function UpdateSpotModal({ spot }) {
         <label>
           Street Address
           <input
+          className="update_spot_input"
             type="text"
             value={address}
             placeholder="Street address is required"
@@ -183,6 +191,7 @@ function UpdateSpotModal({ spot }) {
         <label>
           City
           <input
+          className="update_spot_input"
             type="text"
             value={city}
             placeholder="City is required"
@@ -193,6 +202,7 @@ function UpdateSpotModal({ spot }) {
         <label>
           State
           <input
+          className="update_spot_input"
             type="text"
             value={state}
             placeholder="State is required"
@@ -203,6 +213,7 @@ function UpdateSpotModal({ spot }) {
         <label>
           Latitude
           <input
+          className="update_spot_input"
             type="number"
             value={lat}
             placeholder="Optional"
@@ -213,6 +224,7 @@ function UpdateSpotModal({ spot }) {
         <label>
           Longitude
           <input
+          className="update_spot_input"
             type="number"
             value={lng}
             placeholder="Optional"
@@ -223,9 +235,10 @@ function UpdateSpotModal({ spot }) {
         <label>
           Description
           <input
+          className="update_spot_description"
             type="textarea"
             value={description}
-            placeholder="Description is required"
+            placeholder="Description"
             onChange={(e) => setDescription(e.target.value)}
             required
           />
@@ -233,6 +246,7 @@ function UpdateSpotModal({ spot }) {
         <label>
           Price
           <input
+          className="update_spot_input"
             type="number"
             value={price}
             placeholder="Price per day is required"
@@ -243,6 +257,7 @@ function UpdateSpotModal({ spot }) {
         <label>
           Name
           <input
+          className="update_spot_input"
             type="text"
             value={name}
             placeholder="Name is required"
@@ -253,14 +268,59 @@ function UpdateSpotModal({ spot }) {
         <label>
           URL
           <input
+          className="update_spot_input"
             type="text"
             value={url}
-            placeholder="No Preview Image"
+            placeholder="Preview Image URL"
             onChange={(e) => setUrl(e.target.value)}
             required
           />
         </label>
-        <button type="submit" disabled={errors.length ? true : false}>
+        <label>
+          URL
+          <input
+          className="update_spot_input"
+            type="text"
+            value={url}
+            placeholder="Image URL"
+            onChange={(e) => setUrl2(e.target.value)}
+            required
+          />
+        </label>
+        <label>
+          URL
+          <input
+          className="update_spot_input"
+            type="text"
+            value={url}
+            placeholder="Image URL"
+            onChange={(e) => setUrl3(e.target.value)}
+            required
+          />
+        </label>
+        <label>
+          URL
+          <input
+          className="update_spot_input"
+            type="text"
+            value={url}
+            placeholder="Image URL"
+            onChange={(e) => setUrl4(e.target.value)}
+            required
+          />
+        </label>
+        <label>
+          URL
+          <input
+          className="update_spot_input"
+            type="text"
+            value={url}
+            placeholder="Image URL"
+            onChange={(e) => setUrl5(e.target.value)}
+            required
+          />
+        </label>
+        <button className="update_spot_button" type="submit" disabled={errors.length ? true : false}>
           Update
         </button>
       </form>

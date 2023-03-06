@@ -148,4 +148,20 @@ main {
 
 .description {
   margin-top: 20px;
+  border-bottom: 1px solid #ff5a5f;
+  padding-bottom: 20px;
 }
+
+.spot_details_reviews {
+  display: flex;
+  }
+
+  .spot_detail_review_info {
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+  }
+
+  .spot_detail_review_items {
+    
+  }

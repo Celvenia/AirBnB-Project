@@ -76,6 +76,7 @@ function SpotCreate() {
     setErrors(validationErrors);
 
     if (validationErrors.length) {
+      window.scroll(0, 0)
       return;
     }
 

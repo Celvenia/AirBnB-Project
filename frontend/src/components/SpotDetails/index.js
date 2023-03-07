@@ -15,7 +15,7 @@ const SpotDetails = () => {
   const spot = useSelector((state) => state.spots[spotId]);
   const dispatch = useDispatch();
   const sessionUser = useSelector((state) => state.session.user);
-  const reviews = useSelector((state) => state.reviews)
+  const reviews = useSelector((state) => state.reviews);
   // console.log(reviews)
 
   let userId;
@@ -55,7 +55,7 @@ const SpotDetails = () => {
   const handleClick = () => {
     alert("Feature coming soon...");
   };
-// console.log(spot.SpotImages)
+  // console.log(spot.SpotImages)
   return (
     <div>
       <div className="body_container">
@@ -94,18 +94,23 @@ const SpotDetails = () => {
             {userId === id ? (
               <>
                 {" "}
-                <button>
+                <span className="spot_detail_update_modal_button">
                   <OpenModalMenuItem
-                    itemText="Update"
-                    modalComponent={<UpdateSpotModal spotImages={spot.SpotImages} spot={spot} />}
+                    itemText="Update Spot"
+                    modalComponent={
+                      <UpdateSpotModal
+                        spotImages={spot.SpotImages}
+                        spot={spot}
+                      />
+                    }
                   />
-                </button>
-                <button>
+                </span>
+                <span>
                   <OpenModalMenuItem
-                    itemText="Delete"
+                    itemText="Delete Spot"
                     modalComponent={<DeleteSpotModal spotId={spot.id} />}
                   />
-                </button>
+                </span>
               </>
             ) : (
               ""
@@ -125,7 +130,9 @@ const SpotDetails = () => {
                     : "New"}
                   ,
                 </span>
-                <span>{numReviews} review(s)</span>
+                <span>
+                  {numReviews} {numReviews !== 1 ? "Reviews" : "Review"}
+                </span>
               </span>
             </span>
             <span>
@@ -149,9 +156,23 @@ const SpotDetails = () => {
           </span>
           <span className="spot_detail_review_items">{" * "} </span>
           {/* reviews */}
-          <span className="spot_detail_review_items">{numReviews} {numReviews !== 1 ? "Reviews" : "Review"}</span>
+          <span className="spot_detail_review_items">
+            {numReviews} {numReviews !== 1 ? "Reviews" : "Review"}
+          </span>
         </div>
-        <Reviews />
+        {/* <div className="spot_detail_post_button"> */}
+        {numReviews === 0 ? (
+          <OpenModalMenuItem
+            itemText="Be the first to add a review"
+            modalComponent={<Reviews spotsId={spotId} />}
+          />
+        ) : (
+          <OpenModalMenuItem
+            itemText={"Post a Review"}
+            modalComponent={<Reviews spotsId={spotId} />}
+          />
+        )}
+        {/* </div> */}
       </div>
     </div>
   );

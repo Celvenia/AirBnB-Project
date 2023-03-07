@@ -4,55 +4,51 @@ import { useParams } from "react-router-dom";
 import { getSpotReviews, postAReview } from "../../store/reviews";
 import "./Reviews.css";
 
-const Reviews = () => {
+const Reviews = ({ spotsId }) => {
   const dispatch = useDispatch();
   const { spotId } = useParams();
   const reviews = useSelector((state) => state.reviews[spotId]);
-  const [review, setReview] = useState("this is awesome");
-  const [stars, setStars] = useState(5);
+  const [review, setReview] = useState("");
+  const [stars, setStars] = useState(0);
   const [errors, setErrors] = useState([]);
 
-  // setReview("this is awesome")
-  // setStars(5)
-
-
-  console.log('testing this!!!!!!', reviews)
-
-  const postReviewClick = async (e) => {
-    // e.preventDefault()
+  const postReviewSubmit = async (e) => {
+    // e.preventDefault();
     // const validationErrors = [];
-
 
     const reviewData = {
       review,
       stars,
     };
     let response;
-
     try {
-      console.log('what is this number', spotId)
-      response = await dispatch(postAReview(spotId, reviewData));
+      response = await dispatch(postAReview(spotsId, reviewData));
     } catch (err) {
-      console.log(err);
+      setErrors([...err.message]);
     }
   };
 
   useEffect(() => {
-    dispatch(getSpotReviews(spotId));
+    setErrors([]);
+    dispatch(getSpotReviews(spotsId));
     return () => {};
-  }, [dispatch, spotId]);
+  }, [dispatch, spotsId]);
 
-//   return myReview ? (
-    return (
-    <div>
-      <button onClick={postReviewClick}>Post Review</button>
-      {/* <div>User: {myReview.userId}</div> */}
-      {/* <div>Review: {myReview.review}</div> */}
+  return (
+    <div className="reviews_container">
+      <form>
+        <label>Review</label>
+        <input
+          type="text"
+          onChange={(e) => setReview(e.target.value)}
+          required
+        ></input>
+        <label>Stars</label>
+        <input type="number" onChange={(e) => setStars(e.target.value)}></input>
+        <button onClick={postReviewSubmit}>Post Review</button>
+      </form>
     </div>
-  )
-//   : (
-//     <h1>something went wrong</h1>
-//   );
+  );
 };
 
 export default Reviews;

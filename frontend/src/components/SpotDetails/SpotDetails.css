@@ -165,3 +165,11 @@ main {
   .spot_detail_review_items {
     margin: 10px;
   }
+
+  /* .host > span {
+    margin: 5px;
+  } */
+.spot_detail_update_modal_button {
+  margin: 5px;
+  margin-right: 10px; 
+}

@@ -7,12 +7,17 @@ import UpdateSpotModal from "../UpdateSpotModal";
 import OpenModalMenuItem from "../Navigation/OpenMenuModalItem";
 
 import "./SpotDetails.css";
+import Reviews from "../Reviews";
+import { getSpotReviews } from "../../store/reviews";
 
 const SpotDetails = () => {
   const { spotId } = useParams();
   const spot = useSelector((state) => state.spots[spotId]);
   const dispatch = useDispatch();
   const sessionUser = useSelector((state) => state.session.user);
+  const reviews = useSelector((state) => state.reviews)
+  // console.log(reviews)
+
   let userId;
 
   if (sessionUser) {
@@ -23,6 +28,11 @@ const SpotDetails = () => {
     dispatch(getASpot(spotId));
     return () => {};
   }, [dispatch, spotId]);
+
+  useEffect(() => {
+    dispatch(getSpotReviews(spotId));
+    return () => {};
+  }, [dispatch]);
 
   if (!spot || !spot.SpotImages || !spot.Owner) {
     return <div>Loading...</div>;
@@ -141,6 +151,7 @@ const SpotDetails = () => {
           {/* reviews */}
           <span className="spot_detail_review_items">{numReviews} {numReviews !== 1 ? "Reviews" : "Review"}</span>
         </div>
+        <Reviews />
       </div>
     </div>
   );

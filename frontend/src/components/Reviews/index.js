@@ -36,16 +36,18 @@ const Reviews = ({ spotsId }) => {
 
   return (
     <div className="reviews_container">
+      <h2>How was your stay?</h2>
       <form>
         <label>Review</label>
         <input
-          type="text"
+          type="textarea"
+          placeholder="Leave your review here..."
           onChange={(e) => setReview(e.target.value)}
           required
         ></input>
         <label>Stars</label>
         <input type="number" onChange={(e) => setStars(e.target.value)}></input>
-        <button onClick={postReviewSubmit}>Post Review</button>
+        <button onClick={postReviewSubmit}>Submit Your Review</button>
       </form>
     </div>
   );

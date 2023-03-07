@@ -22,6 +22,6 @@
 
   .spots_manage_buttons {
     display: flex;
-    justify-content: space-evenly;
-    margin-top: 10px;
+    justify-content: space-around;
+    margin: 10px;
   }

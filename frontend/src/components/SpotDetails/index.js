@@ -12,11 +12,10 @@ import { getSpotReviews } from "../../store/reviews";
 
 const SpotDetails = () => {
   const { spotId } = useParams();
-  const spot = useSelector((state) => state.spots[spotId]);
-  const dispatch = useDispatch();
   const sessionUser = useSelector((state) => state.session.user);
+  const spot = useSelector((state) => state.spots[spotId]);
   const reviews = useSelector((state) => state.reviews);
-  // console.log(reviews)
+  const dispatch = useDispatch();
 
   let userId;
 
@@ -25,14 +24,10 @@ const SpotDetails = () => {
   }
 
   useEffect(() => {
-    dispatch(getASpot(spotId));
+    dispatch(getASpot(spotId))
+    dispatch(getSpotReviews(spotId))
     return () => {};
   }, [dispatch, spotId]);
-
-  useEffect(() => {
-    dispatch(getSpotReviews(spotId));
-    return () => {};
-  }, [dispatch]);
 
   if (!spot || !spot.SpotImages || !spot.Owner) {
     return <div>Loading...</div>;
@@ -55,9 +50,8 @@ const SpotDetails = () => {
   const handleClick = () => {
     alert("Feature coming soon...");
   };
-  // console.log(spot.SpotImages)
   return (
-    <div>
+    // <div>
       <div className="body_container">
         <h1>{name}</h1>
         <div className="spot_detail_header">
@@ -160,21 +154,19 @@ const SpotDetails = () => {
             {numReviews} {numReviews !== 1 ? "Reviews" : "Review"}
           </span>
         </div>
-        {/* <div className="spot_detail_post_button"> */}
         {numReviews === 0 ? (
           <OpenModalMenuItem
             itemText="Be the first to add a review"
             modalComponent={<Reviews spotsId={spotId} />}
           />
-        ) : (
+        ) : userId === undefined ? "" : userId === spot.Owner.id ? "" : (
           <OpenModalMenuItem
             itemText={"Post a Review"}
             modalComponent={<Reviews spotsId={spotId} />}
           />
         )}
-        {/* </div> */}
       </div>
-    </div>
+    // </div>
   );
 };
 

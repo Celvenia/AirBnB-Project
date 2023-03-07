@@ -6,11 +6,10 @@ import "./UpdateSpotModal.css";
 import { getMySpots, postAImage, updateASpot } from "../../store/spots";
 import { useModal } from "../../context/Modal";
 
-
 function UpdateSpotModal({ spot }) {
   const sessionUser = useSelector((state) => state.session.user);
   const dispatch = useDispatch();
-    const { closeModal } = useModal();
+  const { closeModal } = useModal();
 
   const [country, setCountry] = useState(spot.country);
   const [address, setAddress] = useState(spot.address);
@@ -21,15 +20,15 @@ function UpdateSpotModal({ spot }) {
   const [description, setDescription] = useState(spot.description);
   const [name, setName] = useState(spot.name);
   const [price, setPrice] = useState(spot.price);
-  const [url, setUrl] = useState("");
+  const [url, setUrl] = useState(spot.previewImage);
   const [url2, setUrl2] = useState("");
   const [url3, setUrl3] = useState("");
   const [url4, setUrl4] = useState("");
   const [url5, setUrl5] = useState("");
   const [errors, setErrors] = useState([]);
-//   const history = useHistory();
+  //   const history = useHistory();
 
-  //   console.log(spot.address)
+  console.log(spot);
 
   //   const handleSubmit = (e) => {
   //     e.preventDefault();
@@ -54,7 +53,8 @@ function UpdateSpotModal({ spot }) {
     // allows for whitespace but not semi-colon, exclues numbers and symbols
     // const regex = /(\d|(?! )\W|\s/;
 
-    const payload = { ...spot,
+    const payload = {
+      ...spot,
       address,
       city,
       state,
@@ -98,20 +98,20 @@ function UpdateSpotModal({ spot }) {
     try {
       data = await dispatch(updateASpot(payload));
       // if spot successfully dispatched, and user entered url allow dispatch for postAImage
-    //   console.log("what is this", spot);
-    if (data) {
-      let imageDataArr = [url, url2, url3, url4, url5];
-      imageDataArr.forEach((url) => {
-        if (url !== "") {
-          let imageData = {
-            url,
-            preview: true,
-          };
-          dispatch(postAImage(spot, imageData));
-        }
-      });
-      dispatch(getMySpots())
-    }
+      //   console.log("what is this", spot);
+      if (data) {
+        let imageDataArr = [url, url2, url3, url4, url5];
+        imageDataArr.forEach((url) => {
+          if (url !== "") {
+            let imageData = {
+              url,
+              preview: true,
+            };
+            dispatch(postAImage(spot, imageData));
+          }
+        });
+        dispatch(getMySpots());
+      }
 
       //   // if spot is successful and no errors, redirect to current page
       //   if (spot && !errors.length) {
@@ -120,7 +120,7 @@ function UpdateSpotModal({ spot }) {
     } catch (err) {
       setErrors(["Spot already exists with that address, try again"]);
     }
-    closeModal()
+    closeModal();
   };
 
   //re-render when inputs are changed to allow removal of validation errors
@@ -139,7 +139,7 @@ function UpdateSpotModal({ spot }) {
     price,
     sessionUser,
     url,
-    dispatch
+    dispatch,
   ]);
 
   useEffect(() => {
@@ -150,26 +150,24 @@ function UpdateSpotModal({ spot }) {
     return () => {};
   }, [sessionUser]);
 
-//   document.addEventListener("submit", closeModal);
+  //   document.addEventListener("submit", closeModal);
 
   return (
     <div className="update_spot_modal_container">
-
       <form className="update_spot_form" onSubmit={handleSubmit}>
-      {/* <h1 className="update_spot_h1">Update Spot</h1> */}
         <ul>
           {errors.length ? <h3>Errors</h3> : ""}
           <div className="errors">
             {errors.map((error, idx) => (
               <li key={idx}>{error}</li>
             ))}
-            {/* <button onClick={handleClick}>Refresh Page</button> */}
           </div>
         </ul>
-          Country  <h1 className="update_spot_h1">Update Spot</h1>
-        <label>
+        <h1 className="update_spot_h1">Update Spot</h1>
+        <label className="update_spot_label">
+        Country
           <input
-          className="update_spot_input"
+            className="update_spot_input"
             type="text"
             value={country}
             placeholder={spot.country}
@@ -177,10 +175,10 @@ function UpdateSpotModal({ spot }) {
             required
           />
         </label>
-        <label>
+        <label className="update_spot_label">
           Street Address
           <input
-          className="update_spot_input"
+            className="update_spot_input"
             type="text"
             value={address}
             placeholder="Street address is required"
@@ -188,10 +186,10 @@ function UpdateSpotModal({ spot }) {
             required
           />
         </label>
-        <label>
+        <label className="update_spot_label">
           City
           <input
-          className="update_spot_input"
+            className="update_spot_input"
             type="text"
             value={city}
             placeholder="City is required"
@@ -199,10 +197,10 @@ function UpdateSpotModal({ spot }) {
             required
           />
         </label>
-        <label>
+        <label className="update_spot_label">
           State
           <input
-          className="update_spot_input"
+            className="update_spot_input"
             type="text"
             value={state}
             placeholder="State is required"
@@ -210,10 +208,10 @@ function UpdateSpotModal({ spot }) {
             required
           />
         </label>
-        <label>
+        <label className="update_spot_label">
           Latitude
           <input
-          className="update_spot_input"
+            className="update_spot_input"
             type="number"
             value={lat}
             placeholder="Optional"
@@ -221,10 +219,10 @@ function UpdateSpotModal({ spot }) {
             required
           />
         </label>
-        <label>
+        <label className="update_spot_label">
           Longitude
           <input
-          className="update_spot_input"
+            className="update_spot_input"
             type="number"
             value={lng}
             placeholder="Optional"
@@ -232,10 +230,10 @@ function UpdateSpotModal({ spot }) {
             required
           />
         </label>
-        <label>
+        <label className="update_spot_label">
           Description
           <input
-          className="update_spot_description"
+            className="update_spot_description"
             type="textarea"
             value={description}
             placeholder="Description"
@@ -243,10 +241,10 @@ function UpdateSpotModal({ spot }) {
             required
           />
         </label>
-        <label>
+        <label className="update_spot_label">
           Price
           <input
-          className="update_spot_input"
+            className="update_spot_input"
             type="number"
             value={price}
             placeholder="Price per day is required"
@@ -254,10 +252,10 @@ function UpdateSpotModal({ spot }) {
             required
           />
         </label>
-        <label>
+        <label className="update_spot_label">
           Name
           <input
-          className="update_spot_input"
+            className="update_spot_input"
             type="text"
             value={name}
             placeholder="Name is required"
@@ -265,62 +263,53 @@ function UpdateSpotModal({ spot }) {
             required
           />
         </label>
-        <label>
+        <label className="update_spot_label">
           URL
-          <input
+        <input
           className="update_spot_input"
-            type="text"
-            value={url}
-            placeholder="Preview Image URL"
-            onChange={(e) => setUrl(e.target.value)}
-            required
+          type="text"
+          value={url}
+          placeholder="Preview Image URL"
+          onChange={(e) => setUrl(e.target.value)}
+          required
           />
-        </label>
-        <label>
-          URL
-          <input
+          </label>
+        {/* <input
           className="update_spot_input"
-            type="text"
-            value={url}
-            placeholder="Image URL"
-            onChange={(e) => setUrl2(e.target.value)}
-            required
-          />
-        </label>
-        <label>
-          URL
-          <input
+          type="text"
+          value={url2}
+          placeholder="Image URL"
+          onChange={(e) => setUrl2(e.target.value)}
+        />
+        <input
           className="update_spot_input"
-            type="text"
-            value={url}
-            placeholder="Image URL"
-            onChange={(e) => setUrl3(e.target.value)}
-            required
-          />
-        </label>
-        <label>
-          URL
-          <input
+          type="text"
+          value={url3}
+          placeholder="Image URL"
+          onChange={(e) => setUrl3(e.target.value)}
+
+        />
+        <input
           className="update_spot_input"
-            type="text"
-            value={url}
-            placeholder="Image URL"
-            onChange={(e) => setUrl4(e.target.value)}
-            required
-          />
-        </label>
-        <label>
-          URL
-          <input
+          type="text"
+          value={url4}
+          placeholder="Image URL"
+          onChange={(e) => setUrl4(e.target.value)}
+
+        />
+        <input
           className="update_spot_input"
-            type="text"
-            value={url}
-            placeholder="Image URL"
-            onChange={(e) => setUrl5(e.target.value)}
-            required
-          />
-        </label>
-        <button className="update_spot_button" type="submit" disabled={errors.length ? true : false}>
+          type="text"
+          value={url5}
+          placeholder="Image URL"
+          onChange={(e) => setUrl5(e.target.value)}
+
+        /> */}
+        <button
+          className="update_spot_button"
+          type="submit"
+          disabled={errors.length ? true : false}
+        >
           Update
         </button>
       </form>

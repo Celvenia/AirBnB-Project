@@ -45,6 +45,7 @@ function ProfileButton({ user }) {
   const ulClassName = "profile-dropdown" + (showMenu ? "" : " hidden");
 
   const handleClick = () => {
+    closeMenu();
     history.push("/spots/current");
   };
 
@@ -68,20 +69,17 @@ function ProfileButton({ user }) {
           </>
         ) : (
           <>
-            <li>
               <OpenModalMenuItem
                 itemText="Log In"
                 onButtonClick={closeMenu}
                 modalComponent={<LoginFormModal />}
               />
-            </li>
-            <li>
+
               <OpenModalMenuItem
                 itemText="Sign Up"
                 onButtonClick={closeMenu}
                 modalComponent={<SignupFormModal />}
               />
-            </li>
           </>
         )}
       </ul>

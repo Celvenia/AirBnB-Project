@@ -54,10 +54,10 @@ return ()=> {}
           ))}
         </ul>
         <div>
-        <button type="submit">Yes(Delete Spot)</button>
+        <button className="delete_spot_modal_button" type="submit">Yes(Delete Spot)</button>
         </div>
         <div>
-        <button onClick={closeModal}>No(Keep Spot)</button>
+        <button className="delete_spot_modal_button" onClick={closeModal}>No(Keep Spot)</button>
         </div>
       </form>
     </div>

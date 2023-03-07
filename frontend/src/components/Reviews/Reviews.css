@@ -5,8 +5,11 @@
     color: white;
     box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.5);
     border-radius: 5px;
+    padding-right: 8px;
+    padding-left: 8px;
     width: auto;
 }
+
 .modal_menu_item:hover {
     cursor: pointer;
     filter:brightness(80%)

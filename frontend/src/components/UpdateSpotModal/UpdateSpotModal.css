@@ -11,7 +11,11 @@ li {
   display: flex;
   justify-content: center;
   margin-top: 10px;
-  margin-left: 45px;
+  width: 480px;
+  background-color: #ff5a5f;
+  color: white;
+  border-radius: 10px;
+  /* margin-left: 10px; */
 }
 .update_spot_description {
   display: flex;
@@ -28,12 +32,15 @@ li {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  width: 525px;
+  /* width: 525px;
+  height: 500px; */
   height: auto;
+  margin-left: 20px;
 }
 .update_spot_input {
   width: 90%;
   margin-left: 1px;
+  font-weight: 100px;
 }
 .update_spot_modal_container {
   overflow: auto;
@@ -42,4 +49,7 @@ li {
 .update_spot_modal_container {
   margin-bottom: 25px;
   /* margin-top: 50px; */
+}
+.update_spot_label {
+  font-weight: bold;
 }

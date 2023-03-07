@@ -21,8 +21,7 @@ module.exports = {
           lat: 41.315625,
           lng: 111.997382,
           name: "Cobblestone Ranch Cabin",
-          description: `About this space
-        This charming little cabin is located at the base of Monroe Mountain. It has spectacular views of mountains in all directions from the loft deck. It sleeps 5 guests comfortably. It is a darling and cozy little home base for Utah's Mighty 5 National Parks, or to relax and enjoy Monroe Mountain, Hot Springs, ATV trails, fishing, hiking, and wildlife all nearby. In summer months, enjoy watching the para-gliders/hang-gliders land just across the street. We will consider requests for 1 night stays.
+          description: `This charming little cabin is located at the base of Monroe Mountain. It has spectacular views of mountains in all directions from the loft deck. It sleeps 5 guests comfortably. It is a darling and cozy little home base for Utah's Mighty 5 National Parks, or to relax and enjoy Monroe Mountain, Hot Springs, ATV trails, fishing, hiking, and wildlife all nearby. In summer months, enjoy watching the para-gliders/hang-gliders land just across the street. We will consider requests for 1 night stays.
         The space
         Walk out of the loft to relax on the upper deck with spectacular views of the Tushar Mountain range, The Cove Basin, Pahvant Mountain range and of course Monroe Mountain. Do some star gazing and enjoy roasting marshmallows and eating s’mores. Lounge on the front porch and watch the para-gliders and grill up a tasty dinner. Relax on an outdoor futon/pull out bed on the west side porch and take in the gorgeous sunsets. Eat breakfast on the porch on the table provided or it is a great place to "work from home". We have one 4 seated UTV (side by side) rental is available with guests having first option. Next door but far enough away not to bother you is a new RV park and the big "Red Barn" which is a small convenience store with fountain drinks, hand scooped "creamery" hard ice-cream brought in from Provo, UT and a variety of old fashioned candy and treats. Make sure you visit the Red Barn, Jordan is the best!
 
@@ -46,8 +45,7 @@ module.exports = {
           lat: 22.222222,
           lng: 22.212121,
           name: "Canyon Creek Cabin",
-          description: `About this space
-          Perched high on a granite ledge, you will find this cabin overlooking a rushing river that weaves its way through the dense, lush forest of the North Cascade mountains. The unique asymmetrical A-frame structure is both unexpected and familiar, with its wood-clad walls, exposed beams, and large geometric windows. Whether you are playing whiskey-fueled card game by the fire, or lounging in the hottub while listening to the nearby rushing creek, this cabin offers the ultimate cabin experience.
+          description: `Perched high on a granite ledge, you will find this cabin overlooking a rushing river that weaves its way through the dense, lush forest of the North Cascade mountains. The unique asymmetrical A-frame structure is both unexpected and familiar, with its wood-clad walls, exposed beams, and large geometric windows. Whether you are playing whiskey-fueled card game by the fire, or lounging in the hottub while listening to the nearby rushing creek, this cabin offers the ultimate cabin experience.
           The space
           It was originally built as a fishing cabin in the 1970's. Then it was remodeled and expanded to what what you see today. The cabin interior has been thoughtful curated by the cabin's owners with uniquely designed objects, furniture, textiles, and art from their design shops in Seattle; Glasswing and their recently opened plant store, Greenhouse.
 
@@ -80,8 +78,7 @@ module.exports = {
           lat: 33.333333,
           lng: 33.313131,
           name: "Private Luxury Cabin",
-          description: `About this space
-          The private & spectacular Lakeside West Cabin (3 bedr/3.5 bath, sleeps 8) overlooks Tumalo Lake with cozy wood-burning stove, private hot tub, & amazing lake views. 12 mi to downtown Bend, 45 min to Mt Bachelor and 4 mi to Tumalo Falls. Immerse in nature and be as active as you choose: hiking, mountain biking, fishing, complimentary canoes, kayaks, SUPs, snowshoeing, sledding, hammock, horseshoe and corn hole game, shared fire pit. Need more or less space? We have 2, 4 and 6 - 8 bedroom cabins.
+          description: `The private & spectacular Lakeside West Cabin (3 bedr/3.5 bath, sleeps 8) overlooks Tumalo Lake with cozy wood-burning stove, private hot tub, & amazing lake views. 12 mi to downtown Bend, 45 min to Mt Bachelor and 4 mi to Tumalo Falls. Immerse in nature and be as active as you choose: hiking, mountain biking, fishing, complimentary canoes, kayaks, SUPs, snowshoeing, sledding, hammock, horseshoe and corn hole game, shared fire pit. Need more or less space? We have 2, 4 and 6 - 8 bedroom cabins.
           The space
           The Lakeside West Cabin (3 bedroom/3.5 bath, sleeps 8) is a stunning luxury cabin overlooking Tumalo Lake surrounded by ponderosa pine trees, located just 12 miles west of downtown Bend.  Situated on a unique 640-acre private parcel of forested land surrounded on all sides by the Deschutes National Forest, there are limitless trails for hiking, biking, x-country skiing and snowshoeing and the private lake offers free fishing, kayaking, canoeing and SUP.  There is a wonderful 2-mile hike around the lake, a lakeside deck with chairs and a picnic table, a swimming dock and a lakeside fire pit (not allowed during fire season).
 
@@ -114,9 +111,7 @@ module.exports = {
           lat: 44.444444,
           lng: 44.414141,
           name: "The Kellogg Doolittle House",
-          description: `About this space
-          The space
-          This is the famous Kellogg Doolittle estate in Joshua Tree California. It is one of the most exclusive homes in the world, and available for the first time as an Airbnb Luxe exclusive.
+          description: `This is the famous Kellogg Doolittle estate in Joshua Tree California. It is one of the most exclusive homes in the world, and available for the first time as an Airbnb Luxe exclusive.
 
           Created over 25 meticulous years, Kellogg Doolittle in Joshua Tree National Park is a marvel of the organic architecture movement. A residence that is so “one-of-a-kind,” nearly every element, inside and out, is handcrafted by architect Ken Kellogg and Master Craftsman John Vugrin. The masterpiece of organic architecture sits along the breathtaking landscape of Joshua Tree National Park, the location that lent itself as the ambitious vision and inspiration behind the design.
 
@@ -183,8 +178,7 @@ module.exports = {
           lat: 55.555555,
           lng: 55.515151,
           name: "The Hideaway at Creekside Meadows",
-          description: `About this space
-          Nestled in the foothills of the Elkhorn Mountains you'll find our charming earth home. Clean Scandinavian style decor allows the magnificent construction of this home to shine. A few unique features include 4 full sized built in sleeping nooks each with their own lights and electrical outlets, a secret door to a hidden private bedroom, and a shower you enter through a ‘tree trunk’ with almost 13ft ceilings!
+          description: `Nestled in the foothills of the Elkhorn Mountains you'll find our charming earth home. Clean Scandinavian style decor allows the magnificent construction of this home to shine. A few unique features include 4 full sized built in sleeping nooks each with their own lights and electrical outlets, a secret door to a hidden private bedroom, and a shower you enter through a ‘tree trunk’ with almost 13ft ceilings!
           The space
           Bring your friends and family and enjoy the outdoors or cuddle up inside. Our place is so fun and cozy you might not want to leave! We hope you like your companions, because there is only one private bedroom (the secret room) and one bathroom. We think our place best suits gatherings and good times!
           Guest access

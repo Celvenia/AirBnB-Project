@@ -27,3 +27,18 @@
     height: 250px;
     width: 250px;
 }
+/* .reviews_stars > * {
+    background-color: grey;
+} */
+/* .fa-regular fa-star {
+    background-color: blue;
+} */
+.stars {
+    background-color: transparent;
+    border: none;
+    outline: none;
+    /* background-color: blue; */
+}
+/* .fa-regular.fa-star {
+    background-color: blue;
+} */

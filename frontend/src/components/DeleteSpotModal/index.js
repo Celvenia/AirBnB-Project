@@ -1,6 +1,6 @@
 // frontend/src/components/DeleteSpotModal/index.js
 import React, { useEffect, useState } from "react";
-import * as sessionActions from "../../store/session";
+// import * as sessionActions from "../../store/session";
 import { useDispatch } from "react-redux";
 import { useModal } from "../../context/Modal";
 import "./DeleteSpotModal.css";

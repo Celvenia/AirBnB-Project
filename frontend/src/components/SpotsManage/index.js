@@ -1,7 +1,13 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect} from "react";
+// import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
-import { deleteASpot, getMySpots, getSpots, updateASpot } from "../../store/spots";
+import {
+  // deleteASpot,
+  getMySpots,
+  getSpots,
+  // updateASpot,
+} from "../../store/spots";
 import DeleteSpotModal from "../DeleteSpotModal";
 import UpdateSpotModal from "../UpdateSpotModal";
 import OpenModalMenuItem from "../Navigation/OpenMenuModalItem";
@@ -11,16 +17,13 @@ import "./SpotsManage.css";
 
 const SpotsManage = () => {
   const spotsArr = useSelector((state) => state.spots?.Spots);
-  // const allSpots = useSelector((state) => state.spots)
-  const [check, setCheck] = useState(false)
+  // const firstImg = spotsArr
 
   const dispatch = useDispatch();
   useEffect(() => {
-    // dispatch(getSpots());
+    dispatch(getSpots());
     dispatch(getMySpots());
-    if(spotsArr.length) {
-      setCheck(true)
-    }
+
     return () => {};
   }, [dispatch]);
 
@@ -28,7 +31,7 @@ const SpotsManage = () => {
     return <div>Loading...</div>;
   }
   // console.log(spotsArr)
-  return check ? (
+  return (
     <div className="spots_manage_container">
       <h1 className="spots_manage_h1 ">Manage Spots</h1>
       <div className="spot_cards">
@@ -54,9 +57,12 @@ const SpotsManage = () => {
           ))}
       </div>
     </div>
-  ) : (
-    <h1 className="spots_manage_h1">Sorry it doesn't appear you have any listings...</h1>
-  );
+  )
+  // : (
+  //   <h1 className="spots_manage_h1">
+  //     Sorry it doesn't appear you have any listings...
+  //   </h1>
+  // );
 };
 
 export default SpotsManage;

@@ -62,14 +62,17 @@ export const getMyReviews = () => async (dispatch) => {
 // };
 
 export const getSpotReviews = (spotId) => async (dispatch) => {
-  const res = await csrfFetch(`/api/spots/${spotId}/reviews`);
+  try {
+    const res = await csrfFetch(`/api/spots/${spotId}/reviews`);
 
-  if (res.ok) {
-    const reviews = await res.json();
-    console.log(reviews)
-    dispatch(loadSpotReviews(reviews));
-    return reviews;
-  } else return res.json()
+    if (res.ok) {
+      const reviews = await res.json();
+      dispatch(loadSpotReviews(reviews));
+      return reviews;
+    }
+  } catch (err) {
+    return err.statusText
+  }
 };
 
 // export const createASpot = (data) => async (dispatch) => {
@@ -106,7 +109,7 @@ export const postAReview = (spotId, reviewData) => async (dispatch) => {
       return review;
     }
   } catch (err) {
-    return console.log(err)
+    return err.statusText
   }
 };
 

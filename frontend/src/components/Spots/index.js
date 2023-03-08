@@ -4,15 +4,16 @@ import { NavLink } from "react-router-dom";
 import { getSpots } from "../../store/spots";
 import SpotCard from "../SpotCard";
 import "./Spots.css";
+// import * as sessionActions from "../../store/session";
 
 const Spots = () => {
   const dispatch = useDispatch();
-  const spotsArr = useSelector((state) => Object.values(state.spots));
-
-  console.log(spotsArr);
+  const spotsObj = useSelector((state) => state.spots);
+  const spotsArr = Object.values(spotsObj);
 
   useEffect(() => {
     dispatch(getSpots());
+    // dispatch(getReviews())
     return () => {};
   }, [dispatch]);
 
@@ -21,16 +22,26 @@ const Spots = () => {
   }
 
   return (
-    <main className="spot_cards">
-      {spotsArr.length &&
-        spotsArr.map((spot) => (
-          <div className="spot_card_container" key={spot.id}>
-            <NavLink to={`/spots/${spot.id}`} className="nav_link">
-              <SpotCard spot={spot} />
-            </NavLink>
-          </div>
-        ))}
-    </main>
+    <div className="spots_container">
+      <div className="spot_cards">
+        {spotsArr.length &&
+          spotsArr.map((spot) =>
+            spot.id !== undefined ? (
+              <div className="spot_card_container" key={spot.id}>
+                <NavLink
+                  to={`/spots/${spot.id}`}
+                  className="nav_link"
+                  key={spot.id}
+                >
+                  <SpotCard spot={spot} key={spot.id} />
+                </NavLink>
+              </div>
+            ) : (
+              ""
+            )
+          )}
+      </div>
+    </div>
   );
 };
 

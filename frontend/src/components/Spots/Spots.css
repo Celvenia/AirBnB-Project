@@ -1,33 +1,19 @@
 .spot_cards {
   display: flex;
   flex-wrap: wrap;
-  /* justify-content: space-evenly; */
-  /* grid-template-columns: repeat(4, 1fr);
-    gap: 20px; */
 }
+.spots_container {
+  margin-top: 100px;
+}
+
 .nav_link {
   text-decoration: none;
 }
-/* .spot_card_container {
-    text-decoration: none;
-} */
-/* .spot_cards {
-    display: flex;
-    gap: 20px;
-} */
 
-/* .spot_card>img {
-    object-fit: contain;
-    overflow: hidden;
-    display: flex;
-    justify-content: start;
-    width: 100%; */
-/* height: 100px;
-    width: 250px; */
-/* } */
 .spot_card:nth-child(1n) {
   margin-left: 25px;
 }
+
 .spot_card:nth-child(4n) {
   margin-right: 25px;
 }

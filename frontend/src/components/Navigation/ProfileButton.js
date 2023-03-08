@@ -1,16 +1,18 @@
 // frontend/src/components/Navigation/ProfileButton.js
+// import OpenModalButton from "../OpenModalButton";
 import React, { useState, useEffect, useRef } from "react";
 import { useDispatch } from "react-redux";
 import * as sessionActions from "../../store/session";
-import OpenModalButton from "../OpenModalButton";
 import LoginFormModal from "../LoginFormModal";
 import SignupFormModal from "../SignupFormModal";
 import OpenModalMenuItem from "./OpenMenuModalItem";
+import { useHistory } from "react-router-dom";
 
 function ProfileButton({ user }) {
   const dispatch = useDispatch();
   const [showMenu, setShowMenu] = useState(false);
   const ulRef = useRef();
+  const history = useHistory()
 
   const openMenu = () => {
     if (showMenu) return;
@@ -37,9 +39,15 @@ function ProfileButton({ user }) {
     e.preventDefault();
     dispatch(sessionActions.logout());
     closeMenu();
+    history.push('/')
   };
 
   const ulClassName = "profile-dropdown" + (showMenu ? "" : " hidden");
+
+  const handleClick = () => {
+    closeMenu();
+    history.push("/spots/current");
+  };
 
   return (
     <div className="profile_button">
@@ -57,23 +65,21 @@ function ProfileButton({ user }) {
             <li>
               <button onClick={logout}>Log Out</button>
             </li>
+            <li className="manage_spots" onClick={handleClick}>Manage Spots</li>
           </>
         ) : (
           <>
-            <li>
               <OpenModalMenuItem
                 itemText="Log In"
                 onButtonClick={closeMenu}
                 modalComponent={<LoginFormModal />}
               />
-            </li>
-            <li>
+
               <OpenModalMenuItem
                 itemText="Sign Up"
                 onButtonClick={closeMenu}
                 modalComponent={<SignupFormModal />}
               />
-            </li>
           </>
         )}
       </ul>

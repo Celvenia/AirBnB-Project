@@ -10,6 +10,7 @@
   background-color: #fff;
   z-index: 999;
   width: 100%;
+  border-bottom: 1px solid lightgray;
 }
 .header_content {
     display: flex;
@@ -27,4 +28,30 @@ button {
 button:hover {
     cursor: pointer;
     filter: brightness(80%);
+}
+
+.header_right {
+  display: flex;
+  margin-right: 20px;
+  padding: 10px;
+}
+
+.header_create_spot {
+  margin-right: 10px;
+  text-decoration: underline;
+  cursor: pointer;
+}
+.header_create_spot:hover {
+  color: #FF5A5F;
+}
+
+
+.manage_spots {
+  margin-top: 10px;
+}
+
+.manage_spots:hover {
+  cursor: pointer;
+  filter: brightness(80%);
+  color: red;
 }

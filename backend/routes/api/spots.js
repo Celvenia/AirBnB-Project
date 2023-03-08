@@ -343,11 +343,11 @@ router.get("/:spotId/reviews", async (req, res) => {
       .status(404)
       .json({ message: "Spot could not be found", statusCode: 404 });
   }
-  if (!spotReviews.length) {
-    res
-      .status(404)
-      .json({ message: "Spot does not have any reviews", statusCode: 404 });
-  }
+  // if (!spotReviews.length) {
+  //   res
+  //     .status(404)
+  //     .json({ message: "Spot does not have any reviews", statusCode: 404 });
+  // }
 
   res.json({ Reviews: spotReviews });
 });

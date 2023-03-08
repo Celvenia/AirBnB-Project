@@ -40,7 +40,7 @@ export const getMyReviews = () => async (dispatch) => {
   } catch (err) {
     return err;
   }
-  // } else return res.json();
+
 };
 
 export const getSpotReviews = (spotId) => async (dispatch) => {
@@ -55,7 +55,7 @@ export const getSpotReviews = (spotId) => async (dispatch) => {
   } catch (err) {
     return err.message
   }
-  // } else return res.json();
+
 };
 
 export const postAReview = (spotId, reviewData) => async (dispatch) => {
@@ -73,7 +73,7 @@ export const postAReview = (spotId, reviewData) => async (dispatch) => {
   } catch (err) {
     return err;
   }
-  // } else return res.json();
+
 };
 
 export const deleteAReview = (reviewId) => async (dispatch) => {
@@ -90,7 +90,7 @@ export const deleteAReview = (reviewId) => async (dispatch) => {
   } catch (err) {
     return err;
   }
-  // } else return res.json();
+
 };
 
 const initialState = {};

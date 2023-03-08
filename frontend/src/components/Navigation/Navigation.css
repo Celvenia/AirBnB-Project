@@ -53,5 +53,10 @@ button:hover {
 .manage_spots:hover {
   cursor: pointer;
   filter: brightness(80%);
-  color: red;
+  color: #FF5A5F;
+}
+
+
+.user_buttons {
+  margin-top: 5px;
 }

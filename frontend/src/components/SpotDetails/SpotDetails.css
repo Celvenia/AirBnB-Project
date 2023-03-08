@@ -68,6 +68,12 @@ main {
   overflow: hidden;
 }
 
+.image_first_alt {
+  grid-column: 1 / span 4;
+  grid-row: 1 / span 2;
+  /* overflow: hidden; */
+}
+
 .image_first img {
   width: 100%;
   height: 100%;

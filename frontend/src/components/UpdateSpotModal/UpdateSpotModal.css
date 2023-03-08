@@ -36,6 +36,7 @@ li {
   height: 500px; */
   height: auto;
   margin-left: 20px;
+  margin-top: 50px;
 }
 .update_spot_input {
   width: 90%;
@@ -48,6 +49,8 @@ li {
 
 .update_spot_modal_container {
   margin-bottom: 25px;
+  /* margin-top: 25px; */
+  height: 600px;
   /* margin-top: 50px; */
 }
 .update_spot_label {

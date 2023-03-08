@@ -20,7 +20,7 @@ function UpdateSpotModal({ spot }) {
   const [description, setDescription] = useState(spot.description);
   const [name, setName] = useState(spot.name);
   const [price, setPrice] = useState(spot.price);
-  const [url, setUrl] = useState(spot?.previewImage);
+  const [url, setUrl] = useState("");
   const [url2, setUrl2] = useState("");
   const [url3, setUrl3] = useState("");
   const [url4, setUrl4] = useState("");
@@ -91,7 +91,7 @@ function UpdateSpotModal({ spot }) {
               url,
               preview: true,
             };
-            dispatch(postAImage(spot, imageData));
+            dispatch(postAImage(data, imageData));
           }
         });
         dispatch(getMySpots());
@@ -130,14 +130,14 @@ function UpdateSpotModal({ spot }) {
     return () => {};
   }, [sessionUser]);
 
-  useEffect(() => {
-    if(spot?.SpotImages?.[0]?.url !== undefined) {
-      setUrl(spot.SpotImages[0].url)
-    } else if (spot?.previewImage !== undefined) {
-      setUrl(spot?.previewImage)
-    }
-    return () => {}
-  },[spot?.previewImage, spot?.SpotImages])
+  // useEffect(() => {
+  //   if(spot?.SpotImages?.[0]?.url !== undefined) {
+  //     setUrl(spot.SpotImages[0].url)
+  //   } else if (spot?.previewImage !== undefined) {
+  //     setUrl(spot?.previewImage)
+  //   }
+  //   return () => {}
+  // },[spot?.previewImage, spot?.SpotImages])
 
 
   //   document.addEventListener("submit", closeModal);

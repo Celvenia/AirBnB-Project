@@ -76,7 +76,8 @@ const SpotDetails = () => {
           </span>
         </div>
         <div className="image_container">
-          <span className="image_first">
+          <span className={images.length > 1 ? "image_first" : "image_first_alt"}>
+          {/* <span className="image_first"> */}
             {images.length ? (
               <img src={images[0].url} alt="preview home" />
             ) : (

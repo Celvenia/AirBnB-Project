@@ -25,6 +25,14 @@ input {
     font-weight: 700px;
     color: white;
     border-radius: 5px;
-    margin-bottom: 100px;
+    margin-bottom: 30px;
+    margin-top: 20px;
+    margin-left: 20px;
     width: 150px;
+}
+.signup_modal_form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
 }

@@ -21,15 +21,15 @@ function UpdateSpotModal({ spot }) {
   const [name, setName] = useState(spot.name);
   const [price, setPrice] = useState(spot.price);
   const [url, setUrl] = useState(spot?.previewImage);
-  // const [url2, setUrl2] = useState("");
-  // const [url3, setUrl3] = useState("");
-  // const [url4, setUrl4] = useState("");
-  // const [url5, setUrl5] = useState("");
+  const [url2, setUrl2] = useState("");
+  const [url3, setUrl3] = useState("");
+  const [url4, setUrl4] = useState("");
+  const [url5, setUrl5] = useState("");
   const [errors, setErrors] = useState([]);
   //   const history = useHistory();
 
   const handleSubmit = async (e) => {
-    // e.preventDefault();
+    e.preventDefault();
     setErrors([]);
     const validationErrors = [];
 
@@ -83,8 +83,8 @@ function UpdateSpotModal({ spot }) {
       data = await dispatch(updateASpot(payload));
       // if spot successfully dispatched, and user entered url allow dispatch for postAImage
       if (data) {
-        // let imageDataArr = [url, url2, url3, url4, url5];
-        let imageDataArr = [url]
+        let imageDataArr = [url, url2, url3, url4, url5];
+        // let imageDataArr = [url]
         imageDataArr.forEach((url) => {
           if (url !== "") {
             let imageData = {

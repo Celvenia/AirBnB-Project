@@ -127,7 +127,6 @@ export const updateASpot = (spot) => async (dispatch) => {
     const spot = await res.json();
      dispatch(updateSpot(spot))
      return spot
-    // .then(dispatch(loadMySpots()))
   } else return res.json()
 }
 
@@ -139,9 +138,7 @@ const spotReducer = (state = initialState, action) => {
     case LOAD_SPOTS: {
       const newState = { ...state };
       action.spots.forEach((spot) => {
-        // if(spot.id !== undefined) {
           newState[spot.id] = spot;
-        // }
       });
       return newState;
     }
@@ -159,7 +156,7 @@ const spotReducer = (state = initialState, action) => {
     }
     case DELETE_SPOT: {
       const newState = { ...state };
-      delete newState[action.spotId];
+      delete newState[action.spotId.id];
       return newState;
     }
     case UPDATE_SPOT: {

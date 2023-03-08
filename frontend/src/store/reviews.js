@@ -29,52 +29,68 @@ const deleteReview = (reviewId) => ({
 
 // thunk action creators - for asynchronous code, i.e fetch calls prior to dispatching action creators
 export const getMyReviews = () => async (dispatch) => {
-  const res = await csrfFetch("/api/reviews/current");
+  try {
+    const res = await csrfFetch("/api/reviews/current");
 
-  if (res.ok) {
-    const reviews = await res.json();
-    dispatch(loadMyReviews(reviews));
-    return reviews;
-  } else return res.json();
+    if (res.ok) {
+      const reviews = await res.json();
+      dispatch(loadMyReviews(reviews));
+      return reviews;
+    }
+  } catch (err) {
+    return err;
+  }
+  // } else return res.json();
 };
 
 export const getSpotReviews = (spotId) => async (dispatch) => {
-  const res = await csrfFetch(`/api/spots/${spotId}/reviews`);
+  try {
+    const res = await csrfFetch(`/api/spots/${spotId}/reviews`);
 
-  if (res.ok) {
-    const reviews = await res.json();
-    dispatch(loadSpotReviews(reviews));
-    return reviews;
-  } else return res.json();
+    if (res.ok) {
+      const reviews = await res.json();
+      dispatch(loadSpotReviews(reviews));
+      return reviews;
+    }
+  } catch (err) {
+    return err.message
+  }
+  // } else return res.json();
 };
 
 export const postAReview = (spotId, reviewData) => async (dispatch) => {
-  console.log(spotId)
-  console.log(reviewData)
-  const res = await csrfFetch(`/api/spots/${spotId}/reviews`, {
-    method: "POST",
-    body: JSON.stringify(reviewData),
-  });
+  try {
+    const res = await csrfFetch(`/api/spots/${spotId}/reviews`, {
+      method: "POST",
+      body: JSON.stringify(reviewData),
+    });
 
-  if (res.ok) {
-    const review = await res.json();
-    dispatch(postReview(review));
-    return review;
-  } else {
-    return res.json();
+    if (res.ok) {
+      const review = await res.json();
+      dispatch(postReview(review));
+      return review;
+    }
+  } catch (err) {
+    return err;
   }
+  // } else return res.json();
 };
 
 export const deleteAReview = (reviewId) => async (dispatch) => {
-  const res = await csrfFetch(`/api/reviews/${reviewId}`, {
-    method: "DELETE",
-  });
+  try {
+    const res = await csrfFetch(`/api/reviews/${reviewId}`, {
+      method: "DELETE",
+    });
 
-  if (res.ok) {
-    const response = await res.json();
-    dispatch(deleteReview(response));
-    return response;
-  } else return res.json();
+    if (res.ok) {
+      const response = await res.json();
+      dispatch(deleteReview(response));
+      return response;
+    }
+  } catch (err) {
+    return err;
+  }
+  // } else return res.json();
 };
 
 const initialState = {};

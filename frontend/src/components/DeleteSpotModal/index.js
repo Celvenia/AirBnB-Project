@@ -14,7 +14,7 @@ function DeleteSpotModal({spotId}) {
   const history = useHistory()
 
   const handleSubmit = (e) => {
-    // e.preventDefault();
+    e.preventDefault();
     if(window.location.pathname === '/spots/current') {
       setErrors([]);
       return dispatch(deleteASpot(spotId))

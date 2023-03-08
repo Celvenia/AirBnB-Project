@@ -3,11 +3,12 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import "./UpdateSpotModal.css";
 // import { useHistory } from "react-router-dom";
-import { getMySpots, postAImage, updateASpot } from "../../store/spots";
+import { getMySpots, getSpots, postAImage, updateASpot } from "../../store/spots";
 import { useModal } from "../../context/Modal";
 
 function UpdateSpotModal({ spot }) {
   const sessionUser = useSelector((state) => state.session.user);
+  const currentSpot = useSelector((state) => state.spots[spot.id])
   const dispatch = useDispatch();
   const { closeModal } = useModal();
 
@@ -80,9 +81,11 @@ function UpdateSpotModal({ spot }) {
     }
     let data;
     try {
-      data = await dispatch(updateASpot(payload));
-      // if spot successfully dispatched, and user entered url allow dispatch for postAImage
-      if (data) {
+      data = await dispatch(updateASpot(payload))
+      .then(() => {
+console.log(currentSpot, 'spot!!!!!!!!!!!!!!', spot)
+        // if spot successfully dispatched, and user entered url allow dispatch for postAImage
+        if (data) {
         let imageDataArr = [url, url2, url3, url4, url5];
         // let imageDataArr = [url]
         imageDataArr.forEach((url) => {
@@ -91,11 +94,14 @@ function UpdateSpotModal({ spot }) {
               url,
               preview: true,
             };
-            dispatch(postAImage(data, imageData));
+            dispatch(getSpots())
+            .then(dispatch(getMySpots()))
+            .then(dispatch(postAImage(currentSpot, imageData)))
+            .then(closeModal)
           }
         });
-        dispatch(getMySpots());
       }
+    })
 
     } catch (err) {
       setErrors(["Spot already exists with that address, try again"]);
@@ -130,19 +136,19 @@ function UpdateSpotModal({ spot }) {
     return () => {};
   }, [sessionUser]);
 
-  // useEffect(() => {
-  //   if(spot?.SpotImages?.[0]?.url !== undefined) {
-  //     setUrl(spot.SpotImages[0].url)
-  //   } else if (spot?.previewImage !== undefined) {
-  //     setUrl(spot?.previewImage)
-  //   }
-  //   return () => {}
-  // },[spot?.previewImage, spot?.SpotImages])
+  useEffect(() => {
+    if(spot?.SpotImages?.[0]?.url !== undefined) {
+      setUrl(spot.SpotImages[0].url)
+    } else if (spot?.previewImage !== undefined) {
+      setUrl(spot?.previewImage)
+    }
+    return () => {}
+  },[spot?.previewImage, spot?.SpotImages])
 
 
-  //   document.addEventListener("submit", closeModal);
+    document.addEventListener("submit", closeModal);
 
-  return (
+  return currentSpot && (
     <div className="update_spot_modal_container">
       <form className="update_spot_form" onSubmit={handleSubmit}>
         <ul>

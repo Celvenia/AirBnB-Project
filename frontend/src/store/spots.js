@@ -91,6 +91,7 @@ export const createASpot = (data) => async (dispatch) => {
 };
 
 export const postAImage = (spot, payload) => async (dispatch) => {
+  console.log('spot', spot)
   const res = await csrfFetch(`/api/spots/${spot.id}/images`, {
     method: "POST",
     body: JSON.stringify(payload),
@@ -116,6 +117,7 @@ export const deleteASpot = (spotId) => async (dispatch) => {
 };
 
 export const updateASpot = (spot) => async (dispatch) => {
+  console.log(spot)
   const res = await csrfFetch(`/api/spots/${spot.id}`, {
     method: "PUT",
     headers: {
@@ -152,7 +154,8 @@ const spotReducer = (state = initialState, action) => {
     }
     case POST_IMAGE: {
       const newState = { ...state };
-      return { ...newState};
+      // console.log(action)
+      return { ...newState, [action.spot.id]: action.spot};
     }
     case DELETE_SPOT: {
       const newState = { ...state };

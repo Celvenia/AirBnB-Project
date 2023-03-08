@@ -71,7 +71,7 @@ main {
 .image_first_alt {
   grid-column: 1 / span 4;
   grid-row: 1 / span 2;
-  /* overflow: hidden; */
+  overflow: hidden;
 }
 
 .image_first img {

@@ -3,6 +3,9 @@ import "./SpotCard.css";
 const SpotCard = ({
   spot: { city, state, price, name, previewImage, avgStarRating }
 }) => {
+  if(avgStarRating === undefined) {
+    return <div>Loading...</div>
+  }
   const address = `${city}, ${state}`;
   return (
     <div className="spot_card" title={`${name}`}>

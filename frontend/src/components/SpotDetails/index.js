@@ -1,4 +1,4 @@
-import { useEffect} from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { getASpot } from "../../store/spots";
@@ -9,27 +9,27 @@ import OpenModalMenuItem from "../Navigation/OpenMenuModalItem";
 import "./SpotDetails.css";
 import ReviewForm from "../ReviewForm";
 import { getSpotReviews } from "../../store/reviews";
+import Review from "../Reviews";
 
 const SpotDetails = () => {
   const { spotId } = useParams();
   const sessionUser = useSelector((state) => state.session.user);
   const spot = useSelector((state) => state.spots[spotId]);
-  const reviews = useSelector((state) => state.reviews);
+  const reviews = useSelector((state) => state.reviews[spotId]);
   // const [errors, setErrors] = useState()
   const dispatch = useDispatch();
 
   let userId;
 
-
   if (sessionUser) {
     userId = sessionUser.id;
   }
-
+  // console.log(userId)
+  // console.log('what is this', reviews[spotId][0])
   useEffect(() => {
     dispatch(getASpot(spotId))
-   dispatch(getSpotReviews(spotId))
-
-   return () => {};
+    dispatch(getSpotReviews(spotId));
+    return () => {};
   }, [dispatch, spotId]);
 
   if (!spot || !spot.SpotImages || !spot.Owner) {
@@ -49,19 +49,20 @@ const SpotDetails = () => {
 
   const { firstName, lastName, id } = spot.Owner;
   const images = Object.values(spot.SpotImages);
-  const usersArr = []
-  if(reviews[spotId]) {
-    reviews[spotId].forEach(review => {
-      usersArr.push(review.userId)
-    })
-  }
+  const usersArr = [];
 
+  // if (reviews[spotId]) {
+  //   reviews[spotId].forEach((review) => {
+  //     usersArr.push(review.userId);
+  //   });
+  // }
 
   const handleClick = () => {
     alert("Feature coming soon...");
   };
 
-  return spot && (
+  return (
+    spot && (
       <div className="body_container">
         <h1>{name}</h1>
         <div className="spot_detail_header">
@@ -164,32 +165,38 @@ const SpotDetails = () => {
             {numReviews} {numReviews !== 1 ? "Reviews" : "Review"}
           </span>
         </div>
-        {numReviews === 0 ? userId === spot.Owner.id ? "" :  (
-          <OpenModalMenuItem
-            itemText="Be the first to add a review"
-            modalComponent={<ReviewForm spotsId={spotId} />}
-          />
-        ) : userId === undefined ? "" : userId === spot.Owner.id ? "" : usersArr.includes(userId) ? "" : (
+        {numReviews === 0 ? (
+          userId === spot.Owner.id ? (
+            ""
+          ) : (
+            <OpenModalMenuItem
+              itemText="Be the first to add a review"
+              modalComponent={<ReviewForm spotsId={spotId} />}
+            />
+          )
+        ) : userId === undefined ? (
+          ""
+        ) : userId === spot.Owner.id ? (
+          ""
+        ) : usersArr.includes(userId) ? (
+          ""
+        ) : (
           <OpenModalMenuItem
             itemText={"Post a Review"}
             modalComponent={<ReviewForm spotsId={spotId} />}
           />
         )}
-      <div>
-        {reviews[spotId]?.map(review => {
-          return (
-            <div key={review.id}>
-            <span>{review.User.firstName}</span>
-            <span>{"  "}</span>
-            <span>{review.User.lastName}</span>
-            <div>{review.updatedAt.slice(0, 10)}</div>
-            <div>{review.review}</div>
-            </div>
-          )
-        })}
-        {/* <h1>{reviews[spotId][0].User.firstName}</h1> */}
+        <div>
+          {reviews?.reverse()?.map((review) => {
+            return (
+              <ul className="spot_details_review" key={review.id}>
+                <Review review={review} spot={spot} />
+              </ul>
+            );
+          })}
+        </div>
       </div>
-      </div>
+    )
   );
 };
 

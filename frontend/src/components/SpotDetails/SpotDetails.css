@@ -171,5 +171,29 @@ main {
   } */
 .spot_detail_update_modal_button {
   margin: 5px;
-  margin-right: 10px; 
+  margin-right: 10px;
+}
+
+.spot_details_review {
+  display: flex;
+  flex-direction: column;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  font-family: cursive;
+}
+.spot_details_review li:nth-child(1) {
+  font-weight: 700;
+}
+.spot_details_review li:nth-child(2) {
+  filter:opacity(50%)
+}
+.spot_details_review_delete {
+  width: 50px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  border: 1px solid black;
+  background-color: grey;
+  color: white;
+  box-shadow: 5px 5px 5px rgb(0 0 0 / 50%);
+  border-radius: 5px;
 }

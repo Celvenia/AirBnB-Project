@@ -1,40 +1,47 @@
 import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 // import { useDispatch, useSelector } from "react-redux";
 // import { useParams } from "react-router-dom";
+import { useModal } from "../../context/Modal";
 import { getSpotReviews, postAReview } from "../../store/reviews";
 import "./ReviewForm.css";
 
 const ReviewForm = ({ spotsId }) => {
   const dispatch = useDispatch();
   // const { spotId } = useParams();
-  // const reviews = useSelector((state) => state.reviews[spotId]);
+  // const reviews = useSelector((state) => state?.reviews[spotsId]);
   const [review, setReview] = useState("");
   const [stars, setStars] = useState(0);
   const [errors, setErrors] = useState([]);
+  const { closeModal } = useModal();
+
 
   const postReviewSubmit = async (e) => {
-    // e.preventDefault();
-    // const validationErrors = [];
+    e.preventDefault();
 
     const reviewData = {
       review,
       stars,
     };
+
     let response;
+
     try {
-      response = await dispatch(postAReview(spotsId, reviewData));
+      response = await dispatch(postAReview(spotsId, reviewData))
+      .then(dispatch(getSpotReviews(spotsId)))
+      .then(closeModal);
       return response
     } catch (err) {
-      setErrors([...err.message]);
+      setErrors([{...err}]);
     }
   };
 
   useEffect(() => {
     setErrors([]);
-    dispatch(getSpotReviews(spotsId));
+    // dispatch(getSpotReviews(spotsId));
     return () => {};
   }, [dispatch, spotsId]);
+  // },[dispatch])
 
   const handleStarClick1 = (e) => {
     e.preventDefault();

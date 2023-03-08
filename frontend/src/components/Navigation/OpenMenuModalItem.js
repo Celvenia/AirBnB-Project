@@ -1,5 +1,6 @@
 // frontend/src/components/Navigation/OpenModalMenuItem.js
-import React from "react";
+import React, { useEffect } from "react";
+import { useDispatch } from "react-redux";
 import { useModal } from "../../context/Modal";
 
 function OpenModalMenuItem({
@@ -9,12 +10,16 @@ function OpenModalMenuItem({
   onModalClose, // optional: callback function that will be called once the modal is closed
 }) {
   const { setModalContent, setOnModalClose } = useModal();
-
+  const dispatch = useDispatch();
   const onClick = () => {
     if (onModalClose) setOnModalClose(onModalClose);
     setModalContent(modalComponent);
     if (onItemClick) onItemClick();
   };
+
+  useEffect(() => {
+
+  },[dispatch])
 
   return <li className="modal_menu_item" onClick={onClick}>{itemText}</li>;
 }

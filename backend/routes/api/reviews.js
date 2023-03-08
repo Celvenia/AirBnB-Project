@@ -69,7 +69,8 @@ router.delete("/:reviewId", requireAuth, async (req, res) => {
     return res.status(403).json({ message: "Forbidden", statusCode: 403 });
   } else {
     await review.destroy();
-    res.status(200).json({ message: "Successfully deleted", statusCode: 200 });
+    // res.status(200).json({ message: "Successfully deleted", statusCode: 200 });
+    res.status(200).json(review)
   }
 });
 

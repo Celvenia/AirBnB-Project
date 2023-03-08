@@ -45,7 +45,6 @@ export const getSpots = () => async (dispatch) => {
   const res = await csrfFetch("/api/spots");
   if (res.ok) {
     const spots = await res.json();
-    // console.log(spots.Spots)
     dispatch(loadSpots(spots.Spots));
     return spots;
   } else return res.json()
@@ -66,7 +65,6 @@ export const getMySpots = () => async (dispatch) => {
 
   if (res.ok) {
     const spots = await res.json();
-    // console.log(spots)
     dispatch(loadMySpots(spots));
     return spots;
   } else return res.json()
@@ -128,7 +126,6 @@ export const updateASpot = (spot) => async (dispatch) => {
   if(res.ok) {
     const spot = await res.json();
      dispatch(updateSpot(spot))
-    //  console.log(spot)
      return spot
     // .then(dispatch(loadMySpots()))
   } else return res.json()
@@ -154,7 +151,6 @@ const spotReducer = (state = initialState, action) => {
     }
     case LOAD_MY_SPOTS: {
       const newState = { ...state };
-      // console.log(action.spots)
       return {...newState, ...action.spots}
     }
     case POST_IMAGE: {
@@ -168,8 +164,6 @@ const spotReducer = (state = initialState, action) => {
     }
     case UPDATE_SPOT: {
       const newState = { ...state}
-      // newState[action.spot.id] = action.spot
-      // console.log('testing this', Object.values(newState))
         return {...newState, [action.spot.id]: action.spot}
     }
     default: {

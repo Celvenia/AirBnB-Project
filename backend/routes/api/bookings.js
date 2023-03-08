@@ -22,7 +22,6 @@ const { Sequelize, Op } = require("sequelize");
 // find all bookings
 router.get("/", async (req, res) => {
   const bookings = await Booking.findAll();
-  // console.log(bookings)
   res.json(bookings);
 });
 

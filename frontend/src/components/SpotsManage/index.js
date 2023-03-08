@@ -30,7 +30,7 @@ const SpotsManage = () => {
   if (!spotsArr) {
     return <div>Loading...</div>;
   }
-  // console.log(spotsArr)
+
   return (
     <div className="spots_manage_container">
       <h1 className="spots_manage_h1 ">Manage Spots</h1>

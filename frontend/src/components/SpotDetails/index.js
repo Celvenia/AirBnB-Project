@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { getASpot } from "../../store/spots";
@@ -24,10 +24,9 @@ const SpotDetails = () => {
   if (sessionUser) {
     userId = sessionUser.id;
   }
-  // console.log(userId)
-  // console.log('what is this', reviews[spotId][0])
+
   useEffect(() => {
-    dispatch(getASpot(spotId))
+    dispatch(getASpot(spotId));
     dispatch(getSpotReviews(spotId));
     return () => {};
   }, [dispatch, spotId]);
@@ -49,13 +48,6 @@ const SpotDetails = () => {
 
   const { firstName, lastName, id } = spot.Owner;
   const images = Object.values(spot.SpotImages);
-  const usersArr = [];
-
-  // if (reviews[spotId]) {
-  //   reviews[spotId].forEach((review) => {
-  //     usersArr.push(review.userId);
-  //   });
-  // }
 
   const handleClick = () => {
     alert("Feature coming soon...");
@@ -178,7 +170,7 @@ const SpotDetails = () => {
           ""
         ) : userId === spot.Owner.id ? (
           ""
-        ) : usersArr.includes(userId) ? (
+        ) : reviews && reviews.some((review) => review.userId === userId) ? (
           ""
         ) : (
           <OpenModalMenuItem

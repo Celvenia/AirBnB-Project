@@ -38,7 +38,7 @@ export const getMyReviews = () => async (dispatch) => {
             return reviews;
         }
     } catch (err) {
-        return console.log(err)
+        return {...err}
     }
 };
 

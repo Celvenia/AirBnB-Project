@@ -28,19 +28,6 @@ function UpdateSpotModal({ spot }) {
   const [errors, setErrors] = useState([]);
   //   const history = useHistory();
 
-  console.log(spot);
-
-  //   const handleSubmit = (e) => {
-  //     e.preventDefault();
-  //     setErrors([]);
-  //     return dispatch(updateASpot(spot))
-  //       .then(closeModal)
-  //       .catch(async (res) => {
-  //         const data = await res.json();
-  //         if (data && data.errors) setErrors(data.errors);
-  //       });
-  //   };
-
   const handleSubmit = async (e) => {
     // e.preventDefault();
     setErrors([]);
@@ -98,7 +85,6 @@ function UpdateSpotModal({ spot }) {
     try {
       data = await dispatch(updateASpot(payload));
       // if spot successfully dispatched, and user entered url allow dispatch for postAImage
-      //   console.log("what is this", spot);
       if (data) {
         let imageDataArr = [url, url2, url3, url4, url5];
         imageDataArr.forEach((url) => {
@@ -113,10 +99,6 @@ function UpdateSpotModal({ spot }) {
         dispatch(getMySpots());
       }
 
-      //   // if spot is successful and no errors, redirect to current page
-      //   if (spot && !errors.length) {
-      //     history.push(`/spots/current`);
-      //   }
     } catch (err) {
       setErrors(["Spot already exists with that address, try again"]);
     }

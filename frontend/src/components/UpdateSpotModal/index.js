@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import "./UpdateSpotModal.css";
 // import { useHistory } from "react-router-dom";
-import { getMySpots, getSpots, postAImage, updateASpot } from "../../store/spots";
+import { getASpot, getMySpots, getSpots, postAImage, updateASpot } from "../../store/spots";
 import { useModal } from "../../context/Modal";
 
 function UpdateSpotModal({ spot }) {
@@ -81,9 +81,11 @@ function UpdateSpotModal({ spot }) {
     }
     let data;
     try {
-      data = await dispatch(updateASpot(payload))
+      data = await dispatch(updateASpot(payload, spot))
+      .then(await dispatch(getMySpots()))
+      .then(await dispatch(getASpot(spot.id)))
       .then(() => {
-console.log(currentSpot, 'spot!!!!!!!!!!!!!!', spot)
+
         // if spot successfully dispatched, and user entered url allow dispatch for postAImage
         if (data) {
         let imageDataArr = [url, url2, url3, url4, url5];
@@ -112,6 +114,8 @@ console.log(currentSpot, 'spot!!!!!!!!!!!!!!', spot)
   //re-render when inputs are changed to allow removal of validation errors
   useEffect(() => {
     setErrors([]);
+    getSpots()
+    getMySpots()
     return () => {};
   }, [
     address,
@@ -132,7 +136,7 @@ console.log(currentSpot, 'spot!!!!!!!!!!!!!!', spot)
     if (!sessionUser) {
       setErrors(["Please log in to create a spot"]);
     }
-    // console.log(spot.SpotImages[0].url)
+
     return () => {};
   }, [sessionUser]);
 

@@ -91,7 +91,6 @@ export const createASpot = (data) => async (dispatch) => {
 };
 
 export const postAImage = (spot, payload) => async (dispatch) => {
-  console.log('spot', spot)
   const res = await csrfFetch(`/api/spots/${spot.id}/images`, {
     method: "POST",
     body: JSON.stringify(payload),
@@ -116,19 +115,29 @@ export const deleteASpot = (spotId) => async (dispatch) => {
   } else return res.json()
 };
 
-export const updateASpot = (spot) => async (dispatch) => {
-  console.log(spot)
+export const updateASpot = (payload, spot) => async (dispatch) => {
   const res = await csrfFetch(`/api/spots/${spot.id}`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(spot),
+    body: JSON.stringify(payload),
   });
   if(res.ok) {
-    const spot = await res.json();
+    const data = await res.json();
+
+    spot.address = data.address
+    spot.city = data.city
+    spot.country = data.country
+    spot.lng = data.lng
+    spot.lat = data.lat
+    spot.name = data.name
+    spot.description = data.description
+    spot.price = data.price
+    spot.updatedAt = data.updatedAt
+
      dispatch(updateSpot(spot))
-     return spot
+     return data
   } else return res.json()
 }
 
@@ -154,8 +163,7 @@ const spotReducer = (state = initialState, action) => {
     }
     case POST_IMAGE: {
       const newState = { ...state };
-      // console.log(action)
-      return { ...newState, [action.spot.id]: action.spot};
+      return { ...newState, [action.spot.id]: action.spot };
     }
     case DELETE_SPOT: {
       const newState = { ...state };

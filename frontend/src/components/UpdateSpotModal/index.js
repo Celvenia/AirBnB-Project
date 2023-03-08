@@ -32,13 +32,10 @@ function UpdateSpotModal({ spot }) {
     // e.preventDefault();
     setErrors([]);
     const validationErrors = [];
-    // const regexForNumberCheck = /\d/;
-    // const regexForSymbolCheck = /\W/;
+
 
     // allows for whitespace and semi-colon, excludes numbers and symbols
-    const numAndSymbolCheck = /\d|(?! )W/;
-    // allows for whitespace but not semi-colon, exclues numbers and symbols
-    // const regex = /(\d|(?! )\W|\s/;
+    const numAndSymbolCheck = /[\p{P}\d]+/u;
 
     const payload = {
       ...spot,
@@ -86,7 +83,8 @@ function UpdateSpotModal({ spot }) {
       data = await dispatch(updateASpot(payload));
       // if spot successfully dispatched, and user entered url allow dispatch for postAImage
       if (data) {
-        let imageDataArr = [url, url2, url3, url4, url5];
+        // let imageDataArr = [url, url2, url3, url4, url5];
+        let imageDataArr = [url]
         imageDataArr.forEach((url) => {
           if (url !== "") {
             let imageData = {
@@ -127,10 +125,20 @@ function UpdateSpotModal({ spot }) {
   useEffect(() => {
     if (!sessionUser) {
       setErrors(["Please log in to create a spot"]);
-      return () => {};
     }
+    // console.log(spot.SpotImages[0].url)
     return () => {};
   }, [sessionUser]);
+
+  useEffect(() => {
+    if(spot?.SpotImages?.[0]?.url !== undefined) {
+      setUrl(spot.SpotImages[0].url)
+    } else if (spot?.previewImage !== undefined) {
+      setUrl(spot?.previewImage)
+    }
+    return () => {}
+  },[spot?.previewImage, spot?.SpotImages])
+
 
   //   document.addEventListener("submit", closeModal);
 

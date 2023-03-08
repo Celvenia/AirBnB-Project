@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { getASpot } from "../../store/spots";
@@ -14,9 +14,11 @@ import Review from "../Reviews";
 const SpotDetails = () => {
   const { spotId } = useParams();
   const sessionUser = useSelector((state) => state.session.user);
-  const spot = useSelector((state) => state.spots[spotId]);
-  const reviews = useSelector((state) => state.reviews[spotId]);
-  // const [errors, setErrors] = useState()
+  const spot = useSelector((state) => state?.spots?.[spotId]);
+  const reviews = useSelector((state) => state?.reviews?.[spotId]);
+  const [test, setTest] = useState([]);
+  const [errors, setErrors] = useState()
+
   const dispatch = useDispatch();
 
   let userId;
@@ -25,11 +27,16 @@ const SpotDetails = () => {
     userId = sessionUser.id;
   }
 
+
   useEffect(() => {
     dispatch(getASpot(spotId));
     dispatch(getSpotReviews(spotId));
     return () => {};
   }, [dispatch, spotId]);
+
+  useEffect(() => {
+    setTest(reviews)
+  },[reviews])
 
   if (!spot || !spot.SpotImages || !spot.Owner) {
     return <div>Loading...</div>;
@@ -179,7 +186,7 @@ const SpotDetails = () => {
           />
         )}
         <div>
-          {reviews?.reverse()?.map((review) => {
+          {test?.reverse()?.map((review) => {
             return (
               <ul className="spot_details_review" key={review.id}>
                 <Review review={review} spot={spot} />

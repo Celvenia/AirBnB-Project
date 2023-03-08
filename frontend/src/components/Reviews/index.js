@@ -10,36 +10,37 @@ const Review = ({ review, spot }) => {
   // const spot = useSelector((state) => state.spots[spotId]);
   const dispatch = useDispatch();
 
-  const handleDeleteReviewClick = async (e) => {
+  const handleDeleteReviewClick = (e) => {
     e.preventDefault();
-    let response;
-    try {
-        response = await dispatch(deleteAReview(review.id, review.spotId))
-        .then(await dispatch(getSpotReviews(review.spotId)))
-        .then(await dispatch(dispatch(getASpot(review.spotId))))
+    // let response;
+    // try {
+      let response = dispatch(deleteAReview(review.id))
+        // .then(await dispatch(getSpotReviews(review.spotId)))
+        // .then(await dispatch(dispatch(getASpot(review.spotId))))
         if(response.ok) {
             return response;
-        }
-    } catch (err) {
-        return err
-    }
+        } else return
+    // } catch (err) {
+        // return err
+    // }
   };
 
 useEffect(() => {
   dispatch(getASpot(review.spotId))
   dispatch(getSpotReviews(review.spotId))
-},[dispatch])
+},[dispatch, review.spotId])
+// },[dispatch, review.spotId])
 
   return (
     <>
       <li>
-        #{review.User.firstName}
+        #{review?.User?.firstName}
         {"  "}
-        {review.User.lastName}
+        {review?.User?.lastName}
       </li>
-      <li>{review.updatedAt.slice(0, 10)}</li>
-      <li>{review.review}</li>
-      {sessionUser.id === review.User.id ? (
+      <li>{review?.updatedAt.slice(0, 10)}</li>
+      <li>{review?.review}</li>
+      {sessionUser?.id === review?.User?.id ? (
           <button
           type="submit"
           onClick={handleDeleteReviewClick}

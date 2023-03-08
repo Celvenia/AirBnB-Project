@@ -1,18 +1,17 @@
 import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-// import { useDispatch, useSelector } from "react-redux";
-// import { useParams } from "react-router-dom";
+import { useDispatch} from "react-redux";
+import { useHistory } from "react-router-dom";
 import { useModal } from "../../context/Modal";
 import { getSpotReviews, postAReview } from "../../store/reviews";
+import { getASpot } from "../../store/spots";
 import "./ReviewForm.css";
 
 const ReviewForm = ({ spotsId }) => {
   const dispatch = useDispatch();
-  // const { spotId } = useParams();
-  // const reviews = useSelector((state) => state?.reviews[spotsId]);
   const [review, setReview] = useState("");
   const [stars, setStars] = useState(0);
   const [errors, setErrors] = useState([]);
+  const history = useHistory();
   const { closeModal } = useModal();
 
 
@@ -28,20 +27,25 @@ const ReviewForm = ({ spotsId }) => {
 
     try {
       response = await dispatch(postAReview(spotsId, reviewData))
-      .then(dispatch(getSpotReviews(spotsId)))
+      .then(await dispatch(getASpot(spotsId)))
+      .then(await dispatch(getSpotReviews(spotsId)))
       .then(closeModal);
+      // history.push(`/spots${spotsId}`)
       return response
     } catch (err) {
-      setErrors([{...err}]);
+      setErrors(err.message);
     }
   };
 
   useEffect(() => {
     setErrors([]);
-    // dispatch(getSpotReviews(spotsId));
     return () => {};
   }, [dispatch, spotsId]);
-  // },[dispatch])
+
+  useEffect(() => {
+    dispatch(getASpot(spotsId))
+    dispatch(getSpotReviews(spotsId))
+  },[dispatch, spotsId])
 
   const handleStarClick1 = (e) => {
     e.preventDefault();

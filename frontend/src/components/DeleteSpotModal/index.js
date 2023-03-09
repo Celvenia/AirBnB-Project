@@ -9,7 +9,7 @@ import "./DeleteSpotModal.css";
 
 function DeleteSpotModal({ spotId }) {
   const dispatch = useDispatch();
-  const reviews = useSelector((state) => state?.reviews?.[spotId]);
+  // const reviews = useSelector((state) => state?.reviews?.[spotId]);
   const [errors, setErrors] = useState([]);
   // const { setModalContent, setOnModalClose } = useModal();
   const { closeModal } = useModal();
@@ -20,9 +20,6 @@ function DeleteSpotModal({ spotId }) {
     if (window.location.pathname === "/spots/current") {
       setErrors([]);
       return dispatch(deleteASpot(spotId))
-        .then(await dispatch(getSpotReviews(spotId)))
-        // .then(await dispatch(getMySpots()))
-        // .then(await dispatch(getASpot(spotId)))
         .then(closeModal)
         .catch(async (res) => {
           const data = await res.json();
@@ -41,10 +38,11 @@ function DeleteSpotModal({ spotId }) {
     }
   };
 
-  useEffect(() => {
+  // useEffect(() => {
+    // dispatch(getASpot(spotId))
     // dispatch(getSpotReviews(spotId));
-    return () => {};
-  }, [dispatch]);
+    // return () => {};
+  // }, [dispatch]);
 
   // const onClick = () => {
   //   if (onModalClose) setOnModalClose(onModalClose);

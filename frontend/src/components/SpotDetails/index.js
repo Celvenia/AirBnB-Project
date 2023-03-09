@@ -18,11 +18,13 @@ const SpotDetails = () => {
   const reviewsState = useSelector((state) => state.reviews);
   const currentSpotReviewsArr = Object.values(reviewsState).filter(
     (review) => review.spotId === spot.id
-  );
+  )
+  const newReviews = currentSpotReviewsArr.reverse()
   const usersReviewObj = currentSpotReviewsArr.find(
     (review) => review.userId === sessionUser.id
   );
-  const [newReviews, setNewReviews] = useState([]);
+  const [reviewAmount, setReviewAmount] = useState()
+  // const [newReviews, setNewReviews] = useState([]);
   // const [errors, setErrors] = useState()
 
   const dispatch = useDispatch();
@@ -35,12 +37,13 @@ const SpotDetails = () => {
   useEffect(() => {
     dispatch(getASpot(spotId));
     dispatch(getSpotReviews(spotId));
-
+    setReviewAmount(newReviews.length)
     return () => {};
-  }, [dispatch, spotId]);
+  }, [dispatch, spotId, newReviews.length]);
 
   useEffect(() => {
-    setNewReviews(currentSpotReviewsArr?.reverse());
+    // setNewReviews(currentSpotReviewsArr);
+    return () => {}
   }, [reviewsState]);
 
   if (!spot || !spot.SpotImages || !spot.Owner) {
@@ -67,8 +70,7 @@ const SpotDetails = () => {
   };
 
   return (
-    spot &&
-    reviewsState && (
+    spot && (
       <div className="body_container">
         <h1>{name}</h1>
         <div className="spot_detail_header">
@@ -136,7 +138,7 @@ const SpotDetails = () => {
                 <span className="price"> ${price} night, </span>
                 <span className="rating">
                   <i className="fa-sharp fa-solid fa-star"></i>
-                  {numReviews !== 0
+                  {reviewAmount !== 0
                     ? avgStarRating % 1 === 0
                       ? avgStarRating.toFixed(1)
                       : parseFloat(avgStarRating.toFixed(2))
@@ -144,7 +146,7 @@ const SpotDetails = () => {
                   ,
                 </span>
                 <span>
-                  {numReviews} {numReviews !== 1 ? "Reviews" : "Review"}
+                  {reviewAmount} {reviewAmount !== 1 ? "Reviews" : "Review"}
                 </span>
               </span>
             </span>
@@ -161,7 +163,7 @@ const SpotDetails = () => {
           {/* star */}
           <span className="spot_detail_review_items">
             <i className="fa-sharp fa-solid fa-star"></i>{" "}
-            {numReviews !== 0
+            {reviewAmount !== 0
               ? avgStarRating % 1 === 0
                 ? avgStarRating.toFixed(1)
                 : parseFloat(avgStarRating.toFixed(2))
@@ -170,10 +172,10 @@ const SpotDetails = () => {
           <span className="spot_detail_review_items">{" * "} </span>
           {/* reviews */}
           <span className="spot_detail_review_items">
-            {numReviews} {numReviews !== 1 ? "Reviews" : "Review"}
+            {reviewAmount} {reviewAmount !== 1 ? "Reviews" : "Review"}
           </span>
         </div>
-        {numReviews === 0 ? (
+        {reviewAmount === 0 ? (
           userId === spot.Owner.id ? (
             ""
           ) : (
@@ -196,7 +198,7 @@ const SpotDetails = () => {
           />
         )}
         <div>
-          {newReviews?.reverse()?.map((review) => {
+          {newReviews.map((review) => {
             return (
               <ul className="spot_details_review" key={review.id}>
                 <Review review={review} spot={spot} />

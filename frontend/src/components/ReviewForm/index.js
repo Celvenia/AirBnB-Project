@@ -1,9 +1,8 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { useModal } from "../../context/Modal";
-import { getSpotReviews, postAReview } from "../../store/reviews";
-import { getASpot } from "../../store/spots";
+import { postAReview } from "../../store/reviews";
 import "./ReviewForm.css";
 
 const ReviewForm = ({ spotsId }) => {
@@ -11,73 +10,60 @@ const ReviewForm = ({ spotsId }) => {
   const [review, setReview] = useState("");
   const [stars, setStars] = useState(0);
   const [errors, setErrors] = useState([]);
-  const history = useHistory();
   const { closeModal } = useModal();
+  const contentRef = useRef();
 
   const postReviewSubmit = async (e) => {
     e.preventDefault();
 
-    const validationErrors = []
+    const validationErrors = [];
 
     const reviewData = {
       review,
       stars,
     };
 
-    if (!review.length)
-      validationErrors.push("Review text is required");
+    if (!review.length) validationErrors.push("Review text is required");
     if (stars <= 0)
-      validationErrors.push(
-        "Stars must be an integer between 1 and 5"
-      );
+      validationErrors.push("Stars must be an integer between 1 and 5");
 
     setErrors(validationErrors);
 
     if (validationErrors.length) {
-      window.scroll(0, 0)
+      contentRef.current.scrollTop = 0;
       return;
     }
 
     let response;
 
     try {
-      response = await dispatch(postAReview(reviewData, spotsId))
-        .then(await dispatch(getASpot(spotsId)))
-        .then(closeModal);
+      response = await dispatch(postAReview(reviewData, spotsId)).then(
+        closeModal
+      );
       return response;
     } catch (err) {
       setErrors(err.message);
     }
   };
 
-  useEffect(() => {
-    setErrors([]);
-    return () => {};
-  }, [dispatch, spotsId]);
-
   const handleStarClick1 = (e) => {
-    e.preventDefault();
     setStars(1);
   };
   const handleStarClick2 = (e) => {
-    e.preventDefault();
     setStars(2);
   };
   const handleStarClick3 = (e) => {
-    e.preventDefault();
     setStars(3);
   };
   const handleStarClick4 = (e) => {
-    e.preventDefault();
     setStars(4);
   };
   const handleStarClick5 = (e) => {
-    e.preventDefault();
     setStars(5);
   };
 
   return (
-    <div className="reviews_container">
+    <div className="reviews_container" ref={contentRef}>
       <h2>How was your stay?</h2>
       <ul>
         {errors.length ? <h3>Errors</h3> : ""}

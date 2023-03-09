@@ -167,7 +167,7 @@ const spotReducer = (state = initialState, action) => {
     }
     case LOAD_MY_SPOTS: {
       const newState = { ...state };
-      console.log(action.spots)
+      // console.log(action.spots)
       return {...newState, ...action.spots}
     }
     case POST_IMAGE: {

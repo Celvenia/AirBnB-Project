@@ -1,10 +1,9 @@
 // frontend/src/components/UpdateSpotModal/index.js
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import "./UpdateSpotModal.css";
-// import { useHistory } from "react-router-dom";
 import { getASpot, getMySpots, getSpots, postAImage, updateASpot } from "../../store/spots";
 import { useModal } from "../../context/Modal";
+import "./UpdateSpotModal.css";
 
 function UpdateSpotModal({ spot }) {
   const sessionUser = useSelector((state) => state.session.user);
@@ -28,7 +27,7 @@ function UpdateSpotModal({ spot }) {
   const [url4, setUrl4] = useState("");
   const [url5, setUrl5] = useState("");
   const [errors, setErrors] = useState([]);
-  //   const history = useHistory();
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setErrors([]);
@@ -83,7 +82,6 @@ function UpdateSpotModal({ spot }) {
     let data;
     try {
       data = await dispatch(updateASpot(payload, spot))
-      .then(await dispatch(getMySpots()))
       .then(await dispatch(getASpot(spot.id)))
       .then((data) => {
 
@@ -119,7 +117,7 @@ function UpdateSpotModal({ spot }) {
   useEffect(() => {
     setErrors([]);
     getSpots()
-    getMySpots()
+    // getMySpots()
     return () => {};
   }, [
     address,
@@ -154,8 +152,6 @@ function UpdateSpotModal({ spot }) {
     }
     return () => {}
   },[spot?.previewImage, spot?.SpotImages])
-
-
 
 
   return currentSpot && (
@@ -322,38 +318,5 @@ function UpdateSpotModal({ spot }) {
     </div>
   );
 }
-
-//   return (
-//     <>
-//       <h1>Update</h1>
-//       <form onSubmit={handleSubmit}>
-//         <ul>
-//           {errors.map((error, idx) => (
-//             <li key={idx}>{error}</li>
-//           ))}
-//         </ul>
-//         <label>
-//           Country
-//           <input
-//             type="text"
-//             value={country}
-//             onChange={(e) => setCountry(e.target.value)}
-//             required
-//           />
-//         </label>
-//         <label>
-//           Password
-//           <input
-//             type="text"
-//             value={password}
-//             onChange={(e) => setPassword(e.target.value)}
-//             required
-//           />
-//         </label>
-//         <button type="submit">Update</button>
-//       </form>
-//     </>
-//   );
-// }
 
 export default UpdateSpotModal;

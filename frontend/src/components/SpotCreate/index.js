@@ -33,15 +33,9 @@ function SpotCreate() {
     e.preventDefault();
     setErrors([]);
     const validationErrors = [];
-    // const regexForNumberCheck = /\d/;
-    // const regexForSymbolCheck = /\W/;
 
-    // allows for whitespace and semi-colon, excludes numbers and symbols
+    // regex checks
     const numAndSymbolCheck = /\d|(?! )W/;
-    // allows for whitespace but not semi-colon, exclues numbers and symbols
-    // const regex = /(\d|(?! )\W|\s/;
-
-    // checks
     const imageCheck = /\.(png|jpe?g)$/i;
 
     const payload = {
@@ -69,21 +63,23 @@ function SpotCreate() {
       validationErrors.push("Image URL must end in .png .jpg or .jpeg");
     if (name.length > 50)
       validationErrors.push("Name must be less than 50 characters");
+    if (price < 0)
+      validationErrors.push("Minimum price must be greater than or equal to 0");
+    if (lat < -90 || lat > 90)
+      validationErrors.push("Latitude is invalid, must be between -90 and 90");
+    if (lng < -180 || lng > 180)
+      validationErrors.push(
+        "Longitude is invalid, must be between -180 and 180"
+      );
     if (description.length < 30)
       validationErrors.push(
         "Description needs to be a minimum of 30 characters"
       );
-    if(price < 0)
-    validationErrors.push("Minimum price must be greater than or equal to 0");
-    if(lat < -90 || lat > 90)
-    validationErrors.push("latitude is invalid, must be between -90 and 90");
-    if(lng < -180 || lng > 180)
-    validationErrors.push("longitude is invalid, must be between -180 and 180")
 
     setErrors(validationErrors);
 
     if (validationErrors.length) {
-      window.scroll(0, 0)
+      window.scroll(0, 0);
       return;
     }
 

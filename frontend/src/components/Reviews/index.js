@@ -20,13 +20,14 @@ const Review = ({ review, spot }) => {
     e.preventDefault();
     // let response;
     // try {
-    let response = await dispatch(deleteAReview(review.id))
+    // let response = await
+     dispatch(deleteAReview(review.id))
       .then(await dispatch(getSpotReviews(review.spotId)))
       .then(await dispatch(getASpot(review.spotId)))
       .then(closeModal);
     // if(response.ok) {
     //     return response;
-    // } else return
+    // } else console.log(response)
     // } catch (err) {
     // return err
     // }

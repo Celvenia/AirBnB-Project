@@ -41,11 +41,9 @@ const ReviewForm = ({ spotsId }) => {
     let response;
 
     try {
-      response = await dispatch(postAReview(spotsId, reviewData))
+      response = await dispatch(postAReview(reviewData, spotsId))
         .then(await dispatch(getASpot(spotsId)))
-        .then(await dispatch(getSpotReviews(spotsId)))
         .then(closeModal);
-      // history.push(`/spots${spotsId}`)
       return response;
     } catch (err) {
       setErrors(err.message);
@@ -55,11 +53,6 @@ const ReviewForm = ({ spotsId }) => {
   useEffect(() => {
     setErrors([]);
     return () => {};
-  }, [dispatch, spotsId]);
-
-  useEffect(() => {
-    dispatch(getASpot(spotsId));
-    dispatch(getSpotReviews(spotsId));
   }, [dispatch, spotsId]);
 
   const handleStarClick1 = (e) => {

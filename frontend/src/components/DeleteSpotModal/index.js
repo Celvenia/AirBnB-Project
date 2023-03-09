@@ -21,8 +21,8 @@ function DeleteSpotModal({ spotId }) {
       setErrors([]);
       return dispatch(deleteASpot(spotId))
         .then(await dispatch(getSpotReviews(spotId)))
-        .then(await dispatch(getMySpots()))
-        .then(await dispatch(getASpot(spotId)))
+        // .then(await dispatch(getMySpots()))
+        // .then(await dispatch(getASpot(spotId)))
         .then(closeModal)
         .catch(async (res) => {
           const data = await res.json();
@@ -42,7 +42,7 @@ function DeleteSpotModal({ spotId }) {
   };
 
   useEffect(() => {
-    dispatch(getSpotReviews(spotId));
+    // dispatch(getSpotReviews(spotId));
     return () => {};
   }, [dispatch]);
 

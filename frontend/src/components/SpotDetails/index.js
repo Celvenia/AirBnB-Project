@@ -1,71 +1,53 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
+import { getSpotReviews } from "../../store/reviews";
 import { getASpot } from "../../store/spots";
 import DeleteSpotModal from "../DeleteSpotModal";
 import UpdateSpotModal from "../UpdateSpotModal";
 import OpenModalMenuItem from "../Navigation/OpenMenuModalItem";
-
-import "./SpotDetails.css";
 import ReviewForm from "../ReviewForm";
-import { getSpotReviews } from "../../store/reviews";
 import Review from "../Reviews";
+import "./SpotDetails.css";
 
 const SpotDetails = () => {
   const { spotId } = useParams();
   const sessionUser = useSelector((state) => state.session.user);
-  const spot = useSelector((state) => state?.spots?.[spotId]);
-  const reviews = useSelector((state) => state?.reviews?.[spotId]);
-  const [test, setTest] = useState([]);
-  const [errors, setErrors] = useState()
+  const spot = useSelector((state) => state.spots?.[spotId]);
+  // const reviews = useSelector((state) => state?.reviews?.[spotId]);
+  const reviewsState = useSelector((state) => state.reviews);
+  const currentSpotReviewsArr = Object.values(reviewsState).filter(
+    (review) => review.spotId === spot.id
+  );
+  const usersReviewObj = currentSpotReviewsArr.find(
+    (review) => review.userId === sessionUser.id
+  );
+  const [newReviews, setNewReviews] = useState([]);
+  // const [errors, setErrors] = useState()
 
   const dispatch = useDispatch();
 
   let userId;
-
   if (sessionUser) {
     userId = sessionUser.id;
   }
 
-
   useEffect(() => {
     dispatch(getASpot(spotId));
     dispatch(getSpotReviews(spotId));
+
     return () => {};
   }, [dispatch, spotId]);
 
   useEffect(() => {
-    setTest(reviews?.reverse())
-  },[reviews])
-
-  const [showMenu, setShowMenu] = useState(false);
-  const ulRef = useRef();
-
-  const openMenu = () => {
-    if (showMenu) return;
-    setShowMenu(true);
-  };
-
-  useEffect(() => {
-    if (!showMenu) return;
-
-    const closeMenu = (e) => {
-      if (!ulRef.current.contains(e.target)) {
-        setShowMenu(false);
-      }
-    };
-
-    document.addEventListener("click", closeMenu);
-
-    return () => document.removeEventListener("click", closeMenu);
-  }, [showMenu]);
-
-  const closeMenu = () => setShowMenu(false);
+    setNewReviews(currentSpotReviewsArr?.reverse());
+  }, [reviewsState]);
 
   if (!spot || !spot.SpotImages || !spot.Owner) {
     return <div>Loading...</div>;
   }
 
+  // destructured spot, DRY code
   const {
     city,
     state,
@@ -79,17 +61,15 @@ const SpotDetails = () => {
 
   const { firstName, lastName, id } = spot.Owner;
   const images = Object.values(spot.SpotImages);
-  // console.log(reviews?.length)
 
   const handleClick = () => {
     alert("Feature coming soon...");
   };
 
   return (
-    spot && (
+    spot &&
+    reviewsState && (
       <div className="body_container">
-
-
         <h1>{name}</h1>
         <div className="spot_detail_header">
           <span className="spot_detail_header_info">
@@ -103,7 +83,9 @@ const SpotDetails = () => {
           </span>
         </div>
         <div className="image_container">
-          <span className={images?.length > 1 ? "image_first" : "image_first_alt"}>
+          <span
+            className={images?.length > 1 ? "image_first" : "image_first_alt"}
+          >
             {images?.length ? (
               <img src={images[0].url} alt="preview home" />
             ) : (
@@ -128,12 +110,10 @@ const SpotDetails = () => {
                 <span className="spot_detail_update_modal_button">
                   <OpenModalMenuItem
                     itemText="Update Spot"
-                    onButtonClick={closeMenu}
                     modalComponent={
                       <UpdateSpotModal
                         spotImages={spot.SpotImages}
                         spot={spot}
-
                       />
                     }
                   />
@@ -206,7 +186,8 @@ const SpotDetails = () => {
           ""
         ) : userId === spot.Owner.id ? (
           ""
-        ) : reviews && reviews.some((review) => review.userId === userId) ? (
+        ) : // ) : reviews && reviews.some((review) => review.userId === userId) ? (
+        usersReviewObj ? (
           ""
         ) : (
           <OpenModalMenuItem
@@ -215,7 +196,7 @@ const SpotDetails = () => {
           />
         )}
         <div>
-          {test?.reverse()?.map((review) => {
+          {newReviews?.reverse()?.map((review) => {
             return (
               <ul className="spot_details_review" key={review.id}>
                 <Review review={review} spot={spot} />

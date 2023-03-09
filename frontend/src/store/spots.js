@@ -42,12 +42,16 @@ const updateSpot = (spot) => ({
 
 // thunk action creators - for asynchronous code, i.e fetch calls prior to dispatching action creators
 export const getSpots = () => async (dispatch) => {
-  const res = await csrfFetch("/api/spots");
-  if (res.ok) {
-    const spots = await res.json();
-    dispatch(loadSpots(spots.Spots));
-    return spots;
-  } else return res.json()
+  try {
+    const res = await csrfFetch("/api/spots");
+    if (res.ok) {
+      const spots = await res.json();
+      dispatch(loadSpots(spots.Spots));
+      return spots;
+  }
+  } catch (err) {
+    return err
+  }
 };
 
 export const getASpot = (spotId) => async (dispatch) => {
@@ -99,9 +103,7 @@ export const postAImage = (spot, payload) => async (dispatch) => {
 
   if (res.ok) {
     const image = await res.json();
-    console.log('!!!!!!!!!!!!!!!!!!!',image)
     dispatch(postImage(spot, image));
-    console.log('spot!!!!!!!!!!')
     return image;
   } else return res.json()
 };
@@ -165,6 +167,7 @@ const spotReducer = (state = initialState, action) => {
     }
     case LOAD_MY_SPOTS: {
       const newState = { ...state };
+      console.log(action.spots)
       return {...newState, ...action.spots}
     }
     case POST_IMAGE: {

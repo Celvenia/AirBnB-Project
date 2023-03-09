@@ -1,23 +1,28 @@
 // frontend/src/components/DeleteSpotModal/index.js
 import React, { useEffect, useState } from "react";
 // import * as sessionActions from "../../store/session";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useModal } from "../../context/Modal";
 import "./DeleteSpotModal.css";
-import { deleteASpot } from "../../store/spots";
+import { deleteASpot, getASpot, getMySpots } from "../../store/spots";
 import { useHistory } from "react-router-dom";
+import { getSpotReviews } from "../../store/reviews";
 
 function DeleteSpotModal({spotId}) {
   const dispatch = useDispatch();
+  const reviews = useSelector((state) => state?.reviews?.[spotId])
   const [errors, setErrors] = useState([]);
   const { closeModal } = useModal();
   const history = useHistory()
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if(window.location.pathname === '/spots/current') {
       setErrors([]);
       return dispatch(deleteASpot(spotId))
+      .then(await dispatch(getSpotReviews(spotId)))
+      .then(await dispatch(getMySpots()))
+      .then(await dispatch(getASpot(spotId)))
         .then(closeModal)
         .catch(async (res) => {
           const data = await res.json();
@@ -38,7 +43,7 @@ function DeleteSpotModal({spotId}) {
   };
 
 useEffect(()=> {
-
+  dispatch(getSpotReviews(spotId))
 return ()=> {}
 },[dispatch])
 

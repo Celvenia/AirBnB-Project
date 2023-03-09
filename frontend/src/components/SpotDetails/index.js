@@ -38,6 +38,30 @@ const SpotDetails = () => {
     setTest(reviews)
   },[reviews])
 
+  const [showMenu, setShowMenu] = useState(false);
+  const ulRef = useRef();
+
+  const openMenu = () => {
+    if (showMenu) return;
+    setShowMenu(true);
+  };
+
+  useEffect(() => {
+    if (!showMenu) return;
+
+    const closeMenu = (e) => {
+      if (!ulRef.current.contains(e.target)) {
+        setShowMenu(false);
+      }
+    };
+
+    document.addEventListener("click", closeMenu);
+
+    return () => document.removeEventListener("click", closeMenu);
+  }, [showMenu]);
+
+  const closeMenu = () => setShowMenu(false);
+
   if (!spot || !spot.SpotImages || !spot.Owner) {
     return <div>Loading...</div>;
   }
@@ -55,14 +79,20 @@ const SpotDetails = () => {
 
   const { firstName, lastName, id } = spot.Owner;
   const images = Object.values(spot.SpotImages);
+  // console.log(reviews?.length)
 
   const handleClick = () => {
     alert("Feature coming soon...");
   };
 
+
+
+
   return (
     spot && (
       <div className="body_container">
+
+
         <h1>{name}</h1>
         <div className="spot_detail_header">
           <span className="spot_detail_header_info">
@@ -76,9 +106,9 @@ const SpotDetails = () => {
           </span>
         </div>
         <div className="image_container">
-          <span className={images.length > 1 ? "image_first" : "image_first_alt"}>
+          <span className={images?.length > 1 ? "image_first" : "image_first_alt"}>
           {/* <span className="image_first"> */}
-            {images.length ? (
+            {images?.length ? (
               <img src={images[0].url} alt="preview home" />
             ) : (
               "No Preview Image"
@@ -102,10 +132,12 @@ const SpotDetails = () => {
                 <span className="spot_detail_update_modal_button">
                   <OpenModalMenuItem
                     itemText="Update Spot"
+                    onButtonClick={closeMenu}
                     modalComponent={
                       <UpdateSpotModal
                         spotImages={spot.SpotImages}
                         spot={spot}
+
                       />
                     }
                   />

@@ -86,6 +86,7 @@ export const deleteAReview = (reviewId) => async (dispatch) => {
       const response = await res.json();
       dispatch(deleteReview(response));
       return response;
+
     }
   } catch (err) {
     return err;
@@ -116,6 +117,7 @@ const reviewReducer = (state = initialState, action) => {
     }
     case DELETE_REVIEW: {
       const newState = { ...state };
+
       let filtered = newState[action.reviewId.spotId].filter(
         (reviewObj) => reviewObj.id !== action.reviewId.id
       );

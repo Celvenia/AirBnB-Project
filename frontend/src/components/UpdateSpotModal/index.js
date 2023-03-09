@@ -1,5 +1,5 @@
 // frontend/src/components/UpdateSpotModal/index.js
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import "./UpdateSpotModal.css";
 // import { useHistory } from "react-router-dom";
@@ -11,6 +11,7 @@ function UpdateSpotModal({ spot }) {
   const currentSpot = useSelector((state) => state.spots[spot.id])
   const dispatch = useDispatch();
   const { closeModal } = useModal();
+  const contentRef = useRef();
 
   const [country, setCountry] = useState(spot.country);
   const [address, setAddress] = useState(spot.address);
@@ -28,7 +29,6 @@ function UpdateSpotModal({ spot }) {
   const [url5, setUrl5] = useState("");
   const [errors, setErrors] = useState([]);
   //   const history = useHistory();
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setErrors([]);
@@ -77,6 +77,7 @@ function UpdateSpotModal({ spot }) {
     setErrors(validationErrors);
 
     if (validationErrors.length) {
+      contentRef.current.scrollTop = 0;
       return;
     }
     let data;
@@ -84,31 +85,34 @@ function UpdateSpotModal({ spot }) {
       data = await dispatch(updateASpot(payload, spot))
       .then(await dispatch(getMySpots()))
       .then(await dispatch(getASpot(spot.id)))
-      .then(() => {
+      .then((data) => {
+
 
         // if spot successfully dispatched, and user entered url allow dispatch for postAImage
         if (data) {
+          // console.log('TESTING!!!!!!!!!!!!!!!!!!!!!!!!!!!!', currentSpot)
         let imageDataArr = [url, url2, url3, url4, url5];
-        // let imageDataArr = [url]
-        imageDataArr.forEach((url) => {
-          if (url !== "") {
-            let imageData = {
-              url,
-              preview: true,
-            };
-            dispatch(getSpots())
-            .then(dispatch(getMySpots()))
-            .then(dispatch(postAImage(currentSpot, imageData)))
-            .then(closeModal)
-          }
-        });
+        // console.log(imageDataArr)
+        // imageDataArr.forEach((url) => {
+        //   if (url !== "") {
+        //     let imageData = {
+        //       url,
+        //       preview: true,
+        //     };
+        //     await postAImage(currentSpot, imageData)
+            // .then(dispatch(getASpot(currentSpot.id)))
+            // .then(closeModal)
+
+          // }
+        // });
       }
+      closeModal()
     })
 
     } catch (err) {
       setErrors(["Spot already exists with that address, try again"]);
     }
-    closeModal();
+    closeModal()
   };
 
   //re-render when inputs are changed to allow removal of validation errors
@@ -141,19 +145,21 @@ function UpdateSpotModal({ spot }) {
   }, [sessionUser]);
 
   useEffect(() => {
+    // console.log(spot)
     if(spot?.SpotImages?.[0]?.url !== undefined) {
       setUrl(spot.SpotImages[0].url)
-    } else if (spot?.previewImage !== undefined) {
+    }
+    if (spot?.previewImage !== undefined) {
       setUrl(spot?.previewImage)
     }
     return () => {}
   },[spot?.previewImage, spot?.SpotImages])
 
 
-    document.addEventListener("submit", closeModal);
+
 
   return currentSpot && (
-    <div className="update_spot_modal_container">
+    <div className="update_spot_modal_container" ref={contentRef}>
       <form className="update_spot_form" onSubmit={handleSubmit}>
         <ul>
           {errors.length ? <h3>Errors</h3> : ""}
@@ -274,7 +280,7 @@ function UpdateSpotModal({ spot }) {
           required
           />
           </label>
-        {/* <input
+        <input
           className="update_spot_input"
           type="text"
           value={url2}
@@ -304,7 +310,7 @@ function UpdateSpotModal({ spot }) {
           placeholder="Image URL"
           onChange={(e) => setUrl5(e.target.value)}
 
-        /> */}
+        />
         <button
           className="update_spot_button"
           type="submit"

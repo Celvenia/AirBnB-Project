@@ -91,6 +91,7 @@ export const createASpot = (data) => async (dispatch) => {
 };
 
 export const postAImage = (spot, payload) => async (dispatch) => {
+  console.log('spot', spot, 'payload', payload)
   const res = await csrfFetch(`/api/spots/${spot.id}/images`, {
     method: "POST",
     body: JSON.stringify(payload),
@@ -98,7 +99,9 @@ export const postAImage = (spot, payload) => async (dispatch) => {
 
   if (res.ok) {
     const image = await res.json();
+    console.log('!!!!!!!!!!!!!!!!!!!',image)
     dispatch(postImage(spot, image));
+    console.log('spot!!!!!!!!!!')
     return image;
   } else return res.json()
 };
@@ -135,7 +138,10 @@ export const updateASpot = (payload, spot) => async (dispatch) => {
     spot.description = data.description
     spot.price = data.price
     spot.updatedAt = data.updatedAt
-
+    // spot.previewImage = data.previewImage
+    // console.log(data)
+    // console.log(spot)
+    // console.log('this is the spot', spot)
      dispatch(updateSpot(spot))
      return data
   } else return res.json()

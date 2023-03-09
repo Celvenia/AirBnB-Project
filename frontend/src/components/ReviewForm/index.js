@@ -81,7 +81,7 @@ const ReviewForm = ({ spotsId }) => {
       <form className="reviews_modal_form">
         <label>Review</label>
         <input
-        className="review_input"
+          className="review_input"
           type="textarea"
           placeholder="Leave your review here..."
           onChange={(e) => setReview(e.target.value)}
@@ -111,7 +111,12 @@ const ReviewForm = ({ spotsId }) => {
             className={stars >= 5 ? "fa-solid fa-star" : "fa-regular fa-star"}
           ></i>
         </div>
-        <button className="review_form_submit_button" onClick={postReviewSubmit}>Submit Your Review</button>
+        <button
+          className="review_form_submit_button"
+          onClick={postReviewSubmit}
+        >
+          Submit Your Review
+        </button>
       </form>
     </div>
   );

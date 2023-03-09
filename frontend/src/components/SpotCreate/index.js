@@ -73,6 +73,13 @@ function SpotCreate() {
       validationErrors.push(
         "Description needs to be a minimum of 30 characters"
       );
+    if(price < 0)
+    validationErrors.push("Minimum price must be greater than or equal to 0");
+    if(lat < -90 || lat > 90)
+    validationErrors.push("latitude is invalid, must be between -90 and 90");
+    if(lng < -180 || lng > 180)
+    validationErrors.push("longitude is invalid, must be between -180 and 180")
+
     setErrors(validationErrors);
 
     if (validationErrors.length) {
@@ -192,6 +199,7 @@ function SpotCreate() {
         <input
           className="spot_create_input"
           type="number"
+          step="0.0000001"
           // value={lat}
           placeholder="Latitude"
           onChange={(e) => setLat(e.target.value)}
@@ -200,6 +208,7 @@ function SpotCreate() {
         <label>Longitude</label>
         <input
           type="number"
+          step="0.0000001"
           // value={lng}
           placeholder="Longitude"
           onChange={(e) => setLng(e.target.value)}
@@ -244,6 +253,7 @@ function SpotCreate() {
         <input
           className="spot_create_input"
           type="number"
+          step="0.01"
           // value={price}
           placeholder="Price per night (USD)"
           onChange={(e) => setPrice(e.target.value)}

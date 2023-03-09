@@ -21,7 +21,7 @@ const SpotDetails = () => {
   )
   const newReviews = currentSpotReviewsArr.reverse()
   const usersReviewObj = currentSpotReviewsArr.find(
-    (review) => review.userId === sessionUser.id
+    (review) => review.userId === sessionUser?.id
   );
   const [reviewAmount, setReviewAmount] = useState()
   // const [newReviews, setNewReviews] = useState([]);

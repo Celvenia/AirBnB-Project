@@ -1,51 +1,56 @@
 // frontend/src/components/DeleteSpotModal/index.js
 import React, { useEffect, useState } from "react";
-// import * as sessionActions from "../../store/session";
 import { useDispatch, useSelector } from "react-redux";
+import { useHistory } from "react-router-dom";
+import { deleteASpot, getASpot, getMySpots } from "../../store/spots";
+import { getSpotReviews } from "../../store/reviews";
 import { useModal } from "../../context/Modal";
 import "./DeleteSpotModal.css";
-import { deleteASpot, getASpot, getMySpots } from "../../store/spots";
-import { useHistory } from "react-router-dom";
-import { getSpotReviews } from "../../store/reviews";
 
-function DeleteSpotModal({spotId}) {
+function DeleteSpotModal({ spotId }) {
   const dispatch = useDispatch();
-  const reviews = useSelector((state) => state?.reviews?.[spotId])
+  const reviews = useSelector((state) => state?.reviews?.[spotId]);
   const [errors, setErrors] = useState([]);
+  // const { setModalContent, setOnModalClose } = useModal();
   const { closeModal } = useModal();
-  const history = useHistory()
+  const history = useHistory();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if(window.location.pathname === '/spots/current') {
+    if (window.location.pathname === "/spots/current") {
       setErrors([]);
       return dispatch(deleteASpot(spotId))
-      .then(await dispatch(getSpotReviews(spotId)))
-      .then(await dispatch(getMySpots()))
-      .then(await dispatch(getASpot(spotId)))
+        .then(await dispatch(getSpotReviews(spotId)))
+        .then(await dispatch(getMySpots()))
+        .then(await dispatch(getASpot(spotId)))
         .then(closeModal)
         .catch(async (res) => {
           const data = await res.json();
           if (data && data.errors) setErrors(data.errors);
         });
     }
-    if(window.location.pathname !== '/spots/current') {
+    if (window.location.pathname !== "/spots/current") {
       setErrors([]);
       return dispatch(deleteASpot(spotId))
         .then(closeModal)
-        .then(history.push('/'))
+        .then(history.push("/"))
         .catch(async (res) => {
           const data = await res.json();
           if (data && data.errors) setErrors(data.errors);
         });
-
     }
   };
 
-useEffect(()=> {
-  dispatch(getSpotReviews(spotId))
-return ()=> {}
-},[dispatch])
+  useEffect(() => {
+    dispatch(getSpotReviews(spotId));
+    return () => {};
+  }, [dispatch]);
+
+  // const onClick = () => {
+  //   if (onModalClose) setOnModalClose(onModalClose);
+  //   setModalContent(modalComponent);
+  //   if (onItemClick) onItemClick();
+  // };
 
   return (
     <div className="delete_container">
@@ -59,10 +64,14 @@ return ()=> {}
           ))}
         </ul>
         <div>
-        <button className="delete_spot_modal_button" type="submit">Yes(Delete Spot)</button>
+          <button className="delete_spot_modal_button" onClick={closeModal} type="submit">
+            Yes(Delete Spot)
+          </button>
         </div>
         <div>
-        <button className="delete_spot_modal_button" onClick={closeModal}>No(Keep Spot)</button>
+          <button className="delete_spot_modal_button" onClick={closeModal}>
+            No(Keep Spot)
+          </button>
         </div>
       </form>
     </div>

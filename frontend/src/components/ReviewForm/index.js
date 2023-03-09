@@ -17,10 +17,26 @@ const ReviewForm = ({ spotsId }) => {
   const postReviewSubmit = async (e) => {
     e.preventDefault();
 
+    const validationErrors = []
+
     const reviewData = {
       review,
       stars,
     };
+
+    if (!review.length)
+      validationErrors.push("Review text is required");
+    if (stars <= 0)
+      validationErrors.push(
+        "Stars must be an integer between 1 and 5"
+      );
+
+    setErrors(validationErrors);
+
+    if (validationErrors.length) {
+      window.scroll(0, 0)
+      return;
+    }
 
     let response;
 

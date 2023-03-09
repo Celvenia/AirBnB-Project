@@ -35,7 +35,7 @@ const SpotDetails = () => {
   }, [dispatch, spotId]);
 
   useEffect(() => {
-    setTest(reviews)
+    setTest(reviews?.reverse())
   },[reviews])
 
   const [showMenu, setShowMenu] = useState(false);
@@ -85,9 +85,6 @@ const SpotDetails = () => {
     alert("Feature coming soon...");
   };
 
-
-
-
   return (
     spot && (
       <div className="body_container">
@@ -107,7 +104,6 @@ const SpotDetails = () => {
         </div>
         <div className="image_container">
           <span className={images?.length > 1 ? "image_first" : "image_first_alt"}>
-          {/* <span className="image_first"> */}
             {images?.length ? (
               <img src={images[0].url} alt="preview home" />
             ) : (

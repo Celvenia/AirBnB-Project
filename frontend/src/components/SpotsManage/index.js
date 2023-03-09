@@ -22,7 +22,7 @@ const SpotsManage = () => {
   const spotsArr = Object.values(spots).filter(spot => spot.ownerId === sessionUser.id)
   // console.log(spotsArr)
   // console.log(spotsArray)
-  console.log(spots)
+  // console.log(spots)
   // const firstImg = spotsArr
 
   const dispatch = useDispatch();
@@ -33,37 +33,37 @@ const SpotsManage = () => {
     return () => {};
   }, [dispatch]);
 
+  // useEffect(() => {
+  //   if (!showMenu) return;
+
+  //   const closeMenu = (e) => {
+  //     if (!ulRef.current.contains(e.target)) {
+  //       setShowMenu(false);
+  //     }
+  //   };
   if (!spotsArr) {
     return <div>Loading...</div>;
   }
 
-  const [showMenu, setShowMenu] = useState(false);
-  const ulRef = useRef();
-  const history = useHistory();
+//   const [showMenu, setShowMenu] = useState(false);
+//   const ulRef = useRef();
+//   const history = useHistory();
 
-  const openMenu = () => {
-    if (showMenu) return;
-    setShowMenu(true);
-  };
+//   const openMenu = () => {
+//     if (showMenu) return;
+//     setShowMenu(true);
+//   };
 
-  useEffect(() => {
-    if (!showMenu) return;
 
-    const closeMenu = (e) => {
-      if (!ulRef.current.contains(e.target)) {
-        setShowMenu(false);
-      }
-    };
+//   document.addEventListener("click", closeMenu);
 
-    document.addEventListener("click", closeMenu);
+//     return () => document.removeEventListener("click", closeMenu);
+//   }, [showMenu]);
 
-    return () => document.removeEventListener("click", closeMenu);
-  }, [showMenu]);
-
-  const closeMenu = () => setShowMenu(false);
-// return (
-//   <h1>testing</h1>
-// )
+//   const closeMenu = () => setShowMenu(false);
+// // return (
+// //   <h1>testing</h1>
+// // )
 
   return (
     <div className="spots_manage_container">
@@ -79,7 +79,7 @@ const SpotsManage = () => {
               <div className="spots_manage_buttons">
                 <OpenModalMenuItem
                   itemText="Update"
-                  onButtonClick={closeMenu}
+                  // onButtonClick={closeMenu}
                   modalComponent={<UpdateSpotModal spot={spot} />}
                 />
 

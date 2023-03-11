@@ -84,7 +84,7 @@ const SpotDetails = () => {
           </span>
           <span className="images_after_first">
             {images.slice(1, 5).map((image) => {
-              return <img src={image.url} alt="preview home" key={image.id} />;
+              return <img src={image.url} alt="preview home" key={image.id} />
             })}
           </span>
         </div>

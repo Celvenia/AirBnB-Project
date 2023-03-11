@@ -19,9 +19,9 @@ const SpotDetails = () => {
     (review) => review?.spotId === spot?.id
   );
   const newReviews = currentSpotReviewsArr.reverse();
-  // const usersReviewObj = currentSpotReviewsArr.find(
-  //   (review) => review.userId === sessionUser?.id
-  // );
+  const usersReviewObj = currentSpotReviewsArr.find(
+    (review) => review.userId === sessionUser?.id
+  );
   const [reviewAmount, setReviewAmount] = useState();
 
   const dispatch = useDispatch();
@@ -83,9 +83,9 @@ const SpotDetails = () => {
             )}
           </span>
           <span className="images_after_first">
-            {images.slice(1, 5).map((image) => (
-              <img src={image.url} alt="preview home" key={image.id} />
-            ))}
+            {images.slice(1, 5).map((image) => {
+              return <img src={image.url} alt="preview home" key={image.id} />;
+            })}
           </span>
         </div>
         <div className="host">
@@ -182,8 +182,8 @@ const SpotDetails = () => {
           ""
         ) : userId === spot.Owner.id ? (
           ""
-        ) : newReviews && newReviews.some((review) => review.userId === userId) ? (
-        // usersReviewObj ? (
+        ) : // ) : reviews && reviews.some((review) => review.userId === userId) ? (
+        usersReviewObj ? (
           ""
         ) : (
           <OpenModalMenuItem

@@ -18,12 +18,12 @@ const SpotDetails = () => {
   const reviewsState = useSelector((state) => state.reviews);
   const currentSpotReviewsArr = Object.values(reviewsState).filter(
     (review) => review?.spotId === spot?.id
-  )
-  const newReviews = currentSpotReviewsArr.reverse()
+  );
+  const newReviews = currentSpotReviewsArr.reverse();
   const usersReviewObj = currentSpotReviewsArr.find(
     (review) => review.userId === sessionUser?.id
   );
-  const [reviewAmount, setReviewAmount] = useState()
+  const [reviewAmount, setReviewAmount] = useState();
   // const [newReviews, setNewReviews] = useState([]);
   // const [errors, setErrors] = useState()
 
@@ -37,13 +37,13 @@ const SpotDetails = () => {
   useEffect(() => {
     dispatch(getASpot(spotId));
     dispatch(getSpotReviews(spotId));
-    setReviewAmount(newReviews.length)
+    setReviewAmount(newReviews.length);
     return () => {};
   }, [dispatch, spotId, newReviews.length]);
 
   useEffect(() => {
     // setNewReviews(currentSpotReviewsArr);
-    return () => {}
+    return () => {};
   }, [reviewsState]);
 
   if (!spot || !spot.SpotImages || !spot.Owner) {
@@ -51,15 +51,8 @@ const SpotDetails = () => {
   }
 
   // destructured spot, DRY code
-  const {
-    city,
-    state,
-    country,
-    name,
-    avgStarRating,
-    description,
-    price,
-  } = spot;
+  const { city, state, country, name, avgStarRating, description, price } =
+    spot;
 
   const { firstName, lastName, id } = spot.Owner;
   const images = Object.values(spot.SpotImages);
@@ -165,9 +158,23 @@ const SpotDetails = () => {
                 : parseFloat(avgStarRating.toFixed(2))
               : "New"}
           </span>
-          <span className={reviewAmount === 0 ? "spot_detail_hidden" : "spot_detail_review_items"}>{" · "} </span>
+          <span
+            className={
+              reviewAmount === 0
+                ? "spot_detail_hidden"
+                : "spot_detail_review_items"
+            }
+          >
+            {" · "}{" "}
+          </span>
           {/* reviews */}
-          <span className={reviewAmount === 0 ? "spot_detail_hidden" : "spot_detail_review_items"}>
+          <span
+            className={
+              reviewAmount === 0
+                ? "spot_detail_hidden"
+                : "spot_detail_review_items"
+            }
+          >
             {reviewAmount} {reviewAmount !== 1 ? "Reviews" : "Review"}
           </span>
         </div>

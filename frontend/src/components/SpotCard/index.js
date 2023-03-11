@@ -1,10 +1,9 @@
-import { useSelector } from "react-redux";
+
 import "./SpotCard.css";
 
 const SpotCard = ({
-  spot: { id, city, state, price, name, previewImage, avgStarRating }
+  spot: { city, state, price, name, previewImage, avgStarRating }
 }) => {
-// const spot = useSelector((state) => state?.spots[id])
 
   if(avgStarRating === undefined) {
     return <div>Loading...</div>

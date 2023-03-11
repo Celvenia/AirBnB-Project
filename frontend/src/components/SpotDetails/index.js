@@ -49,7 +49,6 @@ const SpotDetails = () => {
   // destructured spot, DRY code
   const { city, state, country, name, avgStarRating, description, price } =
     spot;
-console.log(description)
   const { firstName, lastName, id } = spot.Owner;
   const images = Object.values(spot.SpotImages);
 

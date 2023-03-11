@@ -38,7 +38,7 @@ function SpotCreate() {
     const validationErrors = [];
 
     // regex checks
-    const numAndSymbolCheck = /\d|(?! )W/;
+    const lettersAndSpacesOnly = /^[a-zA-Z\s]+$/
     const imageCheck = /\.(png|jpe?g)$/i;
 
     const payload = {
@@ -54,11 +54,11 @@ function SpotCreate() {
     };
 
     // validates for numbers, symbols, or whitespace with regex
-    if (numAndSymbolCheck.test(payload.city))
+    if (lettersAndSpacesOnly.test(payload.city))
       validationErrors.push("City should not include numbers or symbols");
-    if (numAndSymbolCheck.test(payload.state))
+    if (lettersAndSpacesOnly.test(payload.state))
       validationErrors.push("State should not include numbers or symbols");
-    if (numAndSymbolCheck.test(payload.country))
+    if (lettersAndSpacesOnly.test(payload.country))
       validationErrors.push("Country should not include numbers or symbols");
     if (!imageCheck.test(url))
       validationErrors.push("Image URL must end in .png .jpg or .jpeg");

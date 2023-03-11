@@ -37,16 +37,11 @@ module.exports = (sequelize, DataTypes) => {
     lat: DataTypes.DECIMAL,
     lng: DataTypes.DECIMAL,
     name: DataTypes.STRING,
-    description: DataTypes.STRING,
+    description: DataTypes.BLOB,
     price: DataTypes.DECIMAL,
   }, {
     sequelize,
     modelName: 'Spot',
-      // defaultScope: {
-      //   attributes: {
-      //     exclude: ["createdAt", "updatedAt"]
-      //   }
-      // },
   });
   return Spot;
 };

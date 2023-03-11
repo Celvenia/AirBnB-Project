@@ -39,7 +39,6 @@ export const getSpotReviews = (spotId) => async (dispatch) => {
 };
 
 export const postAReview = (reviewData, spotId) => async (dispatch) => {
-  console.log(reviewData, spotId);
   try {
     const res = await csrfFetch(`/api/spots/${spotId}/reviews`, {
       method: "POST",
@@ -49,7 +48,7 @@ export const postAReview = (reviewData, spotId) => async (dispatch) => {
     if (res.ok) {
       const review = await res.json();
       dispatch(postReview(review));
-      return review;
+      return res
     }
   } catch (err) {
     return err;
@@ -62,8 +61,9 @@ export const deleteAReview = (reviewId) => async (dispatch) => {
       method: "DELETE",
     });
     if(res.ok) {
-      const response = await res.json();
-      return dispatch(deleteReview(response));
+      const data = await res.json();
+      dispatch(deleteReview(data));
+      return res
     }
     if(!res.ok) {
       throw new Error("Failed to Delete")

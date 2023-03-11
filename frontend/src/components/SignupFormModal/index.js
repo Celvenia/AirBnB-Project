@@ -33,7 +33,6 @@ function SignupFormModal() {
         .then(closeModal)
         .catch(async (res) => {
           const data = await res.json();
-          // console.log(data)
           if (data && data.errors)
           setErrors(Object.values(data.errors));
         });
@@ -47,7 +46,7 @@ function SignupFormModal() {
     <div className="signup_modal">
       <h1>Sign Up</h1>
       <form className="signup_modal_form" onSubmit={handleSubmit}>
-        <ul>
+        <ul className="errors">
           {errors.map((error, idx) => (
             <li key={idx}>{error}</li>
           ))}
@@ -106,7 +105,7 @@ function SignupFormModal() {
             required
           />
         </label>
-        <button className="signup_button" type="submit">Sign Up</button>
+        <button disabled={errors.length ? true : false} className="signup_button" type="submit">Sign Up</button>
       </form>
     </div>
   );

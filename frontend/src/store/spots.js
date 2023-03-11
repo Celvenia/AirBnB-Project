@@ -80,7 +80,7 @@ export const createASpot = (data) => async (dispatch) => {
 };
 
 export const postAImage = (spot, payload) => async (dispatch) => {
-  console.log('spot', spot, 'payload', payload)
+
   const res = await csrfFetch(`/api/spots/${spot.id}/images`, {
     method: "POST",
     body: JSON.stringify(payload),

@@ -17,7 +17,7 @@ const SpotDetails = () => {
   // const reviews = useSelector((state) => state?.reviews?.[spotId]);
   const reviewsState = useSelector((state) => state.reviews);
   const currentSpotReviewsArr = Object.values(reviewsState).filter(
-    (review) => review.spotId === spot.id
+    (review) => review?.spotId === spot?.id
   )
   const newReviews = currentSpotReviewsArr.reverse()
   const usersReviewObj = currentSpotReviewsArr.find(
@@ -59,7 +59,6 @@ const SpotDetails = () => {
     avgStarRating,
     description,
     price,
-    numReviews,
   } = spot;
 
   const { firstName, lastName, id } = spot.Owner;

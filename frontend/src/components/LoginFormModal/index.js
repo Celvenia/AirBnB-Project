@@ -20,8 +20,10 @@ function LoginFormModal() {
     setErrors([]);
     const validationErrors = [];
 
-    if (credential.length < 4) validationErrors.push("Username or email must be at least 4 characters");
-    if (password.length < 6) validationErrors.push("Password must be at least 6 characters");
+    if (credential.length < 4)
+      validationErrors.push("Username or email must be at least 4 characters");
+    if (password.length < 6)
+      validationErrors.push("Password must be at least 6 characters");
     setErrors(validationErrors);
 
     if (validationErrors.length) {
@@ -37,18 +39,10 @@ function LoginFormModal() {
   };
 
   // demo user login
-  const handleClick = async (e) => {
+  const handleClick = () => {
     setCredential("FakeUser1");
     setPassword("password1");
-    setErrors([]);
-    if ((credential, password)) {
-      return dispatch(sessionActions.login({ credential, password }))
-        .then(closeModal)
-        .catch(async (res) => {
-          const data = await res.json();
-          if (data && data.errors) setErrors(data.errors);
-        });
-    }
+    return dispatch(sessionActions.login({ credential, password }));
   };
 
   // useEffect(() => {
@@ -85,7 +79,7 @@ function LoginFormModal() {
           />
         </label>
         {/* <button disabled={disableButton ? true : false}  className="login_button" type="submit" > */}
-        <button className="login_button" type="submit" >
+        <button className="login_button" type="submit">
           Log In
         </button>
         <button onClick={handleClick} className="demo_user">

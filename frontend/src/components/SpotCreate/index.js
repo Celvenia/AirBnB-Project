@@ -11,6 +11,9 @@ import "./SpotCreate.css";
 function SpotCreate() {
   const dispatch = useDispatch();
   const sessionUser = useSelector((state) => state.session.user);
+  const spots = useSelector((state)=> state.spots)
+  const spotsArr = Object.values(spots)
+  const addresses = spotsArr?.map(spot => spot?.address)
 
   const [country, setCountry] = useState("");
   const [address, setAddress] = useState("");
@@ -50,8 +53,6 @@ function SpotCreate() {
       price,
     };
 
-    let spot;
-
     // validates for numbers, symbols, or whitespace with regex
     if (numAndSymbolCheck.test(payload.city))
       validationErrors.push("City should not include numbers or symbols");
@@ -75,6 +76,8 @@ function SpotCreate() {
       validationErrors.push(
         "Description needs to be a minimum of 30 characters"
       );
+    if(addresses.includes(payload.address))
+    validationErrors.push("Spot already exists with that street address")
 
     setErrors(validationErrors);
 
@@ -83,6 +86,7 @@ function SpotCreate() {
       return;
     }
 
+    let spot;
     try {
       spot = await dispatch(createASpot(payload));
 
@@ -105,7 +109,8 @@ function SpotCreate() {
         history.push(`/spots/${spot.id}`);
       }
     } catch (err) {
-      setErrors(["Spot already exists with that address, try again"]);
+      setErrors(["Internal Server Error"]);
+      window.scroll(0,0)
     }
   };
 

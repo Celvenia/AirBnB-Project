@@ -4,7 +4,7 @@ import "./SpotCard.css";
 const SpotCard = ({
   spot: { id, city, state, price, name, previewImage, avgStarRating }
 }) => {
-const spot = useSelector((state) => state?.spots[id])
+// const spot = useSelector((state) => state?.spots[id])
 
   if(avgStarRating === undefined) {
     return <div>Loading...</div>

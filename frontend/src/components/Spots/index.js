@@ -13,7 +13,6 @@ const Spots = () => {
 
   useEffect(() => {
     dispatch(getSpots());
-    // dispatch(getReviews())
     return () => {};
   }, [dispatch]);
 

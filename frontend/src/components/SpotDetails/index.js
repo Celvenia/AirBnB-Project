@@ -106,9 +106,8 @@ const SpotDetails = () => {
               Hosted by {firstName} {lastName}
             </h2>
 
-            {userId === id ? (
+            {userId === id && (
               <>
-                {" "}
                 <span className="spot_detail_update_modal_button">
                   <OpenModalMenuItem
                     itemText="Update Spot"
@@ -127,16 +126,14 @@ const SpotDetails = () => {
                   />
                 </span>
               </>
-            ) : (
-              ""
             )}
           </div>
 
           <span className="reserve_container">
             <span className="reserve_info">
               <span className="reserve_text">
-                <span className="price"> ${price} night, </span>
-                <span className="rating">
+                <span> ${price} night, </span>
+                <span>
                   <i className="fa-sharp fa-solid fa-star"></i>
                   {reviewAmount !== 0
                     ? avgStarRating % 1 === 0
@@ -145,7 +142,7 @@ const SpotDetails = () => {
                     : "New"}
                   ,
                 </span>
-                <span>
+                <span className="random">
                   {reviewAmount} {reviewAmount !== 1 ? "Reviews" : "Review"}
                 </span>
               </span>
@@ -169,14 +166,14 @@ const SpotDetails = () => {
                 : parseFloat(avgStarRating.toFixed(2))
               : "New"}
           </span>
-          <span className="spot_detail_review_items">{" * "} </span>
+          <span className={reviewAmount === 0 ? "spot_detail_hidden" : "spot_detail_review_items"}>{" · "} </span>
           {/* reviews */}
-          <span className="spot_detail_review_items">
+          <span className={reviewAmount === 0 ? "spot_detail_hidden" : "spot_detail_review_items"}>
             {reviewAmount} {reviewAmount !== 1 ? "Reviews" : "Review"}
           </span>
         </div>
         {reviewAmount === 0 ? (
-          userId === spot.Owner.id ? (
+          !sessionUser || userId === spot.Owner.id ? (
             ""
           ) : (
             <OpenModalMenuItem

@@ -7,18 +7,18 @@ const { User } = require('../../db/models');
 const { check } = require('express-validator');
 const { handleValidationErrors, handleLoginErrors } = require('../../utils/validation');
 
-const validateLogin = [
-    check('credential').exists({ checkFalsy: true }).withMessage('Email or username is required'),
-    check('credential').if(check('credential').exists()).not().isFloat().not().isEmpty().withMessage('Please provide a valid email or username.'),
-    check('password').exists({ checkFalsy: true }).withMessage('Password is required'),
-    check('password').if(check('password').exists()).not().isEmpty().withMessage('Please provide a password.'),
-    handleLoginErrors
-  ];
+// const validateLogin = [
+//     check('credential').exists({ checkFalsy: true }).withMessage('Email or username is required'),
+//     check('credential').if(check('credential').exists()).not().isFloat().not().isEmpty().withMessage('Please provide a valid email or username.'),
+//     check('password').exists({ checkFalsy: true }).withMessage('Password is required'),
+//     check('password').if(check('password').exists()).not().isEmpty().withMessage('Please provide a password.'),
+//     handleLoginErrors
+//   ];
 
   // Log in
   router.post(
     '/',
-    validateLogin,
+    // validateLogin,
     async (req, res, next) => {
 
         const { credential, password } = req.body;
@@ -26,10 +26,14 @@ const validateLogin = [
       const user = await User.login({ credential, password });
 
       if (!user) {
-        res.json({
-          message: "Invalid credentials",
-          statusCode: 401
-        })
+        // res.json({
+        //   message: "Invalid credentials",
+        //   statusCode: 401
+        // })
+        const err = new Error('Login failed')
+        err.status = 401;
+        err.title = 'Login'
+        err.errors = ['The provided credentials were invalid.']
           return next(err);
       }
 

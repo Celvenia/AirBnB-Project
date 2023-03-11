@@ -1,15 +1,17 @@
 // frontend/src/components/UpdateSpotModal/index.js
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getASpot, getMySpots, getSpots, postAImage, updateASpot } from "../../store/spots";
+import { getASpot, getSpots, updateASpot } from "../../store/spots";
 import { useModal } from "../../context/Modal";
 import "./UpdateSpotModal.css";
+import { useHistory } from "react-router-dom";
 
 function UpdateSpotModal({ spot }) {
   const sessionUser = useSelector((state) => state.session.user);
-  const currentSpot = useSelector((state) => state.spots[spot.id])
+  const currentSpot = useSelector((state) => state.spots[spot.id]);
   const dispatch = useDispatch();
   const { closeModal } = useModal();
+  const history = useHistory();
   const contentRef = useRef();
 
   const [country, setCountry] = useState(spot.country);
@@ -21,18 +23,12 @@ function UpdateSpotModal({ spot }) {
   const [description, setDescription] = useState(spot.description);
   const [name, setName] = useState(spot.name);
   const [price, setPrice] = useState(spot.price);
-  const [url, setUrl] = useState("");
-  const [url2, setUrl2] = useState("");
-  const [url3, setUrl3] = useState("");
-  const [url4, setUrl4] = useState("");
-  const [url5, setUrl5] = useState("");
   const [errors, setErrors] = useState([]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setErrors([]);
     const validationErrors = [];
-
 
     // allows for whitespace and semi-colon, excludes numbers and symbols
     const numAndSymbolCheck = /[\p{P}\d]+/u;
@@ -49,8 +45,6 @@ function UpdateSpotModal({ spot }) {
       description,
       price,
     };
-
-    // let spot;
 
     // validates for numbers, symbols, or whitespace with regex
     if (numAndSymbolCheck.test(city))
@@ -82,42 +76,17 @@ function UpdateSpotModal({ spot }) {
     let data;
     try {
       data = await dispatch(updateASpot(payload, spot))
-      .then(await dispatch(getASpot(spot.id)))
-      .then((data) => {
-
-
-        // if spot successfully dispatched, and user entered url allow dispatch for postAImage
-        if (data) {
-          // console.log('TESTING!!!!!!!!!!!!!!!!!!!!!!!!!!!!', currentSpot)
-        let imageDataArr = [url, url2, url3, url4, url5];
-        // console.log(imageDataArr)
-        // imageDataArr.forEach((url) => {
-        //   if (url !== "") {
-        //     let imageData = {
-        //       url,
-        //       preview: true,
-        //     };
-        //     await postAImage(currentSpot, imageData)
-            // .then(dispatch(getASpot(currentSpot.id)))
-            // .then(closeModal)
-
-          // }
-        // });
-      }
-      closeModal()
-    })
-
+       history.push(`/spots/${spot.id}`)
     } catch (err) {
       setErrors(["Spot already exists with that address, try again"]);
     }
-    closeModal()
+    closeModal();
   };
 
   //re-render when inputs are changed to allow removal of validation errors
   useEffect(() => {
     setErrors([]);
-    getSpots()
-    // getMySpots()
+    getSpots();
     return () => {};
   }, [
     address,
@@ -130,7 +99,6 @@ function UpdateSpotModal({ spot }) {
     description,
     price,
     sessionUser,
-    url,
     dispatch,
   ]);
 
@@ -142,180 +110,128 @@ function UpdateSpotModal({ spot }) {
     return () => {};
   }, [sessionUser]);
 
-  useEffect(() => {
-    // console.log(spot)
-    if(spot?.SpotImages?.[0]?.url !== undefined) {
-      setUrl(spot.SpotImages[0].url)
-    }
-    if (spot?.previewImage !== undefined) {
-      setUrl(spot?.previewImage)
-    }
-    return () => {}
-  },[spot?.previewImage, spot?.SpotImages])
-
-
-  return currentSpot && (
-    <div className="update_spot_modal_container" ref={contentRef}>
-      <form className="update_spot_form" onSubmit={handleSubmit}>
-        <ul>
-          {errors.length ? <h3>Errors</h3> : ""}
-          <div className="errors">
-            {errors.map((error, idx) => (
-              <li key={idx}>{error}</li>
-            ))}
-          </div>
-        </ul>
-        <h1 className="update_spot_h1">Update Spot</h1>
-        <label className="update_spot_label">
-        Country
-          <input
-            className="update_spot_input"
-            type="text"
-            value={country}
-            placeholder={spot.country}
-            onChange={(e) => setCountry(e.target.value)}
-            required
-          />
-        </label>
-        <label className="update_spot_label">
-          Street Address
-          <input
-            className="update_spot_input"
-            type="text"
-            value={address}
-            placeholder="Street address is required"
-            onChange={(e) => setAddress(e.target.value)}
-            required
-          />
-        </label>
-        <label className="update_spot_label">
-          City
-          <input
-            className="update_spot_input"
-            type="text"
-            value={city}
-            placeholder="City is required"
-            onChange={(e) => setCity(e.target.value)}
-            required
-          />
-        </label>
-        <label className="update_spot_label">
-          State
-          <input
-            className="update_spot_input"
-            type="text"
-            value={state}
-            placeholder="State is required"
-            onChange={(e) => setState(e.target.value)}
-            required
-          />
-        </label>
-        <label className="update_spot_label">
-          Latitude
-          <input
-            className="update_spot_input"
-            type="number"
-            value={lat}
-            placeholder="Optional"
-            onChange={(e) => setLat(e.target.value)}
-            required
-          />
-        </label>
-        <label className="update_spot_label">
-          Longitude
-          <input
-            className="update_spot_input"
-            type="number"
-            value={lng}
-            placeholder="Optional"
-            onChange={(e) => setLng(e.target.value)}
-            required
-          />
-        </label>
-        <label className="update_spot_label">
-          Description
-          <input
-            className="update_spot_description"
-            type="textarea"
-            value={description}
-            placeholder="Description"
-            onChange={(e) => setDescription(e.target.value)}
-            required
-          />
-        </label>
-        <label className="update_spot_label">
-          Price
-          <input
-            className="update_spot_input"
-            type="number"
-            value={price}
-            placeholder="Price per day is required"
-            onChange={(e) => setPrice(e.target.value)}
-            required
-          />
-        </label>
-        <label className="update_spot_label">
-          Name
-          <input
-            className="update_spot_input"
-            type="text"
-            value={name}
-            placeholder="Name is required"
-            onChange={(e) => setName(e.target.value)}
-            required
-          />
-        </label>
-        <label className="update_spot_label">
-          URL
-        <input
-          className="update_spot_input"
-          type="text"
-          value={url}
-          placeholder="Preview Image URL"
-          onChange={(e) => setUrl(e.target.value)}
-          required
-          />
+  return (
+    currentSpot && (
+      <div className="update_spot_modal_container" ref={contentRef}>
+        <form className="update_spot_form" onSubmit={handleSubmit}>
+          <ul>
+            {errors.length ? <h3>Errors</h3> : ""}
+            <div className="errors">
+              {errors.map((error, idx) => (
+                <li key={idx}>{error}</li>
+              ))}
+            </div>
+          </ul>
+          <h1 className="update_spot_h1">Update your Spot</h1>
+          <label className="update_spot_label">
+            Country
+            <input
+              className="update_spot_input"
+              type="text"
+              value={country}
+              placeholder={spot.country}
+              onChange={(e) => setCountry(e.target.value)}
+              required
+            />
           </label>
-        <input
-          className="update_spot_input"
-          type="text"
-          value={url2}
-          placeholder="Image URL"
-          onChange={(e) => setUrl2(e.target.value)}
-        />
-        <input
-          className="update_spot_input"
-          type="text"
-          value={url3}
-          placeholder="Image URL"
-          onChange={(e) => setUrl3(e.target.value)}
-
-        />
-        <input
-          className="update_spot_input"
-          type="text"
-          value={url4}
-          placeholder="Image URL"
-          onChange={(e) => setUrl4(e.target.value)}
-
-        />
-        <input
-          className="update_spot_input"
-          type="text"
-          value={url5}
-          placeholder="Image URL"
-          onChange={(e) => setUrl5(e.target.value)}
-
-        />
-        <button
-          className="update_spot_button"
-          type="submit"
-          disabled={errors.length ? true : false}
-        >
-          Update
-        </button>
-      </form>
-    </div>
+          <label className="update_spot_label">
+            Street Address
+            <input
+              className="update_spot_input"
+              type="text"
+              value={address}
+              placeholder="Street address is required"
+              onChange={(e) => setAddress(e.target.value)}
+              required
+            />
+          </label>
+          <label className="update_spot_label">
+            City
+            <input
+              className="update_spot_input"
+              type="text"
+              value={city}
+              placeholder="City is required"
+              onChange={(e) => setCity(e.target.value)}
+              required
+            />
+          </label>
+          <label className="update_spot_label">
+            State
+            <input
+              className="update_spot_input"
+              type="text"
+              value={state}
+              placeholder="State is required"
+              onChange={(e) => setState(e.target.value)}
+              required
+            />
+          </label>
+          <label className="update_spot_label">
+            Latitude
+            <input
+              className="update_spot_input"
+              type="number"
+              value={lat}
+              placeholder="Optional"
+              onChange={(e) => setLat(e.target.value)}
+              required
+            />
+          </label>
+          <label className="update_spot_label">
+            Longitude
+            <input
+              className="update_spot_input"
+              type="number"
+              value={lng}
+              placeholder="Optional"
+              onChange={(e) => setLng(e.target.value)}
+              required
+            />
+          </label>
+          <label className="update_spot_label">
+            Description
+            <input
+              className="update_spot_description"
+              type="textarea"
+              value={description}
+              placeholder="Description"
+              onChange={(e) => setDescription(e.target.value)}
+              required
+            />
+          </label>
+          <label className="update_spot_label">
+            Price
+            <input
+              className="update_spot_input"
+              type="number"
+              value={price}
+              placeholder="Price per day is required"
+              onChange={(e) => setPrice(e.target.value)}
+              required
+            />
+          </label>
+          <label className="update_spot_label">
+            Name
+            <input
+              className="update_spot_input"
+              type="text"
+              value={name}
+              placeholder="Name is required"
+              onChange={(e) => setName(e.target.value)}
+              required
+            />
+          </label>
+          <button
+            className="update_spot_button"
+            type="submit"
+            disabled={errors.length ? true : false}
+          >
+            Update
+          </button>
+        </form>
+      </div>
+    )
   );
 }
 

@@ -6,7 +6,7 @@ const SpotCard = ({
 }) => {
   // console.log('this is the id', id)
 const spot = useSelector((state) => state?.spots[id])
-
+// console.log(spot)
 
   if(avgStarRating === undefined) {
     return <div>Loading...</div>

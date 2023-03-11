@@ -9,10 +9,8 @@ import "./DeleteSpotModal.css";
 
 function DeleteSpotModal({ spotId }) {
   const dispatch = useDispatch();
-  // const reviews = useSelector((state) => state?.reviews?.[spotId]);
-  const [errors, setErrors] = useState([]);
-  // const { setModalContent, setOnModalClose } = useModal();
   const { closeModal } = useModal();
+  const [errors, setErrors] = useState([]);
   const history = useHistory();
 
   const handleSubmit = async (e) => {
@@ -38,23 +36,11 @@ function DeleteSpotModal({ spotId }) {
     }
   };
 
-  // useEffect(() => {
-    // dispatch(getASpot(spotId))
-    // dispatch(getSpotReviews(spotId));
-    // return () => {};
-  // }, [dispatch]);
-
-  // const onClick = () => {
-  //   if (onModalClose) setOnModalClose(onModalClose);
-  //   setModalContent(modalComponent);
-  //   if (onItemClick) onItemClick();
-  // };
-
   return (
     <div className="delete_container">
       <h1>Confirm Delete</h1>
 
-      <h3>Are you sure you want to remove this spot from the listings?</h3>
+      <h3>Are you sure you want to remove this spot?</h3>
       <form onSubmit={handleSubmit}>
         <ul>
           {errors.map((error, idx) => (
@@ -62,12 +48,16 @@ function DeleteSpotModal({ spotId }) {
           ))}
         </ul>
         <div>
-          <button className="delete_spot_modal_button" onClick={closeModal} type="submit">
+          <button
+            className="delete_spot_delete_button"
+            onClick={handleSubmit}
+            type="submit"
+          >
             Yes(Delete Spot)
           </button>
         </div>
         <div>
-          <button className="delete_spot_modal_button" onClick={closeModal}>
+          <button className="delete_spot_keep_button" onClick={closeModal}>
             No(Keep Spot)
           </button>
         </div>

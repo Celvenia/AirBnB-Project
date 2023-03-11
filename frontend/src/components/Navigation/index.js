@@ -5,17 +5,12 @@ import { useSelector } from "react-redux";
 import ProfileButton from "./ProfileButton";
 import AirbnbIcon from "../AirbnbIcon";
 import "./Navigation.css";
-// import { getSpots } from "../../store/spots";
 
 function Navigation({ isLoaded }) {
   const sessionUser = useSelector((state) => state.session.user);
   const history = useHistory();
-  // const dispatch = useDispatch();
-  // const spotsObj = useSelector((state) => state.spots);
-  // const spotsArr = Object.values(spotsObj)
 
   const handleClick = () => {
-    // dispatch(getSpots())
     history.push("/");
   };
   const handleCreateASpotClick = () => {

@@ -1,5 +1,5 @@
 // frontend/src/components/LoginFormModal/index.js
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import * as sessionActions from "../../store/session";
 import { useDispatch } from "react-redux";
 import { useModal } from "../../context/Modal";
@@ -11,20 +11,20 @@ function LoginFormModal() {
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState([]);
   const { closeModal } = useModal();
+  // const [disableButton, setDisableButton] = useState(false)
 
+  // login submission
   const handleSubmit = (e) => {
     e.preventDefault();
-    setErrors([]);
 
+    setErrors([]);
     const validationErrors = [];
 
-    if (!credential) validationErrors.push("Invalid credentials");
-    if (!password) validationErrors.push("Must enter a password");
-
+    if (credential.length < 4) validationErrors.push("Username or email must be at least 4 characters");
+    if (password.length < 6) validationErrors.push("Password must be at least 6 characters");
     setErrors(validationErrors);
 
     if (validationErrors.length) {
-      window.scroll(0, 0);
       return;
     }
 
@@ -33,10 +33,10 @@ function LoginFormModal() {
       .catch(async (res) => {
         const data = await res.json();
         if (data && data.errors) setErrors(data.errors);
-        // if(data.message === "Invalid credentials") setErrors("Invalid credentials");
       });
   };
 
+  // demo user login
   const handleClick = async (e) => {
     setCredential("FakeUser1");
     setPassword("password1");
@@ -51,11 +51,19 @@ function LoginFormModal() {
     }
   };
 
+  // useEffect(() => {
+  //   setDisableButton(credential.length < 4)
+  // },[credential])
+
+  // useEffect(() => {
+  //   setDisableButton(password.length < 6)
+  // }, [password])
+
   return (
     <div className="login_modal">
       <h1>Log In</h1>
-      <form onSubmit={handleSubmit}>
-        <ul>
+      <form className="login_form" onSubmit={handleSubmit}>
+        <ul className="login_errors">
           {errors.map((error, idx) => (
             <li key={idx}>{error}</li>
           ))}
@@ -76,12 +84,13 @@ function LoginFormModal() {
             onChange={(e) => setPassword(e.target.value)}
           />
         </label>
-        <button className="login_button" type="submit">
+        {/* <button disabled={disableButton ? true : false}  className="login_button" type="submit" > */}
+        <button className="login_button" type="submit" >
           Log In
         </button>
         <button onClick={handleClick} className="demo_user">
           {" "}
-          Demo User
+          Log in as Demo User
         </button>
       </form>
     </div>

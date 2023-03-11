@@ -129,6 +129,7 @@ main {
 }
 .reserve_button:hover {
   filter: brightness(80%);
+  color: black;
 }
 
 .reserve_info {
@@ -139,8 +140,6 @@ main {
 
 .reserve_text {
   display: flex;
-  /* align-items: center; */
-  /* justify-items: auto; */
   justify-content: space-between;
   width: 100%;
   box-sizing: border-box;
@@ -202,4 +201,12 @@ main {
   color: white;
   box-shadow: 5px 5px 5px rgb(0 0 0 / 50%);
   border-radius: 5px;
+}
+
+.spot_detail_hidden {
+  display: none;
+}
+
+.random {
+  display: hidden;
 }

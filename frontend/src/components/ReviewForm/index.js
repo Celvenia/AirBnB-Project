@@ -23,7 +23,7 @@ const ReviewForm = ({ spotsId }) => {
       stars,
     };
 
-    if (!review.length) validationErrors.push("Review text is required");
+    if (review.length < 10) validationErrors.push("Review should be at least 10 characters");
     if (stars <= 0)
       validationErrors.push("Stars must be an integer between 1 and 5");
 

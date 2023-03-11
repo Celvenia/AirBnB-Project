@@ -2,7 +2,7 @@
 import { useEffect} from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink} from "react-router-dom";
-import { getMySpots, getSpots } from "../../store/spots";
+import { getSpots } from "../../store/spots";
 import DeleteSpotModal from "../DeleteSpotModal";
 import UpdateSpotModal from "../UpdateSpotModal";
 import OpenModalMenuItem from "../Navigation/OpenMenuModalItem";
@@ -11,11 +11,10 @@ import "./SpotsManage.css";
 
 const SpotsManage = () => {
 
-  const sessionUser = useSelector((state) => state?.session?.user)
+  const sessionUser = useSelector((state) => state.session?.user)
   const spots = useSelector((state) => state.spots)
   const spotsArray = Object.values(spots)
-  const loadedSpots = spotsArray.some(spot => spot.ownerId === sessionUser.id)
-  const currentSpots = spotsArray.filter(spot => spot.ownerId === sessionUser.id)
+  const currentSpots = spotsArray.filter(spot => spot.ownerId === sessionUser?.id)
   const dispatch = useDispatch();
 
 
@@ -24,9 +23,6 @@ const SpotsManage = () => {
     return () => {};
   }, [dispatch]);
 
-  if (!loadedSpots) {
-    return <h1 className="spots_manage_h1">Loading...</h1>;
-  }
 
   return currentSpots?.length ? (
     <div className="spots_manage_container">

@@ -19,12 +19,10 @@ const SpotDetails = () => {
     (review) => review?.spotId === spot?.id
   );
   const newReviews = currentSpotReviewsArr.reverse();
-  const usersReviewObj = currentSpotReviewsArr.find(
-    (review) => review.userId === sessionUser?.id
-  );
+  // const usersReviewObj = currentSpotReviewsArr.find(
+  //   (review) => review.userId === sessionUser?.id
+  // );
   const [reviewAmount, setReviewAmount] = useState();
-  // const [newReviews, setNewReviews] = useState([]);
-  // const [errors, setErrors] = useState()
 
   const dispatch = useDispatch();
 
@@ -101,11 +99,7 @@ const SpotDetails = () => {
                 <span className="spot_detail_update_modal_button">
                   <OpenModalMenuItem
                     itemText="Update Spot"
-                    modalComponent={
-                      <UpdateSpotModal
-                        spot={spot}
-                      />
-                    }
+                    modalComponent={<UpdateSpotModal spot={spot} />}
                   />
                 </span>
                 <span>
@@ -188,8 +182,8 @@ const SpotDetails = () => {
           ""
         ) : userId === spot.Owner.id ? (
           ""
-        ) : // ) : reviews && reviews.some((review) => review.userId === userId) ? (
-        usersReviewObj ? (
+        ) : newReviews && newReviews.some((review) => review.userId === userId) ? (
+        // usersReviewObj ? (
           ""
         ) : (
           <OpenModalMenuItem

@@ -14,7 +14,6 @@ const SpotDetails = () => {
   const { spotId } = useParams();
   const sessionUser = useSelector((state) => state.session.user);
   const spot = useSelector((state) => state.spots?.[spotId]);
-  // const reviews = useSelector((state) => state?.reviews?.[spotId]);
   const reviewsState = useSelector((state) => state.reviews);
   const currentSpotReviewsArr = Object.values(reviewsState).filter(
     (review) => review?.spotId === spot?.id
@@ -42,7 +41,6 @@ const SpotDetails = () => {
   }, [dispatch, spotId, newReviews.length]);
 
   useEffect(() => {
-    // setNewReviews(currentSpotReviewsArr);
     return () => {};
   }, [reviewsState]);
 
@@ -105,7 +103,6 @@ const SpotDetails = () => {
                     itemText="Update Spot"
                     modalComponent={
                       <UpdateSpotModal
-                        spotImages={spot.SpotImages}
                         spot={spot}
                       />
                     }

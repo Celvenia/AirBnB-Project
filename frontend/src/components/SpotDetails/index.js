@@ -13,7 +13,7 @@ import "./SpotDetails.css";
 const SpotDetails = () => {
   const { spotId } = useParams();
   const sessionUser = useSelector((state) => state.session.user);
-  const spot = useSelector((state) => state.spots?.[spotId]);
+  const spot = useSelector((state) => state.spots[spotId]);
   const reviewsState = useSelector((state) => state.reviews);
   const currentSpotReviewsArr = Object.values(reviewsState).filter(
     (review) => review?.spotId === spot?.id
@@ -49,7 +49,7 @@ const SpotDetails = () => {
   // destructured spot, DRY code
   const { city, state, country, name, avgStarRating, description, price } =
     spot;
-
+console.log(description)
   const { firstName, lastName, id } = spot.Owner;
   const images = Object.values(spot.SpotImages);
 
@@ -138,7 +138,7 @@ const SpotDetails = () => {
           </span>
         </div>
         <h2>About this place</h2>
-        <article className="description">{description}</article>
+        <div className="description">{description}</div>
         <div className="spot_detail_review_info">
           {/* star */}
           <span className="spot_detail_review_items">

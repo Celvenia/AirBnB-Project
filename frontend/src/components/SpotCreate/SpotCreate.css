@@ -41,6 +41,7 @@
 
 .spot_create_input[type="textarea"] {
     height:100px;
+    width: 100%;
 }
 
 .spot_create_label {

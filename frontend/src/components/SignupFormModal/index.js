@@ -1,5 +1,5 @@
 // frontend/src/components/SignupFormPage/index.js
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useModal } from "../../context/Modal";
 import * as sessionActions from "../../store/session";
@@ -30,17 +30,24 @@ function SignupFormModal() {
           password,
         })
       )
-        .then(closeModal)
+        .then(
+          dispatch(
+            sessionActions.login({ credential: email, password: password })
+          ).then(closeModal)
+        )
         .catch(async (res) => {
           const data = await res.json();
-          if (data && data.errors)
-          setErrors(Object.values(data.errors));
+          if (data && data.errors) setErrors(Object.values(data.errors));
         });
     }
     return setErrors([
       "Confirm Password field must be the same as the Password field",
     ]);
   };
+
+  useEffect(() => {
+    setErrors([])
+  }, [email, username, password, confirmPassword])
 
   return (
     <div className="signup_modal">
@@ -105,7 +112,13 @@ function SignupFormModal() {
             required
           />
         </label>
-        <button disabled={errors.length ? true : false} className="signup_button" type="submit">Sign Up</button>
+        <button
+          disabled={errors.length ? true : false}
+          className="signup_button"
+          type="submit"
+        >
+          Sign Up
+        </button>
       </form>
     </div>
   );

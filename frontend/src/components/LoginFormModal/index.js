@@ -59,6 +59,10 @@ function LoginFormModal() {
   //   setDisableButton(password.length < 6)
   // }, [password])
 
+  useEffect(() => {
+    setErrors([])
+  },[credential,password])
+
   return (
     <div className="login_modal">
       <h1>Log In</h1>

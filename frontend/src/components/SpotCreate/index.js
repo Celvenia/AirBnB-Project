@@ -54,11 +54,11 @@ function SpotCreate() {
     };
 
     // validates for numbers, symbols, or whitespace with regex
-    if (lettersAndSpacesOnly.test(payload.city))
+    if (!lettersAndSpacesOnly.test(payload.city))
       validationErrors.push("City should not include numbers or symbols");
-    if (lettersAndSpacesOnly.test(payload.state))
+    if (!lettersAndSpacesOnly.test(payload.state))
       validationErrors.push("State should not include numbers or symbols");
-    if (lettersAndSpacesOnly.test(payload.country))
+    if (!lettersAndSpacesOnly.test(payload.country))
       validationErrors.push("Country should not include numbers or symbols");
     if (!imageCheck.test(url))
       validationErrors.push("Image URL must end in .png .jpg or .jpeg");
